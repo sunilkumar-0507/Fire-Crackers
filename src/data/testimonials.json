@@ -1,0 +1,82 @@
+[
+  {
+    "id": "t-01",
+    "name": "Meenakshi Raghavan",
+    "role": "Ordered the Family Festival Box",
+    "location": "Adyar, Chennai",
+    "initials": "MR",
+    "accent": "#C84D0E",
+    "rating": 5,
+    "quote": "Ordered on a Tuesday, it reached Adyar on Thursday, packed better than anything I have received from a big marketplace. The running order printed inside the lid meant my father-in-law finally stopped arguing about what to light first."
+  },
+  {
+    "id": "t-02",
+    "name": "Arun Prakash",
+    "role": "Ordered the Grand Terrace Show",
+    "location": "Coimbatore",
+    "initials": "AP",
+    "accent": "#A6357A",
+    "rating": 5,
+    "quote": "We do a terrace show for about forty people every year and usually spend two days planning the sequence. This time the box arrived already sequenced. Twenty minutes, no gaps, nobody standing around waiting for the next thing."
+  },
+  {
+    "id": "t-03",
+    "name": "Fathima Beevi",
+    "role": "Ordered the Silent Celebration Pack",
+    "location": "Kochi, Kerala",
+    "initials": "FB",
+    "accent": "#0F7B6C",
+    "rating": 5,
+    "quote": "My youngest is two and our dog has spent every Diwali of her life hiding. This was the first year both of them stayed outside with us. I did not expect a cracker order to solve that."
+  },
+  {
+    "id": "t-04",
+    "name": "Senthil Kumar",
+    "role": "Bulk order, 180 boxes",
+    "location": "Tiruppur",
+    "initials": "SK",
+    "accent": "#8C3A12",
+    "rating": 5,
+    "quote": "Hundred and eighty gift boxes for the factory staff, GST invoice raised the same day, delivered on the date we asked for and not a day of slippage. Fourth year running. There is not much more I want from a supplier."
+  },
+  {
+    "id": "t-05",
+    "name": "Divya Narayanan",
+    "role": "Ordered the Kids Safe Hamper",
+    "location": "Madurai",
+    "initials": "DN",
+    "accent": "#D9539B",
+    "rating": 4,
+    "quote": "Six children between four and eleven, and everything in the hamper was something I could hand over without hovering. The snake tablets held their attention far longer than anything expensive ever has."
+  },
+  {
+    "id": "t-06",
+    "name": "Rajesh Iyer",
+    "role": "Ordered the Royal Gift Box",
+    "location": "Bengaluru",
+    "initials": "RI",
+    "accent": "#E5B23C",
+    "rating": 5,
+    "quote": "I have been buying from the shop near my parents' house in Sivakasi for twenty years. Same quality here, except I did not have to drive four hundred kilometres to carry it back myself."
+  },
+  {
+    "id": "t-07",
+    "name": "Lakshmi Priya",
+    "role": "Ordered sparklers and fountains",
+    "location": "Trichy",
+    "initials": "LP",
+    "accent": "#FF8A00",
+    "rating": 5,
+    "quote": "The 90cm sparklers are absurd and I mean that as a compliment. Nearly three minutes each. Every single photograph from that night has one in it."
+  },
+  {
+    "id": "t-08",
+    "name": "Mohammed Irfan",
+    "role": "Apartment association order",
+    "location": "Salem",
+    "initials": "MI",
+    "accent": "#2C0F05",
+    "rating": 5,
+    "quote": "Ninety-six flats, one coordinator on the phone, one delivery to the clubhouse. They even flagged that our chosen date fell on a Sunday and moved it before I noticed."
+  }
+]

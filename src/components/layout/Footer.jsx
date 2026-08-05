@@ -1,0 +1,159 @@
+import { memo } from 'react';
+import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { Mail, MapPin, Phone, ShieldCheck } from 'lucide-react';
+import { BRAND, FOOTER_LINKS, SOCIALS } from '@/constants';
+import { fadeUp, inView, stagger } from '@/animations/variants';
+import { LogoMark } from '@/components/ui/Logo';
+
+/**
+ * Row of small lit diyas along the top edge of the footer.
+ *
+ * PERF: fourteen Framer Motion loops here meant fourteen JS-driven animations
+ * writing styles every frame, forever. The same flicker as a CSS keyframe runs
+ * on the compositor and costs the main thread nothing.
+ */
+const DiyaBorder = memo(function DiyaBorder() {
+  return (
+    <div className="relative h-12 overflow-hidden" aria-hidden="true">
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-secondary-400/50 to-transparent" />
+      <div className="flex h-full items-center justify-center gap-6 sm:gap-12">
+        {Array.from({ length: 14 }, (_, i) => (
+          <span
+            key={i}
+            className="relative shrink-0 animate-pulse-glow"
+            style={{ animationDelay: `${(i % 5) * 0.42}s`, animationDuration: '3.2s' }}
+          >
+            <svg width="22" height="26" viewBox="0 0 22 26" fill="none">
+              <path d="M11 1 C13.4 4.6 14.8 7.2 14.8 9.2 C14.8 11.6 13 13.4 11 13.4 C9 13.4 7.2 11.6 7.2 9.2 C7.2 7.2 8.6 4.6 11 1 Z" fill="#FFD56A" />
+              <path d="M1 15 C1 15 4.6 14 11 14 C17.4 14 21 15 21 15 C20 19.6 16 23 11 23 C6 23 2 19.6 1 15 Z" fill="#C84D0E" />
+              <ellipse cx="11" cy="15" rx="9" ry="1.5" fill="#FF8A00" />
+            </svg>
+            <span
+              className="absolute -inset-2 -z-10"
+              style={{ background: 'radial-gradient(closest-side, rgba(255,180,70,.5), transparent 70%)' }}
+            />
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+});
+
+export const Footer = () => (
+  <footer className="relative mt-16 overflow-hidden bg-dark text-bg/75">
+    {/* warm gradient wash */}
+    <div
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-0 opacity-90"
+      style={{
+        background:
+          'radial-gradient(90% 60% at 50% 0%, rgba(200,77,14,.42) 0%, transparent 60%), linear-gradient(180deg,#2C0F05,#1B0903)',
+      }}
+    />
+
+    <div className="relative">
+      <DiyaBorder />
+
+      {/* The floating basket pill sits over the bottom ~76px on small screens,
+          so the last row needs clearance to stay reachable. */}
+      <motion.div variants={stagger(0.06)} {...inView} className="container pb-28 pt-8 lg:pb-12">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.4fr_repeat(3,1fr)] lg:gap-12">
+          {/* brand column */}
+          <motion.div variants={fadeUp} className="max-w-sm sm:col-span-2 lg:col-span-1">
+            <div className="flex items-center gap-3">
+              <LogoMark size={44} />
+              <div className="leading-none">
+                <p className="font-display text-2xl font-semibold text-bg">{BRAND.name}</p>
+                <p className="mt-1.5 text-[9px] font-semibold uppercase tracking-[.3em] text-gold/70">
+                  {BRAND.tagline}
+                </p>
+              </div>
+            </div>
+
+            <p className="mt-6 text-sm leading-relaxed text-bg/55">
+              Three generations on the same factory floor in Sivakasi, making the crackers we grew
+              up lighting. Sold direct, at the price they should have always been.
+            </p>
+
+            <div className="mt-7 space-y-3 text-sm">
+              <a href={BRAND.phoneHref} className="flex items-center gap-3 text-bg/70 transition-colors hover:text-gold">
+                <Phone size={15} className="shrink-0 text-gold/70" strokeWidth={2.2} />
+                {BRAND.phone}
+              </a>
+              <a href={BRAND.emailHref} className="flex items-center gap-3 text-bg/70 transition-colors hover:text-gold">
+                <Mail size={15} className="shrink-0 text-gold/70" strokeWidth={2.2} />
+                <span className="min-w-0 break-all">{BRAND.email}</span>
+              </a>
+              <p className="flex items-start gap-3 text-bg/55">
+                <MapPin size={15} className="mt-0.5 shrink-0 text-gold/70" strokeWidth={2.2} />
+                {BRAND.address}
+              </p>
+            </div>
+          </motion.div>
+
+          {/* link columns */}
+          {FOOTER_LINKS.map((column) => (
+            <motion.div key={column.title} variants={fadeUp}>
+              <h3 className="text-2xs font-semibold uppercase tracking-[.2em] text-gold">
+                {column.title}
+              </h3>
+              <ul className="mt-5 space-y-3">
+                {column.links.map((link) => (
+                  <li key={link.label}>
+                    <Link
+                      to={link.to}
+                      className="group inline-flex items-center gap-2 text-sm text-bg/60 transition-colors duration-300 hover:text-bg"
+                    >
+                      <span className="h-px w-0 bg-gold transition-all duration-400 ease-luxe group-hover:w-3" />
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* licence strip */}
+        <motion.div
+          variants={fadeUp}
+          className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-3 rounded-3xl border border-white/[.07] bg-white/[.03] px-5 py-5 text-2xs text-bg/45 sm:mt-12 sm:px-6"
+        >
+          <span className="flex items-center gap-2 text-gold/80">
+            <ShieldCheck size={14} strokeWidth={2.2} />
+            {BRAND.licence}
+          </span>
+          <span>GSTIN {BRAND.gstin}</span>
+          <span>{BRAND.hours}</span>
+        </motion.div>
+
+        {/* bottom row */}
+        <motion.div
+          variants={fadeUp}
+          className="mt-8 flex flex-col-reverse items-center justify-between gap-6 border-t border-white/[.07] pt-8 sm:flex-row"
+        >
+          <p className="text-2xs text-bg/40">
+            © {new Date().getFullYear()} {BRAND.name}. All rights reserved. Burst responsibly.
+          </p>
+
+          <div className="flex items-center gap-2">
+            {SOCIALS.map((social) => (
+              <a
+                key={social.label}
+                href={social.href}
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-full border border-white/10 px-4 py-2 text-2xs font-medium text-bg/55 transition-all duration-300 hover:-translate-y-0.5 hover:border-gold/50 hover:text-gold"
+              >
+                {social.label}
+              </a>
+            ))}
+          </div>
+        </motion.div>
+      </motion.div>
+    </div>
+  </footer>
+);
+
+export default Footer;
