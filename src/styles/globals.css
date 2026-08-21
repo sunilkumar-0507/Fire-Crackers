@@ -38,14 +38,15 @@
  * ------------------------------------------------------------------ */
 @layer base {
   :root {
-    --c-bg: #fff7ec;
-    --c-primary: #c84d0e;
-    --c-secondary: #ff8a00;
-    --c-dark: #2c0f05;
-    --c-gold: #ffd56a;
-    --c-ink: #3b1f14;
-    --c-muted: #806253;
-    --c-line: rgba(255, 180, 70, 0.25);
+    --c-bg: #fdf3e2;
+    --c-card: #fffbf4;
+    --c-primary: #954c05;
+    --c-secondary: #ffb238;
+    --c-dark: #2b1408;
+    --c-gold: #ffb238;
+    --c-ink: #3d2414;
+    --c-muted: #7a5b42;
+    --c-line: rgba(122, 91, 66, 0.16);
 
     --ease-luxe: cubic-bezier(0.22, 1, 0.36, 1);
 
@@ -61,16 +62,16 @@
      *   --nav-h    : the bar itself at rest
      *   --header-h : announcement strip (36px) + the bar
      * ------------------------------------------------------------------ */
-    --nav-h: 68px;
-    --header-h: 104px;
+    --nav-h: 64px;
+    --header-h: 100px;
 
     color-scheme: light;
   }
 
   @media (min-width: 640px) {
     :root {
-      --nav-h: 86px;
-      --header-h: 122px;
+      --nav-h: 76px;
+      --header-h: 112px;
     }
   }
 
@@ -130,31 +131,35 @@
   }
 
   ::selection {
-    background: rgba(255, 138, 0, 0.28);
+    background: rgba(255, 178, 56, 0.4);
     color: var(--c-dark);
   }
 
-  /* Warm, slim scrollbar that matches the festival palette */
+  /* Warm scrollbar, but a flat one — the old gradient thumb read as a
+     draggable brand element rather than as a scrollbar. */
   ::-webkit-scrollbar {
-    width: 11px;
-    height: 11px;
+    width: 12px;
+    height: 12px;
   }
   ::-webkit-scrollbar-track {
-    background: #fdeed9;
+    background: #f7e8d0;
   }
   ::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, #ffb44b, #c84d0e);
-    border: 3px solid #fdeed9;
+    background: #d9bd97;
+    border: 3px solid #f7e8d0;
     border-radius: 99px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, #ff8a00, #a63e0a);
+    background: #b9986f;
   }
 
+  /* Two-tone ring so the focus indicator survives on both the cream page and
+     the dark footer / amber buttons, where a single brown ring disappeared. */
   :focus-visible {
-    outline: 2px solid var(--c-primary);
-    outline-offset: 3px;
+    outline: 2px solid var(--c-dark);
+    outline-offset: 2px;
     border-radius: 6px;
+    box-shadow: 0 0 0 4px rgba(255, 178, 56, 0.55);
   }
 
   /* Hide number input spinners in quantity fields */
@@ -173,25 +178,27 @@
  * Reusable component classes
  * ------------------------------------------------------------------ */
 @layer components {
+  /* Near-opaque rather than 62–82% translucent. Text over a blurred, moving
+     backdrop is the single most common readability failure in this kind of
+     layout, and the blur cost a full-surface re-raster on every scroll. */
   .glass {
-    background: linear-gradient(140deg, rgba(255, 255, 255, 0.82), rgba(255, 247, 236, 0.62));
-    -webkit-backdrop-filter: blur(14px) saturate(150%);
-    backdrop-filter: blur(14px) saturate(150%);
-    border: 1px solid rgba(255, 255, 255, 0.65);
+    background: rgba(255, 251, 244, 0.96);
+    border: 1px solid var(--c-line);
   }
 
   .glass-dark {
-    background: linear-gradient(140deg, rgba(44, 15, 5, 0.72), rgba(44, 15, 5, 0.5));
-    -webkit-backdrop-filter: blur(16px) saturate(140%);
-    backdrop-filter: blur(16px) saturate(140%);
-    border: 1px solid rgba(255, 213, 106, 0.22);
+    background: rgba(43, 20, 8, 0.94);
+    border: 1px solid rgba(255, 178, 56, 0.22);
   }
 
   .surface {
     @apply rounded-3xl border border-line bg-card shadow-card;
   }
 
-  /* Animated conic border used on combo / offer cards */
+  /* Static amber ring for combo / offer cards. This used to be a conic
+     gradient spun by an @property angle animation — a permanently repainting
+     border on a card that also had a hover tilt. A card can be highlighted
+     without moving. */
   .border-glow {
     position: relative;
     isolation: isolate;
@@ -199,22 +206,10 @@
   .border-glow::before {
     content: '';
     position: absolute;
-    /* inset:0 rather than -1px — the card clips its overflow, and a ring drawn
-       outside the box would be cut off on the corners. */
     inset: 0;
     border-radius: inherit;
     padding: 1px;
-    background: conic-gradient(
-      from var(--angle, 0deg),
-      transparent 0%,
-      #ffd56a 12%,
-      #ff8a00 22%,
-      transparent 40%,
-      transparent 60%,
-      #ffd56a 72%,
-      #c84d0e 82%,
-      transparent 100%
-    );
+    background: linear-gradient(140deg, #ffcb70, #ffb238 55%, rgba(255, 178, 56, 0.35));
     /* Ring trick: mask out the middle so only the 1px padding band paints.
        Firefox needs the unprefixed `mask`, WebKit the prefixed pair. */
     -webkit-mask:
@@ -226,35 +221,28 @@
     -webkit-mask-composite: xor;
     mask-composite: exclude;
     opacity: 0;
-    transition: opacity 0.45s var(--ease-luxe);
+    transition: opacity 0.3s var(--ease-luxe);
     z-index: -1;
   }
   .border-glow:hover::before,
   .border-glow[data-active='true']::before {
     opacity: 1;
-    animation: spin-angle 4s linear infinite;
   }
 
   .text-gradient {
-    @apply bg-flame-soft bg-clip-text text-transparent;
-    background-size: 200% 100%;
+    @apply text-primary-700;
   }
 
   /* Skeleton shimmer */
   .skeleton {
-    @apply relative overflow-hidden rounded-xl bg-secondary-50;
+    @apply relative overflow-hidden rounded-xl bg-secondary-100/70;
   }
   .skeleton::after {
     content: '';
     position: absolute;
     inset: 0;
     transform: translateX(-100%);
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(255, 255, 255, 0.75),
-      transparent
-    );
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.75), transparent);
     animation: shimmer 1.6s infinite;
   }
 
@@ -283,17 +271,10 @@
   .pause-on-hover:hover * {
     animation-play-state: paused;
   }
-}
-
-@property --angle {
-  syntax: '<angle>';
-  initial-value: 0deg;
-  inherits: false;
-}
-
-@keyframes spin-angle {
-  to {
-    --angle: 360deg;
+  /* Every interactive control should clear the 44px minimum on touch. */
+  .tap-target {
+    min-height: 44px;
+    min-width: 44px;
   }
 }
 
@@ -308,17 +289,17 @@
   height: auto;
 }
 .swiper-pagination-bullet {
-  background: #c84d0e;
-  opacity: 0.24;
-  width: 7px;
-  height: 7px;
-  transition: all 0.35s var(--ease-luxe);
+  background: #7a5b42;
+  opacity: 0.3;
+  width: 8px;
+  height: 8px;
+  transition: all 0.3s var(--ease-luxe);
 }
 .swiper-pagination-bullet-active {
   opacity: 1;
   width: 26px;
   border-radius: 99px;
-  background: linear-gradient(90deg, #ff8a00, #c84d0e);
+  background: #954c05;
 }
 
 /* ------------------------------------------------------------------ *

@@ -2,22 +2,29 @@ import { forwardRef, useCallback, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/utils/cn';
 
+/**
+ * `primary` is amber with dark text (9.7:1) rather than the previous orange
+ * gradient with white text, which measured 2.4:1 against its own lightest
+ * stop — the most-clicked control in the shop was failing AA outright.
+ */
 const VARIANTS = {
-  primary:
-    'bg-flame text-white shadow-glow hover:shadow-glow-lg hover:brightness-[1.06] active:brightness-95',
-  gold: 'bg-gradient-to-br from-gold-soft via-gold to-gold-deep text-dark shadow-gold hover:brightness-[1.04]',
-  dark: 'bg-dark text-bg shadow-lift hover:bg-[#3d1708]',
-  outline:
-    'border border-primary/25 bg-white/85 text-primary hover:border-primary/60 hover:bg-white hover:shadow-soft',
-  ghost: 'text-ink/80 hover:bg-secondary-50 hover:text-primary',
-  soft: 'bg-secondary-50 text-primary-600 hover:bg-secondary-100',
+  primary: 'bg-flame text-dark shadow-glow hover:brightness-[1.04] active:brightness-95',
+  gold: 'bg-secondary-300 text-dark shadow-soft hover:bg-secondary-200',
+  dark: 'bg-dark text-bg shadow-soft hover:bg-primary-900',
+  outline: 'border border-primary/35 bg-card text-primary-700 hover:border-primary hover:bg-primary-50',
+  ghost: 'text-ink hover:bg-secondary-50 hover:text-primary-700',
+  soft: 'bg-secondary-50 text-primary-700 hover:bg-secondary-100',
 };
 
+/**
+ * Every size except `xs` clears the 44px minimum touch target. `xs` is only
+ * ever used for inline chips inside a larger hit area.
+ */
 const SIZES = {
-  xs: 'h-8 gap-1.5 rounded-full px-3 text-2xs font-semibold tracking-wide',
-  sm: 'h-10 gap-2 rounded-full px-4 text-sm font-semibold',
+  xs: 'h-8 gap-1.5 rounded-full px-3 text-2xs font-semibold',
+  sm: 'h-11 gap-2 rounded-full px-4 text-sm font-semibold',
   md: 'h-12 gap-2 rounded-full px-6 text-[15px] font-semibold',
-  lg: 'h-14 gap-2.5 rounded-full px-8 text-base font-semibold',
+  lg: 'h-[52px] gap-2.5 rounded-full px-7 text-base font-semibold',
   icon: 'h-11 w-11 rounded-full',
 };
 
@@ -77,8 +84,10 @@ export const Button = forwardRef(function Button(
 
   const classes = cn(
     'relative isolate inline-flex select-none items-center justify-center overflow-hidden',
-    'transition-[transform,box-shadow,background-color,filter] duration-300 ease-luxe',
-    'will-change-transform hover:-translate-y-0.5 active:translate-y-0 active:scale-[.98]',
+    'transition-[box-shadow,background-color,border-color,filter] duration-200 ease-luxe',
+    // No hover lift. Every button on the page rising half a step under the
+    // cursor reads as the layout twitching, not as feedback.
+    'active:scale-[.98]',
     'disabled:pointer-events-none disabled:opacity-50',
     VARIANTS[variant] ?? VARIANTS.primary,
     SIZES[size] ?? SIZES.md,
@@ -102,7 +111,7 @@ export const Button = forwardRef(function Button(
         <span
           key={r.key}
           onAnimationEnd={() => dropRipple(r.key)}
-          className="pointer-events-none absolute z-0 animate-ripple-out rounded-full bg-white/45"
+          className="pointer-events-none absolute z-0 animate-ripple-out rounded-full bg-current opacity-20"
           style={{ left: r.x, top: r.y, width: r.size, height: r.size }}
         />
       ))}

@@ -71,7 +71,7 @@ export const Category = () => {
       </PageHeader>
 
       <div className="container pb-12 sm:pb-16">
-        <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-3xl border border-line bg-white/85 px-4 py-3.5 shadow-soft sm:mb-7 sm:px-5 sm:py-4">
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-3xl border border-line bg-card px-4 py-3.5 shadow-soft sm:mb-7 sm:px-5 sm:py-4">
           <p className="text-sm text-muted">
             <strong className="font-semibold text-dark">{items.length}</strong> product
             {items.length === 1 ? '' : 's'} in {category.name}
@@ -82,7 +82,7 @@ export const Category = () => {
             <select
               value={sort}
               onChange={(e) => setSort(e.target.value)}
-              className="max-w-[52vw] cursor-pointer truncate rounded-full border border-line bg-white px-3 py-2 text-sm font-medium text-ink outline-none transition-colors hover:border-secondary-300 focus:border-secondary-400 sm:max-w-none sm:px-4"
+              className="max-w-[52vw] cursor-pointer truncate rounded-full border border-line bg-card px-3 py-2 text-sm font-medium text-ink outline-none transition-colors hover:border-secondary-300 focus:border-secondary-400 sm:max-w-none sm:px-4"
             >
               {SORT_OPTIONS.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -124,7 +124,7 @@ export const Category = () => {
               <motion.div key={other.id} variants={fadeUp}>
                 <Link
                   to={`/category/${other.slug}`}
-                  className="group flex h-full flex-col items-center gap-2.5 rounded-3xl border border-line bg-white/85 p-4 text-center shadow-soft transition-all duration-500 ease-luxe hover:-translate-y-1.5 hover:shadow-lift sm:gap-3 sm:p-5"
+                  className="group flex h-full flex-col items-center gap-2.5 rounded-3xl border border-line bg-card p-4 text-center shadow-soft transition-all duration-500 ease-luxe hover:-translate-y-1.5 hover:shadow-lift sm:gap-3 sm:p-5"
                 >
                   <span
                     className="grid h-14 w-14 place-items-center rounded-2xl transition-transform duration-500 ease-luxe group-hover:scale-110 sm:h-16 sm:w-16"

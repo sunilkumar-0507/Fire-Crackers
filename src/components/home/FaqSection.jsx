@@ -45,8 +45,8 @@ export const FaqSection = ({ limit = null }) => {
               ))}
             </div>
 
-            <div className="mt-8 rounded-4xl border border-line bg-white/85 p-5 shadow-card sm:mt-10 sm:p-7">
-              <span className="grid h-11 w-11 place-items-center rounded-2xl bg-flame text-white shadow-glow">
+            <div className="mt-8 rounded-4xl border border-line bg-card p-5 shadow-card sm:mt-10 sm:p-7">
+              <span className="grid h-11 w-11 place-items-center rounded-2xl bg-flame text-dark shadow-glow">
                 <MessageCircle size={19} strokeWidth={2.2} />
               </span>
               <h3 className="mt-5 font-display text-xl font-semibold text-dark">

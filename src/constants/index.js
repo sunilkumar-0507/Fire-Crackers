@@ -152,5 +152,4 @@ export const SOCIALS = [
 export const STORAGE_KEYS = {
   cart: 'gopi.cart.v1',
   wishlist: 'gopi.wishlist.v1',
-  splashSeen: 'gopi.splash.v1',
 };

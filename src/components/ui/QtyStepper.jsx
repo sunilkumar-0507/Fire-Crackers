@@ -23,7 +23,7 @@ export const QtyStepper = ({
   return (
     <div
       className={cn(
-        'inline-flex items-center rounded-full border border-line bg-white shadow-soft',
+        'inline-flex items-center rounded-full border border-line bg-card shadow-soft',
         s.wrap,
         className,
       )}

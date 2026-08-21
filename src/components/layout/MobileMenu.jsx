@@ -66,7 +66,7 @@ export const MobileMenu = () => {
                 type="button"
                 onClick={close}
                 aria-label="Close menu"
-                className="grid h-10 w-10 place-items-center rounded-full bg-white text-ink shadow-soft transition-transform duration-300 hover:rotate-90 hover:text-primary"
+                className="grid h-10 w-10 place-items-center rounded-full bg-card text-ink shadow-soft transition-transform duration-300 hover:rotate-90 hover:text-primary"
               >
                 <X size={18} strokeWidth={2.4} />
               </button>
@@ -83,7 +83,7 @@ export const MobileMenu = () => {
                   close();
                   openSearch();
                 }}
-                className="mb-6 flex w-full items-center gap-3 rounded-2xl border border-line bg-white px-4 py-3.5 text-left text-sm text-muted shadow-soft transition-colors hover:border-secondary-300"
+                className="mb-6 flex w-full items-center gap-3 rounded-2xl border border-line bg-card px-4 py-3.5 text-left text-sm text-muted shadow-soft transition-colors hover:border-secondary-300"
               >
                 <Search size={17} className="shrink-0 text-primary" />
                 <span className="truncate">Search Lakshmi, flower pots, rockets…</span>
@@ -140,7 +140,7 @@ export const MobileMenu = () => {
                                   key={category.id}
                                   to={`/category/${category.slug}`}
                                   onClick={close}
-                                  className="flex items-center gap-2.5 rounded-xl border border-line bg-white/70 p-2.5 transition-colors hover:border-secondary-300"
+                                  className="flex items-center gap-2.5 rounded-xl border border-line bg-card p-2.5 transition-colors hover:border-secondary-300"
                                 >
                                   <span
                                     className="grid h-9 w-9 shrink-0 place-items-center rounded-lg"
@@ -164,14 +164,14 @@ export const MobileMenu = () => {
               </ul>
             </div>
 
-            <div className="space-y-4 border-t border-line bg-white/60 px-4 py-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] sm:px-5">
+            <div className="space-y-4 border-t border-line bg-card px-4 py-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] sm:px-5">
               <Button to="/bulk-orders" onClick={close} size="md" className="w-full">
                 Request a bulk quote
               </Button>
 
               <a
                 href={BRAND.phoneHref}
-                className="flex items-center justify-center gap-2 text-sm font-semibold text-ink/75 transition-colors hover:text-primary"
+                className="flex items-center justify-center gap-2 text-sm font-semibold text-ink transition-colors hover:text-primary"
               >
                 <Phone size={15} strokeWidth={2.4} />
                 {BRAND.phone}
@@ -184,7 +184,7 @@ export const MobileMenu = () => {
                     href={social.href}
                     target="_blank"
                     rel="noreferrer"
-                    className="rounded-full border border-line bg-white px-3.5 py-1.5 text-2xs font-semibold text-muted transition-colors hover:border-secondary-300 hover:text-primary"
+                    className="rounded-full border border-line bg-card px-3.5 py-1.5 text-2xs font-semibold text-muted transition-colors hover:border-secondary-300 hover:text-primary"
                   >
                     {social.label}
                   </a>

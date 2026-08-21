@@ -47,7 +47,7 @@ export const Offers = () => {
               <motion.div
                 key={offer.id}
                 variants={fadeUp}
-                className="rounded-3xl border border-line bg-white/85 p-5 shadow-soft sm:p-6"
+                className="rounded-3xl border border-line bg-card p-5 shadow-soft sm:p-6"
               >
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <span className="font-mono text-sm font-bold tracking-[.12em] text-dark">
@@ -77,7 +77,7 @@ export const Offers = () => {
           <motion.p
             variants={fadeUp}
             {...inView}
-            className="mt-8 flex items-start gap-3 rounded-3xl border border-dashed border-secondary-300 bg-secondary-50/60 p-5 text-[13px] leading-relaxed text-ink/80"
+            className="mt-8 flex items-start gap-3 rounded-3xl border border-dashed border-secondary-300 bg-secondary-50/60 p-5 text-[13px] leading-relaxed text-ink"
           >
             <Info size={16} className="mt-0.5 shrink-0 text-primary" strokeWidth={2.2} />
             Only one coupon applies per order — the basket keeps whichever you entered last. The

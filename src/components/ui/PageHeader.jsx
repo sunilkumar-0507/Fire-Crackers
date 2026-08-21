@@ -49,7 +49,7 @@ export const PageHeader = ({
               {breadcrumbs.map((crumb, i) => (
                 <Fragment key={crumb.label}>
                   <li aria-hidden="true">
-                    <ChevronRight size={12} className="text-muted/50" />
+                    <ChevronRight size={12} className="text-muted" />
                   </li>
                   <li>
                     {crumb.to && i < breadcrumbs.length - 1 ? (

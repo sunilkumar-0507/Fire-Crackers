@@ -1,17 +1,14 @@
 import { create } from 'zustand';
 
 /**
- * Transient UI state: overlays, the splash gate, and the quick-view target.
+ * Transient UI state: overlays and the quick-view target.
  * Deliberately not persisted — a refresh should land on a clean page.
  */
 export const useUIStore = create((set, get) => ({
-  splashDone: false,
   cartOpen: false,
   searchOpen: false,
   menuOpen: false,
   quickView: null,
-
-  finishSplash: () => set({ splashDone: true }),
 
   openCart: () => set({ cartOpen: true, searchOpen: false, menuOpen: false }),
   closeCart: () => set({ cartOpen: false }),

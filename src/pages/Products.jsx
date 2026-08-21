@@ -139,14 +139,14 @@ export const Products = () => {
         <div className="grid gap-8 sm:gap-10 lg:grid-cols-[268px_minmax(0,1fr)]">
           {/* desktop sidebar */}
           <aside className="hidden lg:block">
-            <div className="sticky top-28 max-h-[calc(100vh-9rem)] overflow-y-auto rounded-4xl border border-line bg-white/85 p-6 shadow-card hide-scrollbar">
+            <div className="sticky top-28 max-h-[calc(100vh-9rem)] overflow-y-auto rounded-4xl border border-line bg-card p-6 shadow-card hide-scrollbar">
               {panel}
             </div>
           </aside>
 
           <div>
             {/* toolbar */}
-            <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-3xl border border-line bg-white/85 px-4 py-3.5 shadow-soft sm:mb-7 sm:px-5 sm:py-4">
+            <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-3xl border border-line bg-card px-4 py-3.5 shadow-soft sm:mb-7 sm:px-5 sm:py-4">
               <p className="text-sm text-muted">
                 <strong className="font-semibold text-dark">{results.length}</strong> product
                 {results.length === 1 ? '' : 's'}
@@ -158,7 +158,7 @@ export const Products = () => {
                   <select
                     value={filters.sort}
                     onChange={(e) => update({ sort: e.target.value })}
-                    className="max-w-[46vw] cursor-pointer truncate rounded-full border border-line bg-white px-3 py-2 text-sm font-medium text-ink outline-none transition-colors hover:border-secondary-300 focus:border-secondary-400 sm:max-w-none sm:px-4"
+                    className="max-w-[46vw] cursor-pointer truncate rounded-full border border-line bg-card px-3 py-2 text-sm font-medium text-ink outline-none transition-colors hover:border-secondary-300 focus:border-secondary-400 sm:max-w-none sm:px-4"
                   >
                     {SORT_OPTIONS.map((option) => (
                       <option key={option.value} value={option.value}>
@@ -238,7 +238,7 @@ export const Products = () => {
                   type="button"
                   onClick={() => setDrawerOpen(false)}
                   aria-label="Close filters"
-                  className="grid h-10 w-10 place-items-center rounded-full bg-white text-ink shadow-soft transition-transform duration-300 hover:rotate-90"
+                  className="grid h-10 w-10 place-items-center rounded-full bg-card text-ink shadow-soft transition-transform duration-300 hover:rotate-90"
                 >
                   <X size={18} strokeWidth={2.4} />
                 </button>
@@ -246,7 +246,7 @@ export const Products = () => {
 
               <div className="hide-scrollbar flex-1 overflow-y-auto p-5">{panel}</div>
 
-              <div className="border-t border-line bg-white/85 p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
+              <div className="border-t border-line bg-card p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
                 <Button onClick={() => setDrawerOpen(false)} className="w-full" size="lg">
                   Show {results.length} product{results.length === 1 ? '' : 's'}
                 </Button>

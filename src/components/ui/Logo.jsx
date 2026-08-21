@@ -48,46 +48,33 @@ export const LogoMark = ({ className, size = 40 }) => (
 );
 
 /**
- * Wordmark. `scale` lets the navbar shrink it smoothly on scroll without a
- * layout shift — it only ever changes a transform.
+ * Wordmark. It used to take a `scale` prop so the navbar could shrink it on
+ * scroll; a logo that resizes as you move is a small thing that never stops
+ * being distracting, and it made the header's height read as unstable.
  */
-export const Logo = ({ className, compact = false, scale = 1, onClick }) => (
+export const Logo = ({ className, compact = false, onClick }) => (
   <Link
     to="/"
     onClick={onClick}
     aria-label={`${BRAND.name} — home`}
     className={cn('group inline-flex min-w-0 select-none items-center gap-2 sm:gap-3', className)}
-    style={{
-      transform: `scale(${scale})`,
-      transformOrigin: 'left center',
-      transition: 'transform .45s cubic-bezier(.22,1,.36,1)',
-    }}
   >
     {/* The mark carries the brand on its own below 420px, where the wordmark
         plus three header controls will not fit on one line. */}
     <span className="relative grid shrink-0 place-items-center">
-      <span className="absolute inset-0 -z-10 rounded-full bg-secondary-300/35 blur-lg transition-opacity duration-500 group-hover:opacity-100 sm:opacity-0" />
-      <LogoMark
-        size={compact ? 32 : 36}
-        className="transition-transform duration-700 ease-luxe group-hover:rotate-[8deg] group-hover:scale-110 sm:hidden"
-      />
-      <LogoMark
-        size={compact ? 34 : 42}
-        className="hidden transition-transform duration-700 ease-luxe group-hover:rotate-[8deg] group-hover:scale-110 sm:block"
-      />
+      <LogoMark size={compact ? 32 : 36} className="sm:hidden" />
+      <LogoMark size={compact ? 34 : 40} className="hidden sm:block" />
     </span>
 
     <span className="flex min-w-0 flex-col leading-none">
       {/* 15px is the largest size at which the full wordmark still clears the
           three header controls on a 320px screen without ellipsing. */}
-      <span className="truncate font-display text-[15px] font-semibold tracking-tight text-dark xs:text-[19px] sm:text-[22px]">
-        {BRAND.short}
-        <span className="bg-gradient-to-r from-primary to-secondary-500 bg-clip-text text-transparent">
-          {' '}
-          Crackers
-        </span>
+      {/* "Crackers" used to be gradient-clipped text running from #C84D0E to
+          #FF8A00 — the bright half measured under 3:1 on the page. */}
+      <span className="truncate font-display text-[15px] font-semibold tracking-tight text-dark xs:text-[19px] sm:text-[21px]">
+        {BRAND.short} <span className="text-primary-700">Crackers</span>
       </span>
-      <span className="mt-1 hidden text-[9px] font-semibold uppercase tracking-[.28em] text-muted xs:block">
+      <span className="mt-1 hidden text-[10px] font-semibold uppercase tracking-[.16em] text-muted xs:block">
         {BRAND.tagline}
       </span>
     </span>

@@ -12,8 +12,8 @@ export const AccordionItem = ({ question, answer, badge, isOpen, onToggle }) => 
       className={cn(
         'group overflow-hidden rounded-3xl border transition-all duration-500 ease-luxe',
         isOpen
-          ? 'border-secondary-200 bg-white shadow-card'
-          : 'border-line bg-white/55 hover:border-secondary-200 hover:bg-white/85',
+          ? 'border-secondary-200 bg-card shadow-card'
+          : 'border-line bg-card hover:border-secondary-200 hover:bg-card',
       )}
     >
       <h3>
@@ -26,7 +26,7 @@ export const AccordionItem = ({ question, answer, badge, isOpen, onToggle }) => 
         >
           <span className="min-w-0 flex-1">
             {badge ? (
-              <span className="mb-1.5 block text-2xs font-semibold uppercase tracking-[.16em] text-primary/70">
+              <span className="mb-1.5 block text-2xs font-semibold uppercase tracking-[.16em] text-primary">
                 {badge}
               </span>
             ) : null}
@@ -45,7 +45,7 @@ export const AccordionItem = ({ question, answer, badge, isOpen, onToggle }) => 
             transition={{ duration: 0.4, ease: EASE }}
             className={cn(
               'grid h-9 w-9 shrink-0 place-items-center rounded-full transition-colors duration-300',
-              isOpen ? 'bg-flame text-white' : 'bg-secondary-50 text-primary',
+              isOpen ? 'bg-flame text-dark' : 'bg-secondary-50 text-primary',
             )}
           >
             <Plus size={17} strokeWidth={2.4} />

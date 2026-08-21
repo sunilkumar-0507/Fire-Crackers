@@ -11,7 +11,7 @@ export const TrustStrip = () => (
       <motion.ul
         variants={stagger(0.07)}
         {...inView}
-        className="grid gap-px overflow-hidden rounded-4xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-4"
+        className="grid gap-px overflow-hidden rounded-3xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-4"
       >
         {TRUST_POINTS.map((point, i) => {
           const Icon = ICONS[i] ?? ShieldCheck;
@@ -19,9 +19,9 @@ export const TrustStrip = () => (
             <motion.li
               key={point.title}
               variants={fadeUp}
-              className="group flex items-start gap-3.5 bg-white/85 p-5 transition-colors duration-500 hover:bg-white sm:gap-4 sm:p-6"
+              className="flex items-start gap-3.5 bg-card p-5 sm:gap-4 sm:p-6"
             >
-              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-secondary-50 text-primary transition-all duration-500 ease-luxe group-hover:scale-110 group-hover:bg-flame group-hover:text-white sm:h-11 sm:w-11">
+              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-secondary-100 text-primary-700 sm:h-11 sm:w-11">
                 <Icon size={19} strokeWidth={2.1} />
               </span>
               <span>

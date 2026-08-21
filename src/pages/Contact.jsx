@@ -43,7 +43,7 @@ const SUBJECTS = [
 ];
 
 const inputClass =
-  'h-12 w-full rounded-2xl border border-line bg-white px-4 text-sm text-ink outline-none transition-colors placeholder:text-muted/60 focus:border-secondary-400';
+  'h-12 w-full rounded-2xl border border-line bg-card px-4 text-sm text-ink outline-none transition-colors placeholder:text-muted focus:border-secondary-400';
 
 export const Contact = () => {
   const [form, setForm] = useState({ name: '', phone: '', email: '', subject: SUBJECTS[0], message: '' });
@@ -98,9 +98,9 @@ export const Contact = () => {
               href={href}
               target={href.startsWith('http') ? '_blank' : undefined}
               rel="noreferrer"
-              className="group rounded-4xl border border-line bg-white/85 p-5 shadow-card transition-all duration-500 ease-luxe hover:-translate-y-1.5 hover:shadow-lift sm:p-7"
+              className="group rounded-4xl border border-line bg-card p-5 shadow-card transition-all duration-500 ease-luxe hover:-translate-y-1.5 hover:shadow-lift sm:p-7"
             >
-              <span className="grid h-12 w-12 place-items-center rounded-2xl bg-secondary-50 text-primary transition-all duration-500 ease-luxe group-hover:scale-110 group-hover:bg-flame group-hover:text-white">
+              <span className="grid h-12 w-12 place-items-center rounded-2xl bg-secondary-50 text-primary transition-all duration-500 ease-luxe group-hover:scale-110 group-hover:bg-flame group-hover:text-dark">
                 <Icon size={20} strokeWidth={2.1} />
               </span>
               <h2 className="mt-5 text-2xs font-semibold uppercase tracking-[.16em] text-muted">
@@ -144,7 +144,7 @@ export const Contact = () => {
                   </Button>
                 </div>
               ) : (
-                <form onSubmit={submit} className="grid gap-5 rounded-4xl border border-line bg-white/85 p-5 shadow-card sm:p-9">
+                <form onSubmit={submit} className="grid gap-5 rounded-4xl border border-line bg-card p-5 shadow-card sm:p-9">
                   <div className="grid gap-5 sm:grid-cols-2">
                     <label className="block">
                       <span className="mb-2 block text-2xs font-semibold uppercase tracking-[.14em] text-dark">
@@ -213,7 +213,7 @@ export const Contact = () => {
                       rows={5}
                       placeholder="Tell us what you need — how many people, how much open space, and how tolerant the neighbours are."
                       className={cn(
-                        'w-full resize-none rounded-2xl border border-line bg-white p-4 text-sm text-ink outline-none transition-colors placeholder:text-muted/60 focus:border-secondary-400',
+                        'w-full resize-none rounded-2xl border border-line bg-card p-4 text-sm text-ink outline-none transition-colors placeholder:text-muted focus:border-secondary-400',
                         errors.message && 'border-rose-300',
                       )}
                     />
@@ -238,14 +238,14 @@ export const Contact = () => {
 
             {/* aside */}
             <motion.aside variants={stagger(0.06)} {...inView} className="space-y-5">
-              <motion.div variants={fadeUp} className="rounded-4xl border border-line bg-white/85 p-5 shadow-card sm:p-7">
+              <motion.div variants={fadeUp} className="rounded-4xl border border-line bg-card p-5 shadow-card sm:p-7">
                 <span className="grid h-11 w-11 place-items-center rounded-2xl bg-secondary-50 text-primary">
                   <MapPin size={19} strokeWidth={2.1} />
                 </span>
                 <h3 className="mt-5 font-display text-lg font-semibold text-dark">The unit</h3>
                 <p className="mt-2 text-[14px] leading-relaxed text-muted">{BRAND.address}</p>
                 <p className="mt-4 flex items-center gap-2 text-[13px] text-muted">
-                  <Clock size={14} className="shrink-0 text-primary/70" strokeWidth={2.2} />
+                  <Clock size={14} className="shrink-0 text-primary" strokeWidth={2.2} />
                   {BRAND.hours}
                 </p>
                 <p className="mt-5 rounded-2xl bg-amber-50 p-4 text-[13px] leading-relaxed text-amber-800">
@@ -257,7 +257,7 @@ export const Contact = () => {
               <motion.div
                 id="delivery"
                 variants={fadeUp}
-                className="rounded-4xl border border-line bg-white/85 p-5 shadow-card sm:p-7"
+                className="rounded-4xl border border-line bg-card p-5 shadow-card sm:p-7"
               >
                 <span className="grid h-11 w-11 place-items-center rounded-2xl bg-secondary-50 text-primary">
                   <Truck size={19} strokeWidth={2.1} />
@@ -281,7 +281,7 @@ export const Contact = () => {
 
               <motion.div variants={fadeUp} className="rounded-4xl border border-line bg-dark p-5 text-bg sm:p-7">
                 <h3 className="font-display text-lg font-semibold">Find us elsewhere</h3>
-                <p className="mt-2 text-[13px] leading-relaxed text-bg/60">
+                <p className="mt-2 text-[13px] leading-relaxed text-bg/75">
                   Mostly photographs of things going off, which is the point.
                 </p>
                 <div className="mt-5 flex flex-wrap gap-2">
@@ -291,7 +291,7 @@ export const Contact = () => {
                       href={social.href}
                       target="_blank"
                       rel="noreferrer"
-                      className="rounded-full border border-white/12 px-4 py-2 text-2xs font-semibold text-bg/70 transition-all duration-300 hover:-translate-y-0.5 hover:border-gold/50 hover:text-gold"
+                      className="rounded-full border border-white/12 px-4 py-2 text-2xs font-semibold text-bg/85 transition-all duration-300 hover:-translate-y-0.5 hover:border-gold/50 hover:text-gold"
                     >
                       {social.label}
                     </a>

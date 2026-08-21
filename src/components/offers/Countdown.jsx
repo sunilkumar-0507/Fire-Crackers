@@ -7,7 +7,7 @@ const Unit = ({ value, label, tone }) => (
     <div
       className={cn(
         'relative grid h-11 w-11 place-items-center overflow-hidden rounded-2xl font-display text-base font-semibold tabular-nums xs:h-12 xs:w-12 xs:text-lg sm:h-14 sm:w-14 sm:text-xl',
-        tone === 'dark' ? 'bg-white/12 text-bg' : 'bg-white text-dark shadow-soft',
+        tone === 'dark' ? 'bg-white/12 text-bg' : 'bg-card text-dark shadow-soft',
       )}
     >
       {/* The digit slides up on change, so seconds tick rather than blink. */}
@@ -24,7 +24,7 @@ const Unit = ({ value, label, tone }) => (
     <span
       className={cn(
         'mt-1.5 text-[9px] font-semibold uppercase tracking-[.16em]',
-        tone === 'dark' ? 'text-bg/50' : 'text-muted',
+        tone === 'dark' ? 'text-bg/75' : 'text-muted',
       )}
     >
       {label}

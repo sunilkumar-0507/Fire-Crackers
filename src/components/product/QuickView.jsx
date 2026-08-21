@@ -72,7 +72,7 @@ export const QuickView = () => {
                 onClick={() => setActive(index)}
                 aria-label={`View image ${index + 1}`}
                 aria-current={index === active}
-                className={`grid h-12 w-12 shrink-0 place-items-center rounded-2xl border-2 bg-white/70 p-1.5 transition-all duration-300 sm:h-16 sm:w-16 ${
+                className={`grid h-12 w-12 shrink-0 place-items-center rounded-2xl border-2 bg-card p-1.5 transition-all duration-300 sm:h-16 sm:w-16 ${
                   index === active
                     ? 'border-primary shadow-soft'
                     : 'border-transparent opacity-60 hover:opacity-100'
@@ -87,7 +87,7 @@ export const QuickView = () => {
         {/* details */}
         <div className="flex flex-col gap-4 p-5 sm:p-8">
           <div>
-            <p className="text-2xs font-semibold uppercase tracking-[.18em] text-primary/70">
+            <p className="text-2xs font-semibold uppercase tracking-[.18em] text-primary">
               {product.brand}
             </p>
             <h2 className="mt-2 max-w-[calc(100%-2.5rem)] font-display text-xl font-semibold leading-tight text-dark sm:max-w-none sm:text-[28px]">
@@ -113,7 +113,7 @@ export const QuickView = () => {
 
           <ul className="grid gap-2">
             {product.highlights.slice(0, 3).map((line) => (
-              <li key={line} className="flex items-start gap-2.5 text-[13px] text-ink/80">
+              <li key={line} className="flex items-start gap-2.5 text-[13px] text-ink">
                 <Check size={15} className="mt-0.5 shrink-0 text-emerald-500" strokeWidth={2.6} />
                 {line}
               </li>

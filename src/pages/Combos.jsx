@@ -60,7 +60,7 @@ export const Combos = () => {
             { icon: Wallet, value: formatPrice(totalSaved), label: 'Total saved across the range' },
             { icon: Users, value: '2 – 25', label: 'People served per box' },
           ].map(({ icon: Icon, value, label }) => (
-            <motion.div key={label} variants={fadeUp} className="flex items-center gap-3.5 bg-white/85 px-5 py-5 sm:gap-4 sm:px-6 sm:py-6">
+            <motion.div key={label} variants={fadeUp} className="flex items-center gap-3.5 bg-card px-5 py-5 sm:gap-4 sm:px-6 sm:py-6">
               <span className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-secondary-50 text-primary sm:h-11 sm:w-11">
                 <Icon size={19} strokeWidth={2.1} />
               </span>

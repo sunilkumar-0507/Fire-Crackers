@@ -107,7 +107,7 @@ export const NotFound = () => {
                 >
                   <Link
                     to={`/category/${category.slug}`}
-                    className="group flex flex-col items-center gap-2 rounded-3xl border border-line bg-white/85 p-4 shadow-soft transition-all duration-500 ease-luxe hover:-translate-y-1 hover:shadow-lift"
+                    className="group flex flex-col items-center gap-2 rounded-3xl border border-line bg-card p-4 shadow-soft transition-all duration-500 ease-luxe hover:-translate-y-1 hover:shadow-lift"
                   >
                     <span
                       className="grid h-12 w-12 place-items-center rounded-2xl transition-transform duration-500 group-hover:scale-110"

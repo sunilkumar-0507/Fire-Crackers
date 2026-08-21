@@ -45,7 +45,7 @@ const Field = ({ label, hint, error, children }) => (
 );
 
 const inputClass =
-  'h-12 w-full rounded-2xl border border-line bg-white px-4 text-sm text-ink outline-none transition-colors placeholder:text-muted/60 focus:border-secondary-400';
+  'h-12 w-full rounded-2xl border border-line bg-card px-4 text-sm text-ink outline-none transition-colors placeholder:text-muted focus:border-secondary-400';
 
 export const BulkOrders = () => {
   const [form, setForm] = useState({
@@ -111,8 +111,8 @@ export const BulkOrders = () => {
           className="grid gap-px overflow-hidden rounded-4xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-4"
         >
           {BENEFITS.map(({ icon: Icon, title, text }) => (
-            <motion.li key={title} variants={fadeUp} className="group bg-white/85 p-6 transition-colors hover:bg-white">
-              <span className="grid h-11 w-11 place-items-center rounded-2xl bg-secondary-50 text-primary transition-all duration-500 ease-luxe group-hover:scale-110 group-hover:bg-flame group-hover:text-white">
+            <motion.li key={title} variants={fadeUp} className="group bg-card p-6 transition-colors hover:bg-card">
+              <span className="grid h-11 w-11 place-items-center rounded-2xl bg-secondary-50 text-primary transition-all duration-500 ease-luxe group-hover:scale-110 group-hover:bg-flame group-hover:text-dark">
                 <Icon size={19} strokeWidth={2.1} />
               </span>
               <h3 className="mt-5 font-display text-base font-semibold text-dark">{title}</h3>
@@ -156,7 +156,7 @@ export const BulkOrders = () => {
                   </div>
                 </div>
               ) : (
-                <form onSubmit={submit} className="grid gap-5 rounded-4xl border border-line bg-white/85 p-5 shadow-card sm:p-9">
+                <form onSubmit={submit} className="grid gap-5 rounded-4xl border border-line bg-card p-5 shadow-card sm:p-9">
                   <div className="grid gap-5 sm:grid-cols-2">
                     <Field label="Organisation / association" error={errors.organisation}>
                       <input
@@ -250,7 +250,7 @@ export const BulkOrders = () => {
                       onChange={set('notes')}
                       rows={4}
                       placeholder="Delivery date, whether you need the silent range, printed sleeves with the company name…"
-                      className="w-full resize-none rounded-2xl border border-line bg-white p-4 text-sm text-ink outline-none transition-colors placeholder:text-muted/60 focus:border-secondary-400"
+                      className="w-full resize-none rounded-2xl border border-line bg-card p-4 text-sm text-ink outline-none transition-colors placeholder:text-muted focus:border-secondary-400"
                     />
                   </Field>
 
@@ -274,7 +274,7 @@ export const BulkOrders = () => {
 
             {/* aside */}
             <motion.aside variants={fadeUp} {...inView} className="lg:sticky lg:top-28 lg:self-start">
-              <div className="rounded-4xl border border-line bg-white/85 p-5 shadow-card sm:p-7">
+              <div className="rounded-4xl border border-line bg-card p-5 shadow-card sm:p-7">
                 <h3 className="font-display text-xl font-semibold text-dark">How the pricing works</h3>
                 <ul className="mt-5 space-y-3.5">
                   {[
@@ -302,7 +302,7 @@ export const BulkOrders = () => {
 
               <div className="mt-5 rounded-4xl border border-line bg-dark p-5 text-bg sm:p-7">
                 <h3 className="font-display text-lg font-semibold">Rather just talk?</h3>
-                <p className="mt-2 text-[13px] leading-relaxed text-bg/60">
+                <p className="mt-2 text-[13px] leading-relaxed text-bg/75">
                   Call the shop and describe the event. We have quoted a few thousand of these.
                 </p>
                 <Button href={BRAND.phoneHref} variant="gold" size="sm" className="mt-5" leftIcon={<Phone size={15} />}>

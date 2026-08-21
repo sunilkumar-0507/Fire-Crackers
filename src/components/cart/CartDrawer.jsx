@@ -30,7 +30,7 @@ const CartLine = ({ item, onClose }) => {
       initial="hidden"
       animate="show"
       exit="exit"
-      className="flex gap-3 rounded-3xl border border-line bg-white p-3 shadow-soft sm:gap-4"
+      className="flex gap-3 rounded-3xl border border-line bg-card p-3 shadow-soft sm:gap-4"
     >
       <Link
         to={cartItemHref(item)}
@@ -136,7 +136,7 @@ const CouponBox = () => {
             }}
             placeholder="Coupon code"
             aria-label="Coupon code"
-            className="h-11 w-full rounded-2xl border border-line bg-white pl-10 pr-3 text-sm uppercase tracking-wide text-ink outline-none transition-colors placeholder:normal-case placeholder:tracking-normal placeholder:text-muted/70 focus:border-secondary-300"
+            className="h-11 w-full rounded-2xl border border-line bg-card pl-10 pr-3 text-sm uppercase tracking-wide text-ink outline-none transition-colors placeholder:normal-case placeholder:tracking-normal placeholder:text-muted focus:border-secondary-300"
           />
         </div>
         <Button type="submit" size="sm" variant="outline" className="h-11 shrink-0 px-5" onClick={submit}>
@@ -206,7 +206,7 @@ export const CartDrawer = () => {
                 type="button"
                 onClick={close}
                 aria-label="Close basket"
-                className="grid h-10 w-10 place-items-center rounded-full bg-white text-ink shadow-soft transition-transform duration-300 hover:rotate-90 hover:text-primary"
+                className="grid h-10 w-10 place-items-center rounded-full bg-card text-ink shadow-soft transition-transform duration-300 hover:rotate-90 hover:text-primary"
               >
                 <X size={18} strokeWidth={2.4} />
               </button>
@@ -233,11 +233,11 @@ export const CartDrawer = () => {
             ) : (
               <>
                 {/* free shipping progress */}
-                <div className="border-b border-line bg-white/60 px-5 py-4 sm:px-6">
+                <div className="border-b border-line bg-card px-5 py-4 sm:px-6">
                   <div className="flex items-center gap-2.5 text-xs">
                     <Truck size={15} className="shrink-0 text-primary" strokeWidth={2.2} />
                     {totals.freeShippingGap > 0 ? (
-                      <span className="text-ink/80">
+                      <span className="text-ink">
                         Add <strong className="font-semibold text-primary">{formatPrice(totals.freeShippingGap)}</strong> for free delivery
                       </span>
                     ) : (
@@ -253,7 +253,7 @@ export const CartDrawer = () => {
                       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
                       className={cn(
                         'h-full rounded-full',
-                        totals.freeShippingGap > 0 ? 'bg-flame' : 'bg-emerald-500',
+                        totals.freeShippingGap > 0 ? 'bg-primary-600' : 'bg-emerald-600',
                       )}
                     />
                   </div>
@@ -282,7 +282,7 @@ export const CartDrawer = () => {
                 </div>
 
                 {/* summary */}
-                <footer className="space-y-4 border-t border-line bg-white/70 px-5 py-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] backdrop-blur sm:px-6">
+                <footer className="space-y-4 border-t border-line bg-card px-5 py-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] backdrop-blur sm:px-6">
                   <CouponBox />
 
                   <dl className="space-y-2 text-sm">

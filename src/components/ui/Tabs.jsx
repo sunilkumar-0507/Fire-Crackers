@@ -17,7 +17,7 @@ export const Tabs = ({ tabs, initial = 0, className, panelClassName }) => {
       <div
         role="tablist"
         aria-label="Product information"
-        className="hide-scrollbar flex gap-1 overflow-x-auto rounded-full border border-line bg-white/85 p-1.5"
+        className="hide-scrollbar flex gap-1 overflow-x-auto rounded-full border border-line bg-card p-1.5"
       >
         {tabs.map((tab, index) => {
           const isActive = index === active;
@@ -31,14 +31,14 @@ export const Tabs = ({ tabs, initial = 0, className, panelClassName }) => {
               onClick={() => setActive(index)}
               className={cn(
                 'relative shrink-0 whitespace-nowrap rounded-full px-4 py-2.5 text-sm font-semibold transition-colors duration-300 sm:px-5',
-                isActive ? 'text-white' : 'text-muted hover:text-primary',
+                isActive ? 'text-dark' : 'text-muted hover:text-primary',
               )}
             >
               {isActive ? (
                 <motion.span
                   layoutId={`${uid}-pill`}
                   transition={{ type: 'spring', stiffness: 380, damping: 32 }}
-                  className="absolute inset-0 rounded-full bg-flame shadow-[0_8px_20px_-10px_rgba(200,77,14,.9)]"
+                  className="absolute inset-0 rounded-full bg-flame shadow-soft"
                 />
               ) : null}
               <span className="relative z-10 flex items-center gap-2">

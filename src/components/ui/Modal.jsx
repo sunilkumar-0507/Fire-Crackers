@@ -95,7 +95,7 @@ export const Modal = ({ open, onClose, children, className, label = 'Dialog' }) 
               type="button"
               onClick={onClose}
               aria-label="Close dialog"
-              className="absolute right-3 top-3 z-20 grid h-10 w-10 place-items-center rounded-full bg-white/85 text-ink shadow-soft backdrop-blur transition-all duration-300 hover:rotate-90 hover:bg-white hover:text-primary sm:right-4 sm:top-4"
+              className="absolute right-3 top-3 z-20 grid h-10 w-10 place-items-center rounded-full bg-card text-ink shadow-soft backdrop-blur transition-all duration-300 hover:rotate-90 hover:bg-card hover:text-primary sm:right-4 sm:top-4"
             >
               <X size={18} strokeWidth={2.4} />
             </button>

@@ -26,8 +26,8 @@ export const CheckoutStepper = ({ current, furthest, onJump, className }) => (
               className={cn(
                 'relative grid h-11 w-11 shrink-0 place-items-center rounded-full text-sm font-semibold transition-all duration-400 ease-luxe',
                 done && 'bg-emerald-500 text-white hover:scale-110',
-                active && 'bg-flame text-white shadow-glow',
-                !done && !active && 'border border-line bg-white text-muted',
+                active && 'bg-flame text-dark shadow-glow',
+                !done && !active && 'border border-line bg-card text-muted',
                 !reachable && 'cursor-not-allowed',
               )}
             >

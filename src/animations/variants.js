@@ -17,59 +17,42 @@ export const inView = {
 };
 
 export const fadeUp = {
-  hidden: { opacity: 0, y: 28 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: EASE } },
+  hidden: { opacity: 0, y: 14 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: EASE } },
 };
 
 export const fadeDown = {
-  hidden: { opacity: 0, y: -20 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE } },
+  hidden: { opacity: 0, y: -12 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.35, ease: EASE } },
 };
 
 export const fadeIn = {
   hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { duration: 0.8, ease: EASE } },
+  show: { opacity: 1, transition: { duration: 0.4, ease: EASE } },
 };
 
 export const scaleIn = {
-  hidden: { opacity: 0, scale: 0.94 },
-  show: { opacity: 1, scale: 1, transition: { duration: 0.65, ease: EASE } },
+  hidden: { opacity: 0, scale: 0.97 },
+  show: { opacity: 1, scale: 1, transition: { duration: 0.35, ease: EASE } },
 };
 
 export const slideLeft = {
-  hidden: { opacity: 0, x: 40 },
-  show: { opacity: 1, x: 0, transition: { duration: 0.7, ease: EASE } },
+  hidden: { opacity: 0, x: 20 },
+  show: { opacity: 1, x: 0, transition: { duration: 0.4, ease: EASE } },
 };
 
 export const slideRight = {
-  hidden: { opacity: 0, x: -40 },
-  show: { opacity: 1, x: 0, transition: { duration: 0.7, ease: EASE } },
+  hidden: { opacity: 0, x: -20 },
+  show: { opacity: 1, x: 0, transition: { duration: 0.4, ease: EASE } },
 };
 
 /** Parent that staggers its children. Pair with any child variant above. */
-export const stagger = (staggerChildren = 0.08, delayChildren = 0) => ({
+export const stagger = (staggerChildren = 0.05, delayChildren = 0) => ({
   hidden: {},
   show: { transition: { staggerChildren, delayChildren } },
 });
 
 export const staggerContainer = stagger();
-
-/** Word-by-word heading reveal — the hero title uses this. */
-export const wordContainer = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.055, delayChildren: 0.1 } },
-};
-
-export const wordChild = {
-  hidden: { opacity: 0, y: '0.6em', rotate: 2, filter: 'blur(6px)' },
-  show: {
-    opacity: 1,
-    y: '0em',
-    rotate: 0,
-    filter: 'blur(0px)',
-    transition: { duration: 0.85, ease: EASE },
-  },
-};
 
 /* -------------------------------------------------------------------------- */
 /* Overlays                                                                    */
@@ -105,13 +88,6 @@ export const modal = {
   exit: { opacity: 0, scale: 0.96, y: 12, transition: { duration: 0.22, ease: EASE_IN } },
 };
 
-/** Route transitions — short, because a page change should feel instant. */
-export const pageTransition = {
-  initial: { opacity: 0, y: 12 },
-  animate: { opacity: 1, y: 0, transition: { duration: 0.42, ease: EASE } },
-  exit: { opacity: 0, y: -8, transition: { duration: 0.22, ease: EASE_IN } },
-};
-
 /** Accordion body — animating height is unavoidable here, so keep it short. */
 export const accordion = {
   collapsed: { height: 0, opacity: 0, transition: { duration: 0.28, ease: EASE_IN } },
@@ -129,4 +105,4 @@ export const listItem = {
 /* -------------------------------------------------------------------------- */
 
 export const tapScale = { scale: 0.97 };
-export const hoverLift = { y: -6, transition: { duration: 0.35, ease: EASE } };
+export const hoverLift = { y: -3, transition: { duration: 0.2, ease: EASE } };

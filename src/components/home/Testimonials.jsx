@@ -61,7 +61,7 @@ export const Testimonials = () => {
 
                 <Rating value={person.rating} size="sm" showValue={false} />
 
-                <blockquote className="mt-5 flex-1 text-[15px] leading-[1.75] text-ink/85">
+                <blockquote className="mt-5 flex-1 text-[15px] leading-[1.75] text-ink">
                   “{person.quote}”
                 </blockquote>
 

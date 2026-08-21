@@ -5,51 +5,95 @@ export default {
     container: {
       center: true,
       padding: { DEFAULT: '1rem', xs: '1.25rem', sm: '1.5rem', lg: '2rem', xl: '2.5rem' },
-      screens: { '2xl': '1320px' },
+      screens: { '2xl': '1200px' },
     },
     extend: {
       // Small phones (320–420px) are a real slice of the traffic for a Diwali
       // shop, and several layouts need one step below Tailwind's `sm`.
       screens: { xs: '420px' },
+
+      /* ------------------------------------------------------------------ *
+       * Palette.
+       *
+       * Warm and festive, but tuned for reading rather than for spectacle:
+       *
+       *  - `primary` is the deep end of the ember ramp. It is what carries
+       *    text and icons, so its DEFAULT clears 4.5:1 on the page background
+       *    (the old #C84D0E sat at 4.31:1 and missed).
+       *  - `secondary` is the bright amber the brand is recognised by. It is a
+       *    fill, never a text colour — every surface painted with it pairs
+       *    with `text-dark` (9.7:1) instead of white (2.4:1, which is what the
+       *    previous flame gradient shipped).
+       *  - `mint` / `berry` / `royal` give categories distinct identities so a
+       *    grid is scannable by colour, not only by label.
+       * ------------------------------------------------------------------ */
       colors: {
-        bg: '#FFF7EC',
+        bg: '#FDF3E2',
         primary: {
-          DEFAULT: '#C84D0E',
-          50: '#FDF2E9',
-          100: '#FADFC7',
-          200: '#F5BE93',
-          300: '#EE9A60',
-          400: '#E2762F',
-          500: '#C84D0E',
-          600: '#A63E0A',
-          700: '#7F2F08',
-          800: '#571F05',
-          900: '#331203',
+          DEFAULT: '#954C05',
+          50: '#FFF7EA',
+          100: '#FFEDD2',
+          200: '#FFCB70',
+          300: '#FFB238',
+          400: '#FF9500',
+          500: '#E67A00',
+          600: '#BE6103',
+          700: '#954C05',
+          800: '#6F3A09',
+          900: '#4A270A',
         },
         secondary: {
-          DEFAULT: '#FF8A00',
-          50: '#FFF4E5',
-          100: '#FFE4BF',
-          200: '#FFCE85',
-          300: '#FFB44B',
-          400: '#FF9E1E',
-          500: '#FF8A00',
-          600: '#DB6F00',
-          700: '#A85400',
-          800: '#743A00',
-          900: '#452200',
+          DEFAULT: '#FFB238',
+          50: '#FFF8EC',
+          100: '#FFEFD4',
+          200: '#FFDEA8',
+          300: '#FFCB70',
+          400: '#FFBC52',
+          500: '#FFB238',
+          600: '#F09A12',
+          700: '#C77A06',
+          800: '#955A08',
+          900: '#603A08',
         },
-        dark: '#2C0F05',
+        mint: {
+          DEFAULT: '#0FAE94',
+          100: '#E4FBF6',
+          300: '#4FE0C8',
+          400: '#22C9AE',
+          500: '#0FAE94',
+          700: '#0A7A6B',
+          800: '#086154',
+        },
+        berry: {
+          DEFAULT: '#DD2476',
+          100: '#FFEAF1',
+          300: '#FF8AA8',
+          400: '#F5567F',
+          500: '#DD2476',
+          700: '#93154D',
+          800: '#6F0F3A',
+        },
+        royal: {
+          DEFAULT: '#A352DD',
+          100: '#F6EAFF',
+          300: '#DBA3FF',
+          400: '#C273F5',
+          500: '#A352DD',
+          700: '#6F2EA3',
+          800: '#542178',
+        },
+        dark: '#2B1408',
         gold: {
-          DEFAULT: '#FFD56A',
-          soft: '#FFE9AE',
-          deep: '#E5B23C',
+          DEFAULT: '#FFB238',
+          soft: '#FFCB70',
+          deep: '#E67A00',
         },
-        ink: '#3B1F14',
-        muted: '#806253',
-        card: '#FFFFFF',
-        line: 'rgba(255,180,70,.25)',
-        'line-strong': 'rgba(200,77,14,.18)',
+        ink: '#3D2414',
+        muted: '#7A5B42',
+        subtle: '#A5815D',
+        card: '#FFFBF4',
+        line: 'rgba(122,91,66,.16)',
+        'line-strong': 'rgba(122,91,66,.30)',
       },
       fontFamily: {
         // The *Fallback* families are metric-matched (see globals.css) so the
@@ -65,42 +109,73 @@ export default {
         ],
       },
       fontSize: {
-        '2xs': ['0.6875rem', { lineHeight: '1rem' }],
-        'display-sm': ['clamp(2rem,6vw,2.75rem)', { lineHeight: '1.08', letterSpacing: '-0.02em' }],
-        'display-md': ['clamp(2.5rem,7vw,4rem)', { lineHeight: '1.04', letterSpacing: '-0.025em' }],
-        'display-lg': ['clamp(3rem,8.5vw,5.75rem)', { lineHeight: '0.98', letterSpacing: '-0.03em' }],
+        // Was 11px. Eyebrows, badges and stock pills all use this size, and at
+        // 11px with .18em tracking they were decorative rather than legible.
+        '2xs': ['0.75rem', { lineHeight: '1.05rem' }],
+        // Headlines were tuned for impact (up to 5.75rem) and overran the line
+        // on every screen between 640 and 1024px. These top out a third
+        // smaller, which is where a headline stops being a poster and starts
+        // being something you read.
+        'display-sm': [
+          'clamp(1.75rem,4.5vw,2.375rem)',
+          { lineHeight: '1.18', letterSpacing: '-0.012em' },
+        ],
+        'display-md': [
+          'clamp(2.125rem,5.5vw,3.125rem)',
+          { lineHeight: '1.12', letterSpacing: '-0.016em' },
+        ],
+        'display-lg': [
+          'clamp(2.375rem,6vw,3.75rem)',
+          { lineHeight: '1.08', letterSpacing: '-0.02em' },
+        ],
       },
+      // Roughly halved. A 3rem radius on a product tile reads as a pill rather
+      // than as a card, and it clips the corners of the artwork inside it.
       borderRadius: {
-        xl: '0.875rem',
-        '2xl': '1.25rem',
-        '3xl': '1.75rem',
-        '4xl': '2.25rem',
-        '5xl': '3rem',
+        xl: '0.75rem',
+        '2xl': '0.875rem',
+        '3xl': '1.125rem',
+        '4xl': '1.375rem',
+        '5xl': '1.75rem',
       },
+      /* ------------------------------------------------------------------ *
+       * Shadows.
+       *
+       * Every one of these is now a plain warm-grey drop shadow. The old set
+       * layered a coloured 1px ring under a 40px orange bloom, which on a
+       * cream page made buttons look lit from within and made it hard to tell
+       * a hovered card from a selected one. Depth is depth; colour should
+       * carry meaning.
+       * ------------------------------------------------------------------ */
       boxShadow: {
-        soft: '0 2px 8px -2px rgba(90,40,10,.06), 0 12px 32px -12px rgba(90,40,10,.10)',
-        card: '0 1px 2px rgba(90,40,10,.04), 0 8px 24px -12px rgba(120,55,15,.18)',
-        lift: '0 18px 48px -18px rgba(140,60,15,.32), 0 4px 12px -6px rgba(140,60,15,.16)',
-        glow: '0 0 0 1px rgba(255,213,106,.35), 0 10px 40px -8px rgba(255,138,0,.45)',
-        'glow-lg': '0 0 0 1px rgba(255,213,106,.45), 0 18px 60px -10px rgba(255,138,0,.55)',
-        gold: '0 12px 40px -12px rgba(229,178,60,.55)',
+        soft: '0 1px 2px rgba(61,36,20,.04), 0 6px 16px -10px rgba(61,36,20,.14)',
+        card: '0 1px 2px rgba(61,36,20,.05), 0 8px 20px -14px rgba(61,36,20,.18)',
+        lift: '0 10px 28px -14px rgba(61,36,20,.24), 0 2px 6px -3px rgba(61,36,20,.10)',
+        glow: '0 4px 12px -6px rgba(149,76,5,.30)',
+        'glow-lg': '0 8px 20px -8px rgba(149,76,5,.36)',
+        gold: '0 8px 22px -14px rgba(149,76,5,.40)',
         inset: 'inset 0 1px 0 rgba(255,255,255,.7)',
       },
       backgroundImage: {
-        'flame': 'linear-gradient(115deg,#FF8A00 0%,#C84D0E 55%,#A63E0A 100%)',
-        'flame-soft': 'linear-gradient(120deg,#FFD56A 0%,#FF8A00 48%,#C84D0E 100%)',
-        'gold-sheen': 'linear-gradient(100deg,transparent 20%,rgba(255,255,255,.55) 50%,transparent 80%)',
-        'warm-fade': 'linear-gradient(180deg,#FFF7EC 0%,#FFEFDC 40%,#FFF7EC 100%)',
+        // `flame` is the primary action fill: amber with dark text, not orange
+        // with white text. See the palette note above.
+        flame: 'linear-gradient(135deg,#FFCB70 0%,#FFB238 55%,#FFA51F 100%)',
+        'flame-soft': 'linear-gradient(120deg,#FFE7BC 0%,#FFCB70 50%,#FFB238 100%)',
+        'gold-sheen':
+          'linear-gradient(100deg,transparent 20%,rgba(255,255,255,.55) 50%,transparent 80%)',
+        'warm-fade': 'linear-gradient(180deg,#FDF3E2 0%,#FBEBD3 40%,#FDF3E2 100%)',
         'radial-glow': 'radial-gradient(closest-side,var(--tw-gradient-stops))',
       },
       keyframes: {
+        // Idle motion is halved. A 22px bob with a 3deg rotation is hard to
+        // read past, and there were six of them on the hero at once.
         float: {
           '0%,100%': { transform: 'translate3d(0,0,0)' },
-          '50%': { transform: 'translate3d(0,-14px,0)' },
+          '50%': { transform: 'translate3d(0,-8px,0)' },
         },
         'float-slow': {
-          '0%,100%': { transform: 'translate3d(0,0,0) rotate(0deg)' },
-          '50%': { transform: 'translate3d(0,-22px,0) rotate(3deg)' },
+          '0%,100%': { transform: 'translate3d(0,0,0)' },
+          '50%': { transform: 'translate3d(0,-12px,0)' },
         },
         shimmer: {
           '100%': { transform: 'translateX(100%)' },
@@ -109,9 +184,10 @@ export default {
           '0%,100%': { backgroundPosition: '0% 50%' },
           '50%': { backgroundPosition: '100% 50%' },
         },
+        // Opacity only — the scale pulse made low-stock dots twitch.
         'pulse-glow': {
-          '0%,100%': { opacity: '.55', transform: 'scale(1)' },
-          '50%': { opacity: '1', transform: 'scale(1.06)' },
+          '0%,100%': { opacity: '.6' },
+          '50%': { opacity: '1' },
         },
         'spark-rise': {
           '0%': { transform: 'translateY(0) scale(1)', opacity: '0' },
@@ -132,8 +208,8 @@ export default {
         },
       },
       animation: {
-        float: 'float 6s ease-in-out infinite',
-        'float-slow': 'float-slow 11s ease-in-out infinite',
+        float: 'float 7s ease-in-out infinite',
+        'float-slow': 'float-slow 12s ease-in-out infinite',
         shimmer: 'shimmer 2.2s ease-in-out infinite',
         'gradient-pan': 'gradient-pan 12s ease infinite',
         'pulse-glow': 'pulse-glow 4s ease-in-out infinite',

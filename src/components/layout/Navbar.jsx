@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ChevronDown, Menu, Search, ShoppingBag, Phone } from 'lucide-react';
+import { ChevronDown, Menu, Search, ShoppingBag } from 'lucide-react';
 import { cn } from '@/utils/cn';
-import { BRAND, NAV_LINKS } from '@/constants';
+import { NAV_LINKS } from '@/constants';
 import { categoriesWithCounts } from '@/data';
 import { artForCategory } from '@/utils/image';
 import { useScrolled } from '@/hooks/useScrolled';
@@ -26,7 +26,7 @@ const CategoryPanel = ({ onNavigate }) => (
         className="group/item flex items-center gap-3.5 rounded-2xl p-3 transition-colors duration-300 hover:bg-secondary-50"
       >
         <span
-          className="grid h-12 w-12 shrink-0 place-items-center rounded-xl transition-transform duration-500 ease-luxe group-hover/item:scale-110"
+          className="grid h-12 w-12 shrink-0 place-items-center rounded-xl"
           style={{ background: `${category.accentSoft}` }}
         >
           <CrackerArt type={artForCategory(category.slug)} variant={1} className="h-9 w-9" />
@@ -47,7 +47,7 @@ const CategoryPanel = ({ onNavigate }) => (
     <Link
       to="/products"
       onClick={onNavigate}
-      className="col-span-full mt-1 flex items-center justify-between rounded-2xl bg-dark px-5 py-3.5 text-sm font-semibold text-bg transition-colors hover:bg-[#3d1708]"
+      className="col-span-full mt-1 flex items-center justify-between rounded-2xl bg-dark px-5 py-3.5 text-sm font-semibold text-bg transition-colors hover:bg-primary-900"
     >
       Browse the full catalogue
       <span className="text-gold">→</span>
@@ -85,8 +85,8 @@ const NavItem = ({ link, openKey, setOpenKey, onNavigate }) => {
         aria-expanded={hasChildren ? isOpen : undefined}
         className={({ isActive }) =>
           cn(
-            'group relative flex items-center gap-1 rounded-full px-3.5 py-2 text-[14.5px] font-medium transition-colors duration-300',
-            isActive || isOpen ? 'text-primary' : 'text-ink/75 hover:text-primary',
+            'group relative flex items-center gap-1 whitespace-nowrap rounded-full px-3 py-2.5 text-[15px] font-medium transition-colors duration-200',
+            isActive || isOpen ? 'text-primary-700' : 'text-ink hover:text-primary-700',
           )
         }
       >
@@ -102,7 +102,7 @@ const NavItem = ({ link, openKey, setOpenKey, onNavigate }) => {
             ) : null}
             <span
               className={cn(
-                'absolute inset-x-3.5 -bottom-0.5 h-[2px] origin-left rounded-full bg-flame transition-transform duration-400 ease-luxe',
+                'absolute inset-x-3 -bottom-0.5 h-[2.5px] origin-left rounded-full bg-primary transition-transform duration-300 ease-luxe',
                 isActive ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100',
               )}
             />
@@ -122,7 +122,7 @@ const NavItem = ({ link, openKey, setOpenKey, onNavigate }) => {
               onMouseLeave={close}
               className="absolute left-1/2 top-full z-50 -translate-x-1/2 pt-3"
             >
-              <div className="overflow-hidden rounded-3xl border border-line bg-white/92 shadow-lift backdrop-blur-xl">
+              <div className="overflow-hidden rounded-3xl border border-line bg-card shadow-lift">
                 <CategoryPanel onNavigate={onNavigate} />
               </div>
             </motion.div>
@@ -173,12 +173,14 @@ export const Navbar = () => {
         <AnnouncementBar />
       </motion.div>
 
+      {/* The bar is opaque at every scroll position. It used to be fully
+          transparent until 28px, which meant the logo and every nav label sat
+          directly on whatever the page happened to be showing underneath —
+          legible over the hero, unreadable over a product image. */}
       <div
         className={cn(
-          'relative transition-[background-color,box-shadow,backdrop-filter] duration-500 ease-luxe',
-          scrolled
-            ? 'border-b border-line bg-bg/80 shadow-[0_8px_30px_-18px_rgba(120,55,15,.35)] backdrop-blur-xl saturate-150'
-            : 'bg-transparent',
+          'relative border-b border-line bg-card transition-shadow duration-300 ease-luxe',
+          scrolled && 'shadow-soft',
         )}
       >
         <div
@@ -189,7 +191,7 @@ export const Navbar = () => {
             scrolled ? 'h-14 sm:h-16' : 'h-nav',
           )}
         >
-          <Logo scale={scrolled ? 0.88 : 1} onClick={closeDropdown} />
+          <Logo className="shrink-0" onClick={closeDropdown} />
 
           <nav aria-label="Primary">
             <ul className="hidden items-center gap-0.5 lg:flex">
@@ -206,19 +208,11 @@ export const Navbar = () => {
           </nav>
 
           <div className="flex shrink-0 items-center gap-0.5 sm:gap-2">
-            <a
-              href={BRAND.phoneHref}
-              className="hidden items-center gap-2 rounded-full border border-line bg-white/60 px-4 py-2 text-xs font-semibold text-ink/80 transition-all duration-300 hover:-translate-y-0.5 hover:border-secondary-300 hover:text-primary hover:shadow-soft xl:inline-flex"
-            >
-              <Phone size={13} strokeWidth={2.4} />
-              {BRAND.phone}
-            </a>
-
             <button
               type="button"
               onClick={openSearch}
               aria-label="Search crackers"
-              className="grid h-10 w-10 place-items-center rounded-full text-ink/80 transition-all duration-300 hover:bg-secondary-50 hover:text-primary active:scale-90 xs:h-11 xs:w-11"
+              className="grid h-11 w-11 place-items-center rounded-full text-ink transition-colors duration-200 hover:bg-secondary-50 hover:text-primary-700 active:scale-95"
             >
               <Search size={19} strokeWidth={2} />
             </button>
@@ -227,9 +221,10 @@ export const Navbar = () => {
               type="button"
               onClick={openCart}
               aria-label={`Open cart, ${count} item${count === 1 ? '' : 's'}`}
-              className="relative grid h-10 w-10 place-items-center rounded-full text-ink/80 transition-all duration-300 hover:bg-secondary-50 hover:text-primary active:scale-90 xs:h-11 xs:w-11"
+              className="relative flex h-11 items-center gap-2 rounded-full bg-flame px-3.5 text-sm font-semibold text-dark transition-[filter] duration-200 hover:brightness-[1.04] active:scale-95 sm:px-4"
             >
-              <ShoppingBag size={19} strokeWidth={2} />
+              <ShoppingBag size={18} strokeWidth={2.2} />
+              <span className="hidden sm:inline">Cart</span>
               <AnimatePresence>
                 {count > 0 ? (
                   <motion.span
@@ -238,7 +233,7 @@ export const Navbar = () => {
                     animate={{ scale: 1, opacity: 1 }}
                     exit={{ scale: 0.4, opacity: 0 }}
                     transition={{ type: 'spring', stiffness: 520, damping: 22 }}
-                    className="absolute -right-0.5 -top-0.5 grid h-5 min-w-5 place-items-center rounded-full bg-flame px-1 text-[10px] font-bold text-white shadow-[0_4px_12px_-4px_rgba(200,77,14,.9)]"
+                    className="absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-dark px-1 text-[10px] font-bold text-bg"
                   >
                     {count > 99 ? '99+' : count}
                   </motion.span>
@@ -246,31 +241,17 @@ export const Navbar = () => {
               </AnimatePresence>
             </button>
 
-            <Link
-              to="/bulk-orders"
-              className="ml-1 hidden shrink-0 items-center rounded-full bg-flame px-5 py-2.5 text-xs font-semibold text-white shadow-glow transition-all duration-300 hover:-translate-y-0.5 hover:shadow-glow-lg md:inline-flex"
-            >
-              Bulk orders
-            </Link>
-
             <button
               type="button"
               onClick={openMenu}
               aria-label="Open menu"
-              className="grid h-10 w-10 place-items-center rounded-full text-ink/80 transition-all duration-300 hover:bg-secondary-50 hover:text-primary active:scale-90 xs:h-11 xs:w-11 lg:hidden"
+              className="grid h-11 w-11 place-items-center rounded-full text-ink transition-colors duration-200 hover:bg-secondary-50 hover:text-primary-700 active:scale-95 lg:hidden"
             >
               <Menu size={20} strokeWidth={2} />
             </button>
           </div>
         </div>
 
-        {/* hairline that draws in once the bar goes solid */}
-        <span
-          className={cn(
-            'absolute inset-x-0 bottom-0 h-px origin-left bg-gradient-to-r from-transparent via-secondary-300/60 to-transparent transition-transform duration-700 ease-luxe',
-            scrolled ? 'scale-x-100' : 'scale-x-0',
-          )}
-        />
       </div>
     </header>
   );

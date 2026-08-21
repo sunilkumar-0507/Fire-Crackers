@@ -64,7 +64,7 @@ export const FilterPanel = ({ filters, onChange, onReset, resultCount, className
         <p className="font-display text-lg font-semibold text-dark">
           Filters
           {activeCount > 0 ? (
-            <span className="ml-2 rounded-full bg-flame px-2 py-0.5 text-2xs font-bold text-white">
+            <span className="ml-2 rounded-full bg-flame px-2 py-0.5 text-2xs font-bold text-dark">
               {activeCount}
             </span>
           ) : null}
@@ -89,7 +89,7 @@ export const FilterPanel = ({ filters, onChange, onReset, resultCount, className
               'flex items-center justify-between rounded-xl px-3 py-2.5 text-sm transition-colors',
               filters.category === 'all'
                 ? 'bg-secondary-50 font-semibold text-primary'
-                : 'text-ink/75 hover:bg-secondary-50/60',
+                : 'text-ink hover:bg-secondary-50/60',
             )}
           >
             All categories
@@ -107,7 +107,7 @@ export const FilterPanel = ({ filters, onChange, onReset, resultCount, className
                 'flex items-center justify-between rounded-xl px-3 py-2.5 text-sm transition-colors',
                 filters.category === category.slug
                   ? 'bg-secondary-50 font-semibold text-primary'
-                  : 'text-ink/75 hover:bg-secondary-50/60',
+                  : 'text-ink hover:bg-secondary-50/60',
               )}
             >
               <span className="flex items-center gap-2.5">
@@ -178,7 +178,7 @@ export const FilterPanel = ({ filters, onChange, onReset, resultCount, className
       </Group>
 
       <Group title="Availability">
-        <label className="flex cursor-pointer items-center gap-3 text-sm text-ink/80">
+        <label className="flex cursor-pointer items-center gap-3 text-sm text-ink">
           <input
             type="checkbox"
             checked={filters.inStockOnly}

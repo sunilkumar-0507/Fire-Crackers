@@ -63,8 +63,8 @@ export const About = () => (
         className="grid gap-px overflow-hidden rounded-4xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-4"
       >
         {STATS.map(({ icon: Icon, value, label }) => (
-          <motion.div key={label} variants={fadeUp} className="bg-white/85 px-5 py-6 text-center sm:px-6 sm:py-7">
-            <Icon size={20} className="mx-auto text-primary/70" strokeWidth={2.1} />
+          <motion.div key={label} variants={fadeUp} className="bg-card px-5 py-6 text-center sm:px-6 sm:py-7">
+            <Icon size={20} className="mx-auto text-primary" strokeWidth={2.1} />
             <dd className="mt-3 font-display text-2xl font-semibold text-dark sm:text-3xl">{value}</dd>
             <dt className="mt-1 text-2xs uppercase tracking-[.14em] text-muted">{label}</dt>
           </motion.div>
@@ -149,12 +149,12 @@ export const About = () => (
               <motion.li
                 key={rule}
                 variants={fadeUp}
-                className="flex items-start gap-3 rounded-3xl border border-line bg-white/85 p-5 shadow-soft"
+                className="flex items-start gap-3 rounded-3xl border border-line bg-card p-5 shadow-soft"
               >
-                <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-flame text-[11px] font-bold text-white">
+                <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-flame text-[11px] font-bold text-dark">
                   {i + 1}
                 </span>
-                <span className="text-[13px] leading-relaxed text-ink/80">{rule}</span>
+                <span className="text-[13px] leading-relaxed text-ink">{rule}</span>
               </motion.li>
             ))}
           </motion.ul>
@@ -168,7 +168,7 @@ export const About = () => (
         <motion.div
           variants={fadeUp}
           {...inView}
-          className="flex flex-col items-start gap-6 rounded-4xl border border-line bg-white/85 p-6 shadow-card sm:p-10 lg:flex-row lg:items-center"
+          className="flex flex-col items-start gap-6 rounded-4xl border border-line bg-card p-6 shadow-card sm:p-10 lg:flex-row lg:items-center"
         >
           <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-emerald-50 text-emerald-600">
             <ShieldCheck size={26} strokeWidth={2.1} />
@@ -181,7 +181,7 @@ export const About = () => (
               guidelines. We test the batch, not the sample.
             </p>
           </div>
-          <ul className="grid gap-2 text-[13px] text-ink/75">
+          <ul className="grid gap-2 text-[13px] text-ink">
             {['PESO licensed unit', 'Batch-level dB testing', 'Licensed surface transport'].map((line) => (
               <li key={line} className="flex items-center gap-2">
                 <Check size={14} className="shrink-0 text-emerald-500" strokeWidth={2.8} />

@@ -55,7 +55,7 @@ export const ProductGallery = ({ images, alt, fallbackType, badges }) => {
         ) : null}
 
         {fine ? (
-          <span className="absolute right-5 top-5 z-20 flex items-center gap-1.5 rounded-full bg-white/85 px-3 py-1.5 text-2xs font-semibold text-muted opacity-0 shadow-soft backdrop-blur transition-opacity duration-300 group-hover:opacity-100">
+          <span className="absolute right-5 top-5 z-20 flex items-center gap-1.5 rounded-full bg-card px-3 py-1.5 text-2xs font-semibold text-muted opacity-0 shadow-soft backdrop-blur transition-opacity duration-300 group-hover:opacity-100">
             <ZoomIn size={12} strokeWidth={2.4} />
             Hover to zoom
           </span>
@@ -100,7 +100,7 @@ export const ProductGallery = ({ images, alt, fallbackType, badges }) => {
               aria-label={`View image ${index + 1} of ${images.length}`}
               aria-current={index === active}
               className={cn(
-                'group/thumb relative grid h-16 w-16 shrink-0 place-items-center overflow-hidden rounded-2xl border-2 bg-white p-2 transition-all duration-400 ease-luxe xs:h-20 xs:w-20 sm:h-24 sm:w-24',
+                'group/thumb relative grid h-16 w-16 shrink-0 place-items-center overflow-hidden rounded-2xl border-2 bg-card p-2 transition-all duration-400 ease-luxe xs:h-20 xs:w-20 sm:h-24 sm:w-24',
                 index === active
                   ? 'border-primary shadow-soft'
                   : 'border-line opacity-65 hover:-translate-y-1 hover:border-secondary-300 hover:opacity-100',

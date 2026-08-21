@@ -34,7 +34,7 @@ export const MobileBottomBar = () => {
             onClick={openCart}
             className="flex w-full items-center gap-4 rounded-full bg-dark py-3 pl-3 pr-5 text-left shadow-lift"
           >
-            <span className="relative grid h-11 w-11 shrink-0 place-items-center rounded-full bg-flame text-white">
+            <span className="relative grid h-11 w-11 shrink-0 place-items-center rounded-full bg-flame text-dark">
               <ShoppingBag size={18} strokeWidth={2.2} />
               <span className="absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-gold px-1 text-[10px] font-bold text-dark">
                 {totals.count}

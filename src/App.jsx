@@ -1,45 +1,34 @@
 import { RouterProvider } from 'react-router-dom';
-import { AnimatePresence } from 'framer-motion';
 import { Toaster } from 'react-hot-toast';
 import router from '@/routes';
-import SplashScreen from '@/components/fx/SplashScreen';
-import { useUIStore } from '@/store/uiStore';
 
 /**
- * The splash gate.
+ * App root.
  *
- * The router mounts underneath the splash from the very first frame, so the
- * homepage has finished laying out and warming its fonts by the time the
- * curtain lifts — the handover reads as instant rather than as a second load.
+ * There is deliberately nothing between the visitor and the storefront. This
+ * used to open on a 4.5-second GSAP intro — a diya lighting, embers rising, a
+ * rocket climbing and breaking into a firework — behind which the router was
+ * mounted but inert. It looked good exactly once. On a shop whose visitors
+ * arrive from a WhatsApp link with a price in mind, a gate that long is the
+ * most expensive thing on the page, so the catalogue now paints immediately.
  */
-export const App = () => {
-  const splashDone = useUIStore((s) => s.splashDone);
-  const finishSplash = useUIStore((s) => s.finishSplash);
+export const App = () => (
+  <>
+    <RouterProvider router={router} />
 
-  return (
-    <>
-      <div aria-hidden={!splashDone} className={splashDone ? undefined : 'pointer-events-none'}>
-        <RouterProvider router={router} />
-      </div>
-
-      <AnimatePresence>
-        {!splashDone ? <SplashScreen key="splash" onFinish={finishSplash} /> : null}
-      </AnimatePresence>
-
-      <Toaster
-        position="bottom-center"
-        gutter={10}
-        containerClassName="!bottom-28 lg:!bottom-8"
-        toastOptions={{
-          duration: 2600,
-          className:
-            '!rounded-2xl !border !border-line !bg-white/95 !px-4 !py-3 !text-sm !font-medium !text-ink !shadow-lift !backdrop-blur-md',
-          success: { iconTheme: { primary: '#16a34a', secondary: '#fff' } },
-          error: { iconTheme: { primary: '#e11d48', secondary: '#fff' } },
-        }}
-      />
-    </>
-  );
-};
+    <Toaster
+      position="bottom-center"
+      gutter={10}
+      containerClassName="!bottom-28 lg:!bottom-8"
+      toastOptions={{
+        duration: 2600,
+        className:
+          '!rounded-2xl !border !border-line !bg-card !px-4 !py-3 !text-sm !font-medium !text-ink !shadow-lift',
+        success: { iconTheme: { primary: '#0A7A6B', secondary: '#fff' } },
+        error: { iconTheme: { primary: '#93154D', secondary: '#fff' } },
+      }}
+    />
+  </>
+);
 
 export default App;

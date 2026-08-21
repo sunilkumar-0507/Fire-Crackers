@@ -41,14 +41,14 @@ const DiyaBorder = memo(function DiyaBorder() {
 });
 
 export const Footer = () => (
-  <footer className="relative mt-16 overflow-hidden bg-dark text-bg/75">
+  <footer className="relative mt-16 overflow-hidden bg-dark text-bg/85">
     {/* warm gradient wash */}
     <div
       aria-hidden="true"
       className="pointer-events-none absolute inset-0 opacity-90"
       style={{
         background:
-          'radial-gradient(90% 60% at 50% 0%, rgba(200,77,14,.42) 0%, transparent 60%), linear-gradient(180deg,#2C0F05,#1B0903)',
+          'radial-gradient(90% 60% at 50% 0%, rgba(149,76,5,.45) 0%, transparent 60%), linear-gradient(180deg,#2B1408,#1A0C04)',
       }}
     />
 
@@ -71,21 +71,21 @@ export const Footer = () => (
               </div>
             </div>
 
-            <p className="mt-6 text-sm leading-relaxed text-bg/55">
+            <p className="mt-6 text-sm leading-relaxed text-bg/75">
               Three generations on the same factory floor in Sivakasi, making the crackers we grew
               up lighting. Sold direct, at the price they should have always been.
             </p>
 
             <div className="mt-7 space-y-3 text-sm">
-              <a href={BRAND.phoneHref} className="flex items-center gap-3 text-bg/70 transition-colors hover:text-gold">
+              <a href={BRAND.phoneHref} className="flex items-center gap-3 text-bg/85 transition-colors hover:text-gold">
                 <Phone size={15} className="shrink-0 text-gold/70" strokeWidth={2.2} />
                 {BRAND.phone}
               </a>
-              <a href={BRAND.emailHref} className="flex items-center gap-3 text-bg/70 transition-colors hover:text-gold">
+              <a href={BRAND.emailHref} className="flex items-center gap-3 text-bg/85 transition-colors hover:text-gold">
                 <Mail size={15} className="shrink-0 text-gold/70" strokeWidth={2.2} />
                 <span className="min-w-0 break-all">{BRAND.email}</span>
               </a>
-              <p className="flex items-start gap-3 text-bg/55">
+              <p className="flex items-start gap-3 text-bg/75">
                 <MapPin size={15} className="mt-0.5 shrink-0 text-gold/70" strokeWidth={2.2} />
                 {BRAND.address}
               </p>
@@ -103,7 +103,7 @@ export const Footer = () => (
                   <li key={link.label}>
                     <Link
                       to={link.to}
-                      className="group inline-flex items-center gap-2 text-sm text-bg/60 transition-colors duration-300 hover:text-bg"
+                      className="group inline-flex items-center gap-2 text-sm text-bg/75 transition-colors duration-300 hover:text-bg"
                     >
                       <span className="h-px w-0 bg-gold transition-all duration-400 ease-luxe group-hover:w-3" />
                       {link.label}
@@ -118,7 +118,7 @@ export const Footer = () => (
         {/* licence strip */}
         <motion.div
           variants={fadeUp}
-          className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-3 rounded-3xl border border-white/[.07] bg-white/[.03] px-5 py-5 text-2xs text-bg/45 sm:mt-12 sm:px-6"
+          className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-3 rounded-3xl border border-white/[.07] bg-white/[.03] px-5 py-5 text-2xs text-bg/75 sm:mt-12 sm:px-6"
         >
           <span className="flex items-center gap-2 text-gold/80">
             <ShieldCheck size={14} strokeWidth={2.2} />
@@ -133,7 +133,7 @@ export const Footer = () => (
           variants={fadeUp}
           className="mt-8 flex flex-col-reverse items-center justify-between gap-6 border-t border-white/[.07] pt-8 sm:flex-row"
         >
-          <p className="text-2xs text-bg/40">
+          <p className="text-2xs text-bg/75">
             © {new Date().getFullYear()} {BRAND.name}. All rights reserved. Burst responsibly.
           </p>
 
@@ -144,7 +144,7 @@ export const Footer = () => (
                 href={social.href}
                 target="_blank"
                 rel="noreferrer"
-                className="rounded-full border border-white/10 px-4 py-2 text-2xs font-medium text-bg/55 transition-all duration-300 hover:-translate-y-0.5 hover:border-gold/50 hover:text-gold"
+                className="rounded-full border border-white/10 px-4 py-2 text-2xs font-medium text-bg/75 transition-all duration-300 hover:-translate-y-0.5 hover:border-gold/50 hover:text-gold"
               >
                 {social.label}
               </a>

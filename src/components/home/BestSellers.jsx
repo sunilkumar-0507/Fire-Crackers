@@ -38,7 +38,7 @@ export const BestSellers = () => {
                 ref={prevRef}
                 type="button"
                 aria-label="Previous products"
-                className="grid h-12 w-12 place-items-center rounded-full border border-line bg-white/80 text-primary shadow-soft backdrop-blur transition-all duration-300 hover:-translate-x-0.5 hover:bg-white hover:shadow-lift active:scale-90"
+                className="grid h-12 w-12 place-items-center rounded-full border border-line bg-card text-primary shadow-soft backdrop-blur transition-all duration-300 hover:-translate-x-0.5 hover:bg-card hover:shadow-lift active:scale-90"
               >
                 <ChevronLeft size={19} strokeWidth={2.4} />
               </button>
@@ -46,7 +46,7 @@ export const BestSellers = () => {
                 ref={nextRef}
                 type="button"
                 aria-label="Next products"
-                className="grid h-12 w-12 place-items-center rounded-full border border-line bg-white/80 text-primary shadow-soft backdrop-blur transition-all duration-300 hover:translate-x-0.5 hover:bg-white hover:shadow-lift active:scale-90"
+                className="grid h-12 w-12 place-items-center rounded-full border border-line bg-card text-primary shadow-soft backdrop-blur transition-all duration-300 hover:translate-x-0.5 hover:bg-card hover:shadow-lift active:scale-90"
               >
                 <ChevronRight size={19} strokeWidth={2.4} />
               </button>

@@ -28,7 +28,7 @@ import EmptyState from '@/components/ui/EmptyState';
 import CrackerArt from '@/components/ui/CrackerArt';
 
 const inputClass =
-  'h-12 w-full rounded-2xl border border-line bg-white px-4 text-sm text-ink outline-none transition-colors placeholder:text-muted/60 focus:border-secondary-400';
+  'h-12 w-full rounded-2xl border border-line bg-card px-4 text-sm text-ink outline-none transition-colors placeholder:text-muted focus:border-secondary-400';
 
 const Field = ({ label, hint, error, children }) => (
   <label className="block">
@@ -149,8 +149,8 @@ const Confirmation = ({ order, totals }) => (
           { icon: MapPin, label: 'Shipping to', value: `${order.district} ${order.pincode}` },
           { icon: Lock, label: 'Paid by', value: PAYMENT_METHODS.find((p) => p.id === order.payment)?.label },
         ].map(({ icon: Icon, label, value }) => (
-          <div key={label} className="flex items-start gap-3 bg-white px-5 py-5">
-            <Icon size={16} className="mt-0.5 shrink-0 text-primary/70" strokeWidth={2.2} />
+          <div key={label} className="flex items-start gap-3 bg-card px-5 py-5">
+            <Icon size={16} className="mt-0.5 shrink-0 text-primary" strokeWidth={2.2} />
             <span>
               <dt className="text-2xs uppercase tracking-[.14em] text-muted">{label}</dt>
               <dd className="mt-1 text-sm font-semibold text-dark">{value}</dd>
@@ -274,10 +274,10 @@ export const Checkout = () => {
               current={step}
               furthest={furthest}
               onJump={setStep}
-              className="mb-8 rounded-4xl border border-line bg-white/85 p-4 shadow-soft sm:mb-10 sm:p-7"
+              className="mb-8 rounded-4xl border border-line bg-card p-4 shadow-soft sm:mb-10 sm:p-7"
             />
 
-            <div className="rounded-4xl border border-line bg-white/85 p-5 shadow-card sm:p-9">
+            <div className="rounded-4xl border border-line bg-card p-5 shadow-card sm:p-9">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={step}
@@ -356,7 +356,7 @@ export const Checkout = () => {
                           placeholder="12/4 Ganapathy Nagar, 2nd Street, Adambakkam"
                           autoComplete="street-address"
                           className={cn(
-                            'w-full resize-none rounded-2xl border border-line bg-white p-4 text-sm text-ink outline-none transition-colors placeholder:text-muted/60 focus:border-secondary-400',
+                            'w-full resize-none rounded-2xl border border-line bg-card p-4 text-sm text-ink outline-none transition-colors placeholder:text-muted focus:border-secondary-400',
                             errors.address && 'border-rose-300',
                           )}
                         />
@@ -427,7 +427,7 @@ export const Checkout = () => {
                                 'flex cursor-pointer items-center gap-3.5 rounded-3xl border p-4 transition-all duration-300 sm:gap-4 sm:p-5',
                                 selected
                                   ? 'border-primary bg-secondary-50/70 shadow-soft'
-                                  : 'border-line bg-white hover:border-secondary-300',
+                                  : 'border-line bg-card hover:border-secondary-300',
                                 disabled && 'cursor-not-allowed opacity-45',
                               )}
                             >
@@ -482,7 +482,7 @@ export const Checkout = () => {
                           ['Payment', PAYMENT_METHODS.find((p) => p.id === form.payment)?.label],
                           ['Delivery', deliveryWindow],
                         ].map(([label, value]) => (
-                          <div key={label} className="bg-white px-4 py-3.5 sm:px-5 sm:py-4">
+                          <div key={label} className="bg-card px-4 py-3.5 sm:px-5 sm:py-4">
                             <dt className="text-2xs uppercase tracking-[.14em] text-muted">{label}</dt>
                             <dd className="mt-1 break-words text-sm font-medium text-dark">{value}</dd>
                           </div>
@@ -542,7 +542,7 @@ export const Checkout = () => {
 
           {/* summary rail */}
           <aside className="lg:sticky lg:top-28 lg:self-start">
-            <div className="overflow-hidden rounded-4xl border border-line bg-white/90 shadow-card">
+            <div className="overflow-hidden rounded-4xl border border-line bg-card shadow-card">
               <div className="flex items-center justify-between gap-3 border-b border-line px-5 py-4 sm:px-6 sm:py-5">
                 <h2 className="font-display text-lg font-semibold text-dark">Order summary</h2>
                 <span className="rounded-full bg-secondary-50 px-3 py-1 text-2xs font-semibold text-primary">
@@ -616,7 +616,7 @@ export const Checkout = () => {
             </div>
 
             <p className="mt-5 flex items-start gap-2.5 px-2 text-2xs leading-relaxed text-muted">
-              <Truck size={14} className="mt-0.5 shrink-0 text-primary/70" strokeWidth={2.2} />
+              <Truck size={14} className="mt-0.5 shrink-0 text-primary" strokeWidth={2.2} />
               Fireworks travel by licensed surface transport only. Arrives {deliveryWindow}.
             </p>
           </aside>

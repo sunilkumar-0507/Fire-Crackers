@@ -4,10 +4,12 @@ import { fadeUp, inView, stagger } from '@/animations/variants';
 
 /** Page section with a consistent vertical rhythm and in-view reveal. */
 export const Section = ({ className, children, id, spacing = 'md', ...rest }) => {
+  // Was up to py-32. Eight sections of that on the homepage put roughly two
+  // full screens of empty cream between the shelves.
   const pad = {
-    sm: 'py-10 sm:py-16',
-    md: 'py-14 sm:py-24',
-    lg: 'py-16 sm:py-32',
+    sm: 'py-8 sm:py-12',
+    md: 'py-10 sm:py-16',
+    lg: 'py-12 sm:py-20',
   }[spacing];
 
   return (
@@ -34,7 +36,7 @@ export const SectionHeading = ({
     variants={stagger(0.08)}
     {...inView}
     className={cn(
-      'flex flex-col gap-5 pb-8 sm:pb-14',
+      'flex flex-col gap-4 pb-7 sm:pb-10',
       align === 'center'
         ? 'items-center text-center'
         : 'md:flex-row md:items-end md:justify-between',
@@ -43,9 +45,9 @@ export const SectionHeading = ({
   >
     <div className={cn('max-w-2xl', align === 'center' && 'flex flex-col items-center')}>
       {eyebrow ? (
-        <motion.div variants={fadeUp} className="mb-4 flex items-center gap-3">
-          <span className="h-px w-8 origin-left bg-gradient-to-r from-primary to-transparent" />
-          <span className="text-2xs font-semibold uppercase tracking-[.22em] text-primary">
+        <motion.div variants={fadeUp} className="mb-3 flex items-center gap-2.5">
+          <span className="h-4 w-1 rounded-full bg-secondary-500" />
+          <span className="text-2xs font-semibold uppercase tracking-[.12em] text-primary-700">
             {eyebrow}
           </span>
         </motion.div>
@@ -61,7 +63,7 @@ export const SectionHeading = ({
       {description ? (
         <motion.p
           variants={fadeUp}
-          className="mt-4 text-[15px] leading-relaxed text-muted sm:text-base"
+          className="mt-3 text-[15px] leading-relaxed text-muted sm:text-base"
         >
           {description}
         </motion.p>

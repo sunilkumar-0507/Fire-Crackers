@@ -41,7 +41,7 @@ export const OfferCard = ({ offer, featured = false, className }) => {
       variants={fadeUp}
       className={cn(
         'border-glow group relative flex flex-col overflow-hidden rounded-4xl p-5 sm:p-8',
-        featured ? 'text-bg' : 'border border-line bg-white text-ink shadow-card',
+        featured ? 'text-bg' : 'border border-line bg-card text-ink shadow-card',
         className,
       )}
       style={
@@ -55,7 +55,7 @@ export const OfferCard = ({ offer, featured = false, className }) => {
         <div
           className={cn(
             'relative overflow-hidden px-14 py-1.5 text-2xs font-bold uppercase tracking-[.18em] shadow-lg',
-            featured ? 'bg-dark text-gold' : 'bg-flame text-white',
+            featured ? 'bg-dark text-gold' : 'bg-flame text-dark',
           )}
         >
           {offer.badge}
@@ -78,7 +78,7 @@ export const OfferCard = ({ offer, featured = false, className }) => {
         <p
           className={cn(
             'text-2xs font-semibold uppercase tracking-[.2em]',
-            featured ? 'text-white/70' : 'text-primary/70',
+            featured ? 'text-white/70' : 'text-primary',
           )}
         >
           {offer.subtitle}

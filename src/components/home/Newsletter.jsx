@@ -28,24 +28,23 @@ export const Newsletter = () => {
   };
 
   return (
-    <section className="relative py-14 sm:py-24">
+    <section className="relative py-10 sm:py-16">
       <div className="container">
         <motion.div
           variants={fadeUp}
           {...inView}
-          className="relative overflow-hidden rounded-[2rem] px-5 py-12 text-center shadow-lift sm:rounded-[2.5rem] sm:px-12 sm:py-20"
-          style={{ background: 'linear-gradient(140deg,#2C0F05 0%,#571F05 52%,#8C3A12 100%)' }}
+          className="relative overflow-hidden rounded-4xl px-5 py-12 text-center shadow-lift sm:px-12 sm:py-16"
+          style={{ background: 'linear-gradient(140deg,#2B1408 0%,#4A270A 52%,#6F3A09 100%)' }}
         >
           {/* decorative art */}
           <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-[.18]">
             <CrackerArt type="sparkler" variant={4} className="absolute -left-8 top-2 h-32 w-32 sm:h-48 sm:w-48" />
             <CrackerArt type="rocket" variant={3} className="absolute -bottom-6 -right-6 h-36 w-36 sm:h-52 sm:w-52" />
-            <CrackerArt type="aerial" variant={1} className="absolute left-1/2 top-1/2 hidden h-64 w-64 -translate-x-1/2 -translate-y-1/2 lg:block" />
           </div>
           <div
             aria-hidden="true"
             className="pointer-events-none absolute inset-x-0 top-0 h-64 opacity-40"
-            style={{ background: 'radial-gradient(60% 100% at 50% 0%, rgba(255,213,106,.5), transparent 70%)' }}
+            style={{ background: 'radial-gradient(60% 100% at 50% 0%, rgba(255,178,56,.45), transparent 70%)' }}
           />
 
           <div className="relative mx-auto max-w-xl">
@@ -57,7 +56,7 @@ export const Newsletter = () => {
             <h2 className="mt-6 font-display text-display-sm font-semibold text-bg">
               We open bookings six weeks before Diwali
             </h2>
-            <p className="mt-4 text-[15px] leading-relaxed text-bg/60">
+            <p className="mt-4 text-[15px] leading-relaxed text-bg/75">
               One email when the season opens, one when stock on the popular boxes gets thin. That
               is the entire list. No festival greetings, no daily offers.
             </p>
@@ -86,7 +85,7 @@ export const Newsletter = () => {
                     placeholder="you@example.com"
                     aria-label="Email address"
                     aria-invalid={Boolean(error)}
-                    className="h-14 min-w-0 flex-1 rounded-full border border-white/12 bg-white/[.07] px-6 text-[15px] text-bg outline-none backdrop-blur transition-colors placeholder:text-bg/35 focus:border-gold/50"
+                    className="h-14 min-w-0 flex-1 rounded-full border border-white/12 bg-white/[.07] px-6 text-[15px] text-bg outline-none backdrop-blur transition-colors placeholder:text-bg/60 focus:border-gold/50"
                   />
                   <Button
                     type="submit"
@@ -105,7 +104,7 @@ export const Newsletter = () => {
                     {error}
                   </p>
                 ) : (
-                  <p className="mt-3 text-2xs text-bg/40">
+                  <p className="mt-3 text-2xs text-bg/75">
                     Two emails a year. Unsubscribe from any of them.
                   </p>
                 )}

@@ -36,7 +36,7 @@ import EmptyState from '@/components/ui/EmptyState';
 const SpecTable = ({ specs }) => (
   <dl className="grid gap-px overflow-hidden rounded-3xl border border-line bg-line sm:grid-cols-2">
     {Object.entries(specs).map(([key, value]) => (
-      <div key={key} className="flex items-baseline justify-between gap-3 bg-white px-4 py-3.5 sm:px-5 sm:py-4">
+      <div key={key} className="flex items-baseline justify-between gap-3 bg-card px-4 py-3.5 sm:px-5 sm:py-4">
         <dt className="text-2xs font-semibold uppercase tracking-[.14em] text-muted">{key}</dt>
         <dd className="text-right text-sm font-semibold text-dark">{value}</dd>
       </div>
@@ -61,7 +61,7 @@ const SafetyPanel = ({ product }) => (
 
     <ul className="grid gap-2.5 sm:grid-cols-2">
       {SAFETY_RULES.map((rule) => (
-        <li key={rule} className="flex items-start gap-3 rounded-2xl bg-white/85 p-4 text-[13px] leading-relaxed text-ink/80">
+        <li key={rule} className="flex items-start gap-3 rounded-2xl bg-card p-4 text-[13px] leading-relaxed text-ink">
           <Check size={15} className="mt-0.5 shrink-0 text-emerald-500" strokeWidth={2.8} />
           {rule}
         </li>
@@ -82,7 +82,7 @@ const DeliveryPanel = () => {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-start gap-4 rounded-3xl border border-line bg-white p-5">
+      <div className="flex items-start gap-4 rounded-3xl border border-line bg-card p-5">
         <Truck size={20} className="mt-0.5 shrink-0 text-primary" strokeWidth={2.2} />
         <div>
           <p className="font-display text-base font-semibold text-dark">
@@ -95,14 +95,14 @@ const DeliveryPanel = () => {
         </div>
       </div>
 
-      <ul className="grid gap-2.5 text-[13px] text-ink/80 sm:grid-cols-2">
+      <ul className="grid gap-2.5 text-[13px] text-ink sm:grid-cols-2">
         {[
           `Free delivery above ${formatPrice(SHIPPING.freeAbove)} in Tamil Nadu & Kerala`,
           `${formatPrice(SHIPPING.localFee)} below that, ${formatPrice(SHIPPING.outstationFee)} for other states`,
           'Amend or cancel free until the consignment leaves the warehouse',
           'Damaged items replaced or refunded — photograph the carton first',
         ].map((line) => (
-          <li key={line} className="flex items-start gap-3 rounded-2xl bg-white/85 p-4">
+          <li key={line} className="flex items-start gap-3 rounded-2xl bg-card p-4">
             <Check size={15} className="mt-0.5 shrink-0 text-emerald-500" strokeWidth={2.8} />
             {line}
           </li>
@@ -198,7 +198,7 @@ export const ProductDetail = () => {
             className="lg:sticky lg:top-28 lg:self-start"
           >
             <motion.div variants={fadeUp}>
-              <p className="text-2xs font-semibold uppercase tracking-[.2em] text-primary/70">
+              <p className="text-2xs font-semibold uppercase tracking-[.2em] text-primary">
                 {product.brand} · {category?.name}
               </p>
               <h1 className="mt-3 font-display text-display-sm font-semibold leading-[1.1] text-dark">
@@ -217,7 +217,7 @@ export const ProductDetail = () => {
             {/* price block */}
             <motion.div
               variants={fadeUp}
-              className="mt-7 rounded-4xl border border-line bg-white/90 p-5 shadow-card sm:p-6"
+              className="mt-7 rounded-4xl border border-line bg-card p-5 shadow-card sm:p-6"
             >
               <div className="flex flex-wrap items-end gap-x-3 gap-y-2">
                 <span className="font-display text-3xl font-semibold text-dark sm:text-4xl">
@@ -279,7 +279,7 @@ export const ProductDetail = () => {
                     'grid h-14 w-14 shrink-0 place-items-center rounded-full border transition-all duration-300 hover:scale-105 active:scale-95',
                     wishlisted
                       ? 'border-transparent bg-primary text-white shadow-glow'
-                      : 'border-line bg-white text-muted hover:border-secondary-300 hover:text-primary',
+                      : 'border-line bg-card text-muted hover:border-secondary-300 hover:text-primary',
                   )}
                 >
                   <Heart size={19} strokeWidth={2.2} fill={wishlisted ? 'currentColor' : 'none'} />
@@ -297,7 +297,7 @@ export const ProductDetail = () => {
             {/* highlights */}
             <motion.ul variants={fadeUp} className="mt-6 grid gap-2.5">
               {product.highlights.map((line) => (
-                <li key={line} className="flex items-start gap-3 text-[14px] leading-relaxed text-ink/80">
+                <li key={line} className="flex items-start gap-3 text-[14px] leading-relaxed text-ink">
                   <Sparkles size={15} className="mt-0.5 shrink-0 text-secondary-500" strokeWidth={2.2} />
                   {line}
                 </li>
@@ -311,7 +311,7 @@ export const ProductDetail = () => {
                 className="mt-6 flex items-start gap-3 rounded-3xl border border-dashed border-secondary-300 bg-secondary-50/60 p-5"
               >
                 <Info size={17} className="mt-0.5 shrink-0 text-primary" strokeWidth={2.2} />
-                <p className="text-[13px] leading-relaxed text-ink/80">
+                <p className="text-[13px] leading-relaxed text-ink">
                   <strong className="font-semibold text-dark">{featuredOffers[1].code}</strong> —{' '}
                   {featuredOffers[1].title.toLowerCase()} on orders above{' '}
                   {formatPrice(featuredOffers[1].minOrder)}.{' '}
@@ -333,10 +333,10 @@ export const ProductDetail = () => {
                 label: 'About this cracker',
                 content: (
                   <div className="space-y-5">
-                    <p className="text-[15px] leading-[1.8] text-ink/80">{product.description}</p>
+                    <p className="text-[15px] leading-[1.8] text-ink">{product.description}</p>
                     <ul className="grid gap-2.5 sm:grid-cols-2">
                       {product.highlights.map((line) => (
-                        <li key={line} className="flex items-start gap-3 rounded-2xl bg-white/85 p-4 text-[13px] leading-relaxed text-ink/80">
+                        <li key={line} className="flex items-start gap-3 rounded-2xl bg-card p-4 text-[13px] leading-relaxed text-ink">
                           <Check size={15} className="mt-0.5 shrink-0 text-emerald-500" strokeWidth={2.8} />
                           {line}
                         </li>

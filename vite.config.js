@@ -15,15 +15,14 @@ export default defineConfig({
     cssCodeSplit: true,
     rollupOptions: {
       output: {
-        // Split the heavy libraries out of the entry chunk so first paint (the
-        // splash screen) downloads as little JS as possible, and so a change to
-        // app code does not invalidate the vendor bundles in cache.
+        // Split the heavy libraries out of the entry chunk so first paint
+        // downloads as little JS as possible, and so a change to app code does
+        // not invalidate the vendor bundles in cache.
         // Vite 8 runs on rolldown, which requires the function form.
         manualChunks(id) {
           if (!id.includes('node_modules')) return undefined;
           if (/[\\/]node_modules[\\/](react|react-dom|scheduler|react-router)/.test(id)) return 'react';
           if (id.includes('framer-motion') || id.includes('motion-dom') || id.includes('motion-utils')) return 'motion';
-          if (id.includes('gsap')) return 'gsap';
           if (id.includes('swiper')) return 'swiper';
           return 'vendor';
         },

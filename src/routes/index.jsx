@@ -6,9 +6,9 @@ import Home from '@/pages/Home';
 /**
  * Route table.
  *
- * Home is imported eagerly — it is what the splash screen hands over to, and
- * a Suspense flash right after a cinematic intro would undo the whole effect.
- * Everything else is lazy, so the first paint carries only what it needs.
+ * Home is imported eagerly so the landing route paints without a Suspense
+ * flash. Everything else is lazy, so the first paint carries only what it
+ * needs.
  */
 const Products = lazy(() => import('@/pages/Products'));
 const ProductDetail = lazy(() => import('@/pages/ProductDetail'));

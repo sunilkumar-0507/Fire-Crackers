@@ -102,7 +102,7 @@ export const ComboDetail = () => {
                   <motion.li
                     key={line.name}
                     variants={fadeUp}
-                    className="flex items-center gap-3 bg-white px-4 py-3.5 sm:gap-4 sm:px-5 sm:py-4"
+                    className="flex items-center gap-3 bg-card px-4 py-3.5 sm:gap-4 sm:px-5 sm:py-4"
                   >
                     <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-emerald-50 text-emerald-600">
                       <Check size={15} strokeWidth={2.8} />
@@ -126,9 +126,9 @@ export const ComboDetail = () => {
           >
             <motion.div
               variants={fadeUp}
-              className="rounded-4xl border border-line bg-white/90 p-5 shadow-card sm:p-7"
+              className="rounded-4xl border border-line bg-card p-5 shadow-card sm:p-7"
             >
-              <p className="text-sm italic text-primary/80">{combo.tagline}</p>
+              <p className="text-sm italic text-primary">{combo.tagline}</p>
 
               <div className="mt-5 flex flex-wrap items-end gap-x-3 gap-y-2">
                 <span className="font-display text-3xl font-semibold text-dark sm:text-4xl">
@@ -148,8 +148,8 @@ export const ComboDetail = () => {
                   { icon: Users, value: combo.serves, label: 'Serves' },
                   { icon: Clock, value: combo.duration === '—' ? 'N/A' : combo.duration.replace('About ', ''), label: 'Runs for' },
                 ].map(({ icon: Icon, value, label }) => (
-                  <div key={label} className="bg-white px-2 py-4">
-                    <Icon size={15} className="mx-auto text-primary/70" strokeWidth={2.2} />
+                  <div key={label} className="bg-card px-2 py-4">
+                    <Icon size={15} className="mx-auto text-primary" strokeWidth={2.2} />
                     <dd className="mt-2 text-xs font-semibold leading-tight text-dark">{value}</dd>
                     <dt className="mt-1 text-[9px] uppercase tracking-[.14em] text-muted">{label}</dt>
                   </div>
@@ -181,7 +181,7 @@ export const ComboDetail = () => {
 
               <div className="mt-6 space-y-3 border-t border-line pt-5 text-[13px] text-muted">
                 <p className="flex items-start gap-2.5">
-                  <Truck size={15} className="mt-0.5 shrink-0 text-primary/70" strokeWidth={2.2} />
+                  <Truck size={15} className="mt-0.5 shrink-0 text-primary" strokeWidth={2.2} />
                   Arrives {formatDay(addWorkingDays(2))} – {formatDay(addWorkingDays(4))}, free
                   above {formatPrice(2000)}
                 </p>

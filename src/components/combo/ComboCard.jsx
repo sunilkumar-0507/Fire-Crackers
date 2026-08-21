@@ -6,18 +6,16 @@ import { cn } from '@/utils/cn';
 import { formatPrice } from '@/utils/format';
 import { comboToCartItem } from '@/utils/cart';
 import { useCartStore, selectInCart } from '@/store/cartStore';
-import { useTilt } from '@/hooks/useTilt';
 import { fadeUp } from '@/animations/variants';
 import CrackerArt from '@/components/ui/CrackerArt';
 import Button from '@/components/ui/Button';
 import Badge from '@/components/ui/Badge';
 import Rating from '@/components/ui/Rating';
 
-/** Curated bundle card — animated border, save badge and full contents list. */
+/** Curated bundle card — save flag, contents list and a single clear CTA. */
 export const ComboCard = ({ combo, className, showContents = true }) => {
   const addItem = useCartStore((s) => s.addItem);
   const inCart = useCartStore(selectInCart(combo.id));
-  const tilt = useTilt({ max: 5, scale: 1.008 });
 
   const add = (event) => {
     event.preventDefault();
@@ -29,13 +27,8 @@ export const ComboCard = ({ combo, className, showContents = true }) => {
   return (
     <motion.article variants={fadeUp} className={cn('h-full', className)}>
       <div
-        ref={tilt.ref}
-        onPointerEnter={tilt.onPointerEnter}
-        onPointerMove={tilt.onPointerMove}
-        onPointerLeave={tilt.onPointerLeave}
-        style={tilt.style}
         data-active={inCart > 0}
-        className="border-glow group relative flex h-full flex-col overflow-hidden rounded-4xl border border-line bg-card shadow-card transition-shadow duration-500 ease-luxe hover:shadow-lift"
+        className="border-glow group relative flex h-full flex-col overflow-hidden rounded-4xl border border-line bg-card shadow-card transition-shadow duration-300 ease-luxe hover:shadow-lift"
       >
         {/* save flag */}
         <div className="absolute right-4 top-4 z-10 text-right sm:right-5 sm:top-5">
@@ -43,7 +36,7 @@ export const ComboCard = ({ combo, className, showContents = true }) => {
             <span className="block font-display text-base font-semibold leading-none text-gold">
               {formatPrice(combo.saves)}
             </span>
-            <span className="mt-1 block text-[9px] font-semibold uppercase tracking-[.14em] text-bg/60">
+            <span className="mt-1 block text-[9px] font-semibold uppercase tracking-[.14em] text-bg/75">
               You save
             </span>
           </span>
@@ -63,7 +56,7 @@ export const ComboCard = ({ combo, className, showContents = true }) => {
           <CrackerArt
             type={combo.art}
             variant={2}
-            className="relative h-28 w-28 transition-transform duration-[900ms] ease-luxe group-hover:-translate-y-2 group-hover:scale-110 sm:h-36 sm:w-36"
+            className="relative h-28 w-28 transition-transform duration-400 ease-luxe group-hover:scale-105 sm:h-36 sm:w-36"
           />
           <Badge tone="gold" className="absolute left-4 top-4 max-w-[55%] truncate sm:left-5 sm:top-5">
             {combo.badge}
@@ -79,23 +72,23 @@ export const ComboCard = ({ combo, className, showContents = true }) => {
             </h3>
           </div>
 
-          <p className="mt-1.5 text-sm italic text-primary/80">{combo.tagline}</p>
+          <p className="mt-1.5 text-sm italic text-primary">{combo.tagline}</p>
           <p className="mt-3 line-clamp-2 text-[13px] leading-relaxed text-muted">
             {combo.description}
           </p>
 
           <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-2xs text-muted">
             <span className="flex items-center gap-1.5">
-              <Package size={13} strokeWidth={2.2} className="text-primary/70" />
+              <Package size={13} strokeWidth={2.2} className="text-primary" />
               {combo.itemCount} items
             </span>
             <span className="flex items-center gap-1.5">
-              <Users size={13} strokeWidth={2.2} className="text-primary/70" />
+              <Users size={13} strokeWidth={2.2} className="text-primary" />
               {combo.serves}
             </span>
             {combo.duration !== '—' ? (
               <span className="flex items-center gap-1.5">
-                <Clock size={13} strokeWidth={2.2} className="text-primary/70" />
+                <Clock size={13} strokeWidth={2.2} className="text-primary" />
                 {combo.duration}
               </span>
             ) : null}
@@ -104,7 +97,7 @@ export const ComboCard = ({ combo, className, showContents = true }) => {
           {showContents ? (
             <ul className="mt-5 space-y-2 rounded-2xl bg-secondary-50/60 p-4">
               {combo.includes.slice(0, 4).map((line) => (
-                <li key={line.name} className="flex items-start gap-2.5 text-xs text-ink/75">
+                <li key={line.name} className="flex items-start gap-2.5 text-xs text-ink">
                   <Check size={13} className="mt-0.5 shrink-0 text-emerald-500" strokeWidth={2.8} />
                   <span className="flex-1">{line.name}</span>
                   <span className="shrink-0 font-semibold text-muted">×{line.qty}</span>

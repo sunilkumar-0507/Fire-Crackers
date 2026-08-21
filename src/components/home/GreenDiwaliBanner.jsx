@@ -16,7 +16,7 @@ export const GreenDiwaliBanner = () => (
       <motion.div
         variants={fadeUp}
         {...inView}
-        className="relative grid overflow-hidden rounded-[2.5rem] border border-line bg-white/85 shadow-card lg:grid-cols-2"
+        className="relative grid overflow-hidden rounded-[2.5rem] border border-line bg-card shadow-card lg:grid-cols-2"
       >
         {/* copy */}
         <div className="relative z-10 p-6 sm:p-12 lg:p-14">
