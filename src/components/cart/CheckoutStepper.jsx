@@ -1,6 +1,5 @@
 import { Fragment } from 'react';
-import { motion } from 'framer-motion';
-import { Check } from 'lucide-react';
+import { Check } from '@/components/ui/icons';
 import { cn } from '@/utils/cn';
 import { CHECKOUT_STEPS } from '@/constants';
 
@@ -32,14 +31,10 @@ export const CheckoutStepper = ({ current, furthest, onJump, className }) => (
               )}
             >
               {active ? (
-                <motion.span
-                  layoutId="step-halo"
-                  className="absolute -inset-1.5 rounded-full border-2 border-secondary-300"
-                  transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                />
+                <span className="absolute -inset-1.5 rounded-full border-2 border-secondary-300" />
               ) : null}
               <span className="relative">
-                {done ? <Check size={17} strokeWidth={3} /> : index + 1}
+                {done ? <Check size={17} /> : index + 1}
               </span>
             </button>
 
@@ -58,12 +53,7 @@ export const CheckoutStepper = ({ current, furthest, onJump, className }) => (
 
           {index < CHECKOUT_STEPS.length - 1 ? (
             <li aria-hidden="true" className="mx-2 mt-5 h-0.5 flex-1 overflow-hidden rounded-full bg-line sm:mx-3">
-              <motion.span
-                initial={false}
-                animate={{ scaleX: index < current ? 1 : 0 }}
-                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                className="block h-full origin-left bg-emerald-500"
-              />
+              <span className="block h-full origin-left bg-emerald-500" />
             </li>
           ) : null}
         </Fragment>

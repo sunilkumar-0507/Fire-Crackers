@@ -1,9 +1,7 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
-import { Check, Mail, Send } from 'lucide-react';
+import { Check, Mail, Send } from '@/components/ui/icons';
 import { api } from '@/data';
-import { fadeUp, inView } from '@/animations/variants';
 import CrackerArt from '@/components/ui/CrackerArt';
 import Button from '@/components/ui/Button';
 
@@ -30,9 +28,7 @@ export const Newsletter = () => {
   return (
     <section className="relative py-10 sm:py-16">
       <div className="container">
-        <motion.div
-          variants={fadeUp}
-          {...inView}
+        <div
           className="relative overflow-hidden rounded-4xl px-5 py-12 text-center shadow-lift sm:px-12 sm:py-16"
           style={{ background: 'linear-gradient(140deg,#2B1408 0%,#4A270A 52%,#6F3A09 100%)' }}
         >
@@ -49,7 +45,7 @@ export const Newsletter = () => {
 
           <div className="relative mx-auto max-w-xl">
             <span className="inline-flex items-center gap-2 rounded-full border border-gold/25 bg-white/[.06] px-4 py-2 text-2xs font-semibold uppercase tracking-[.2em] text-gold">
-              <Mail size={13} strokeWidth={2.4} />
+              <Mail size={13} />
               Before the rush
             </span>
 
@@ -62,14 +58,12 @@ export const Newsletter = () => {
             </p>
 
             {state === 'done' ? (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.94 }}
-                animate={{ opacity: 1, scale: 1 }}
+              <div
                 className="mt-9 inline-flex items-center gap-3 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-6 py-4 text-sm font-semibold text-emerald-300"
               >
-                <Check size={17} strokeWidth={2.8} />
+                <Check size={17} />
                 Added — we will write to {email}
-              </motion.div>
+              </div>
             ) : (
               <form onSubmit={submit} className="mx-auto mt-9 max-w-md">
                 <div className="flex flex-col gap-3 sm:flex-row">
@@ -111,7 +105,7 @@ export const Newsletter = () => {
               </form>
             )}
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

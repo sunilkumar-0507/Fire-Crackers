@@ -1,12 +1,10 @@
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
-import { ArrowRight, Check, Clock, Package, Users } from 'lucide-react';
+import { ArrowRight, Check, Clock, Package, Users } from '@/components/ui/icons';
 import { cn } from '@/utils/cn';
 import { formatPrice } from '@/utils/format';
 import { comboToCartItem } from '@/utils/cart';
 import { useCartStore, selectInCart } from '@/store/cartStore';
-import { fadeUp } from '@/animations/variants';
 import CrackerArt from '@/components/ui/CrackerArt';
 import Button from '@/components/ui/Button';
 import Badge from '@/components/ui/Badge';
@@ -25,7 +23,7 @@ export const ComboCard = ({ combo, className, showContents = true }) => {
   };
 
   return (
-    <motion.article variants={fadeUp} className={cn('h-full', className)}>
+    <article className={cn('h-full', className)}>
       <div
         data-active={inCart > 0}
         className="border-glow group relative flex h-full flex-col overflow-hidden rounded-4xl border border-line bg-card shadow-card transition-shadow duration-300 ease-luxe hover:shadow-lift"
@@ -79,16 +77,16 @@ export const ComboCard = ({ combo, className, showContents = true }) => {
 
           <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-2xs text-muted">
             <span className="flex items-center gap-1.5">
-              <Package size={13} strokeWidth={2.2} className="text-primary" />
+              <Package size={13} className="text-primary" />
               {combo.itemCount} items
             </span>
             <span className="flex items-center gap-1.5">
-              <Users size={13} strokeWidth={2.2} className="text-primary" />
+              <Users size={13} className="text-primary" />
               {combo.serves}
             </span>
             {combo.duration !== '—' ? (
               <span className="flex items-center gap-1.5">
-                <Clock size={13} strokeWidth={2.2} className="text-primary" />
+                <Clock size={13} className="text-primary" />
                 {combo.duration}
               </span>
             ) : null}
@@ -98,7 +96,7 @@ export const ComboCard = ({ combo, className, showContents = true }) => {
             <ul className="mt-5 space-y-2 rounded-2xl bg-secondary-50/60 p-4">
               {combo.includes.slice(0, 4).map((line) => (
                 <li key={line.name} className="flex items-start gap-2.5 text-xs text-ink">
-                  <Check size={13} className="mt-0.5 shrink-0 text-emerald-500" strokeWidth={2.8} />
+                  <Check size={13} className="mt-0.5 shrink-0 text-emerald-500" />
                   <span className="flex-1">{line.name}</span>
                   <span className="shrink-0 font-semibold text-muted">×{line.qty}</span>
                 </li>
@@ -145,7 +143,7 @@ export const ComboCard = ({ combo, className, showContents = true }) => {
           </div>
         </div>
       </div>
-    </motion.article>
+    </article>
   );
 };
 

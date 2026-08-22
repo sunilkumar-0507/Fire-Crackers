@@ -1,8 +1,6 @@
-import { motion } from 'framer-motion';
-import { ArrowRight, Check, Info } from 'lucide-react';
+import { ArrowRight, Check, Info } from '@/components/ui/icons';
 import { offers, combos } from '@/data';
 import { formatPrice } from '@/utils/format';
-import { fadeUp, inView, stagger } from '@/animations/variants';
 import PageHeader from '@/components/ui/PageHeader';
 import Section, { SectionHeading } from '@/components/ui/Section';
 import OfferCard from '@/components/offers/OfferCard';
@@ -24,12 +22,12 @@ export const Offers = () => {
       />
 
       <div className="container pb-8">
-        <motion.div variants={stagger(0.08)} {...inView} className="grid gap-5 lg:grid-cols-2">
+        <div className="grid gap-5 lg:grid-cols-2">
           {headline ? <OfferCard offer={headline} featured className="lg:col-span-2" /> : null}
           {rest.map((offer) => (
             <OfferCard key={offer.id} offer={offer} />
           ))}
-        </motion.div>
+        </div>
       </div>
 
       {/* terms */}
@@ -42,13 +40,9 @@ export const Offers = () => {
             className="pb-8"
           />
 
-          <motion.div variants={stagger(0.05)} {...inView} className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {offers.map((offer) => (
-              <motion.div
-                key={offer.id}
-                variants={fadeUp}
-                className="rounded-3xl border border-line bg-card p-5 shadow-soft sm:p-6"
-              >
+              <div key={offer.id} className="rounded-3xl border border-line bg-card p-5 shadow-soft sm:p-6">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <span className="font-mono text-sm font-bold tracking-[.12em] text-dark">
                     {offer.code}
@@ -65,24 +59,22 @@ export const Offers = () => {
                 <ul className="mt-4 space-y-2.5">
                   {offer.terms.map((term) => (
                     <li key={term} className="flex items-start gap-2.5 text-[13px] leading-relaxed text-muted">
-                      <Check size={14} className="mt-0.5 shrink-0 text-emerald-500" strokeWidth={2.8} />
+                      <Check size={14} className="mt-0.5 shrink-0 text-emerald-500" />
                       {term}
                     </li>
                   ))}
                 </ul>
-              </motion.div>
+              </div>
             ))}
-          </motion.div>
+          </div>
 
-          <motion.p
-            variants={fadeUp}
-            {...inView}
+          <p
             className="mt-8 flex items-start gap-3 rounded-3xl border border-dashed border-secondary-300 bg-secondary-50/60 p-5 text-[13px] leading-relaxed text-ink"
           >
-            <Info size={16} className="mt-0.5 shrink-0 text-primary" strokeWidth={2.2} />
+            <Info size={16} className="mt-0.5 shrink-0 text-primary" />
             Only one coupon applies per order — the basket keeps whichever you entered last. The
             catalogue discount is separate and always applies.
-          </motion.p>
+          </p>
         </div>
       </Section>
 
@@ -101,11 +93,11 @@ export const Offers = () => {
             className="pb-8"
           />
 
-          <motion.div variants={stagger(0.07)} {...inView} className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
             {combos.slice(0, 3).map((combo) => (
               <ComboCard key={combo.id} combo={combo} showContents={false} />
             ))}
-          </motion.div>
+          </div>
         </div>
       </Section>
     </>

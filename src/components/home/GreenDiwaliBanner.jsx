@@ -1,7 +1,5 @@
-import { motion } from 'framer-motion';
-import { ArrowRight, Leaf, VolumeX } from 'lucide-react';
+import { ArrowRight, Leaf, VolumeX } from '@/components/ui/icons';
 import { banners, products } from '@/data';
-import { fadeUp, inView, slideRight } from '@/animations/variants';
 import CrackerArt from '@/components/ui/CrackerArt';
 import Button from '@/components/ui/Button';
 
@@ -13,15 +11,13 @@ const silentCount = products.filter((p) => p.tags.some((t) => SILENT_TAGS.includ
 export const GreenDiwaliBanner = () => (
   <section className="py-6 sm:py-12">
     <div className="container">
-      <motion.div
-        variants={fadeUp}
-        {...inView}
+      <div
         className="relative grid overflow-hidden rounded-[2.5rem] border border-line bg-card shadow-card lg:grid-cols-2"
       >
         {/* copy */}
         <div className="relative z-10 p-6 sm:p-12 lg:p-14">
           <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-2xs font-semibold uppercase tracking-[.18em] text-emerald-700 ring-1 ring-inset ring-emerald-200">
-            <Leaf size={13} strokeWidth={2.4} />
+            <Leaf size={13} />
             {banner.eyebrow}
           </span>
 
@@ -57,8 +53,7 @@ export const GreenDiwaliBanner = () => (
         </div>
 
         {/* art panel */}
-        <motion.div
-          variants={slideRight}
+        <div
           className="relative min-h-[220px] overflow-hidden sm:min-h-[280px] lg:min-h-full"
           style={{ background: `linear-gradient(140deg, ${banner.accent}22, ${banner.accentTo}33)` }}
         >
@@ -74,16 +69,12 @@ export const GreenDiwaliBanner = () => (
             { type: 'flowerpot', variant: 4, className: 'right-[10%] top-[26%] h-28 w-28 sm:h-36 sm:w-36', d: 6.5 },
             { type: 'kids', variant: 2, className: 'left-[22%] bottom-[8%] h-28 w-28 sm:h-36 sm:w-36', d: 5.5 },
           ].map((art, i) => (
-            <div
-              key={i}
-              className={`absolute ${art.className} animate-float-slow`}
-              style={{ animationDuration: `${art.d + 4}s`, animationDelay: `${i * 0.7}s` }}
-            >
+            <div key={i} className={`absolute ${art.className}`}>
               <CrackerArt type={art.type} variant={art.variant} className="h-full w-full" />
             </div>
           ))}
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
     </div>
   </section>
 );

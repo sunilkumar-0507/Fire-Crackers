@@ -1,4 +1,4 @@
-import { Star } from 'lucide-react';
+import { Star } from '@/components/ui/icons';
 import { cn } from '@/utils/cn';
 import { categoriesWithCounts, allTags, priceBounds } from '@/data';
 import { formatPrice } from '@/utils/format';

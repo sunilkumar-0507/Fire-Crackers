@@ -1,8 +1,6 @@
 import { useId, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
-import { Plus } from 'lucide-react';
+import { Plus } from '@/components/ui/icons';
 import { cn } from '@/utils/cn';
-import { accordion, EASE } from '@/animations/variants';
 
 export const AccordionItem = ({ question, answer, badge, isOpen, onToggle }) => {
   const id = useId().replace(/:/g, '');
@@ -40,37 +38,25 @@ export const AccordionItem = ({ question, answer, badge, isOpen, onToggle }) => 
             </span>
           </span>
 
-          <motion.span
-            animate={{ rotate: isOpen ? 135 : 0 }}
-            transition={{ duration: 0.4, ease: EASE }}
+          <span
             className={cn(
               'grid h-9 w-9 shrink-0 place-items-center rounded-full transition-colors duration-300',
               isOpen ? 'bg-flame text-dark' : 'bg-secondary-50 text-primary',
             )}
           >
-            <Plus size={17} strokeWidth={2.4} />
-          </motion.span>
+            <Plus size={17} />
+          </span>
         </button>
       </h3>
 
-      <AnimatePresence initial={false}>
-        {isOpen ? (
-          <motion.div
-            id={`panel-${id}`}
-            key="panel"
-            variants={accordion}
-            initial="collapsed"
-            animate="open"
-            exit="collapsed"
-            className="overflow-hidden"
-          >
-            <div className="px-5 pb-5 sm:px-7 sm:pb-7">
-              <div className="mb-4 h-px w-full bg-gradient-to-r from-secondary-200 via-line to-transparent" />
-              <p className="text-[15px] leading-[1.75] text-muted">{answer}</p>
-            </div>
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
+      {isOpen ? (
+        <div id={`panel-${id}`} key="panel" className="overflow-hidden">
+          <div className="px-5 pb-5 sm:px-7 sm:pb-7">
+            <div className="mb-4 h-px w-full bg-gradient-to-r from-secondary-200 via-line to-transparent" />
+            <p className="text-[15px] leading-[1.75] text-muted">{answer}</p>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 };

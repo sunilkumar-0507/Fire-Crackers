@@ -21,7 +21,7 @@ const HEIGHTS = { xs: 12, sm: 14, md: 16, lg: 20 };
 /**
  * Five stars with true fractional fill (4.7 fills 70% of the fifth star).
  *
- * PERF: this used to render ten separate lucide `<Star>` icons — about 22 DOM
+ * PERF: this used to render ten separate `<Star>` icon components — about 22 DOM
  * nodes and ten React elements per rating. On a 43-card catalogue page that is
  * ~950 nodes for decoration alone. It is now one `<svg>` with two paths and a
  * clip rect: six nodes, one element, identical output.

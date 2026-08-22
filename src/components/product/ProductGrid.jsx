@@ -1,17 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
-import { motion } from 'framer-motion';
 import { cn } from '@/utils/cn';
-import { inView, stagger } from '@/animations/variants';
 import ProductCard from './ProductCard';
 import { ProductCardSkeleton } from '@/components/ui/Skeleton';
 import Button from '@/components/ui/Button';
 
 /**
- * Responsive product grid with a staggered reveal.
- *
- * The stagger is capped: past ~12 cards the per-item delay would make the
- * bottom of a long list arrive noticeably late, so the step shrinks as the
- * count grows and the whole grid still lands inside half a second.
+ * Responsive product grid.
  *
  * PERF: with `paginate`, only `pageSize` cards mount up front and the rest
  * arrive a page at a time as you scroll. Rendering the full 43-item catalogue
@@ -67,7 +61,6 @@ export const ProductGrid = ({
   }
 
   const shown = paginate ? products.slice(0, limit) : products;
-  const step = shown.length > 12 ? 0.03 : 0.06;
 
   // Placeholders for the next page occupy the space those cards will fill, so
   // swapping them for real cards does not push the footer down. Without this,
@@ -76,11 +69,7 @@ export const ProductGrid = ({
 
   return (
     <>
-      <motion.div
-        variants={stagger(step)}
-        {...inView}
-        className={cn('grid grid-cols-2 gap-3 sm:gap-5', columns, className)}
-      >
+      <div className={cn('grid grid-cols-2 gap-3 sm:gap-5', columns, className)}>
         {shown.map((product) => (
           <ProductCard key={product.id} product={product} compact={compact} />
         ))}
@@ -88,7 +77,7 @@ export const ProductGrid = ({
         {Array.from({ length: pending }, (_, i) => (
           <ProductCardSkeleton key={`pending-${limit}-${i}`} />
         ))}
-      </motion.div>
+      </div>
 
       {hasMore ? (
         <div className="flex flex-col items-center gap-4 pt-10">

@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import { AnimatePresence, motion } from 'framer-motion';
-import { ChevronDown, Menu, Search, ShoppingBag } from 'lucide-react';
+import { ChevronDown, Menu, Search, ShoppingBag } from '@/components/ui/icons';
 import { cn } from '@/utils/cn';
 import { NAV_LINKS } from '@/constants';
 import { categoriesWithCounts } from '@/data';
@@ -9,7 +8,6 @@ import { artForCategory } from '@/utils/image';
 import { useScrolled } from '@/hooks/useScrolled';
 import { useCartStore, selectCount } from '@/store/cartStore';
 import { useUIStore } from '@/store/uiStore';
-import { dropdown, EASE } from '@/animations/variants';
 import Logo from '@/components/ui/Logo';
 import CrackerArt from '@/components/ui/CrackerArt';
 import AnnouncementBar from './AnnouncementBar';
@@ -96,7 +94,6 @@ const NavItem = ({ link, openKey, setOpenKey, onNavigate }) => {
             {hasChildren ? (
               <ChevronDown
                 size={14}
-                strokeWidth={2.4}
                 className={cn('transition-transform duration-300', isOpen && 'rotate-180')}
               />
             ) : null}
@@ -110,24 +107,16 @@ const NavItem = ({ link, openKey, setOpenKey, onNavigate }) => {
         )}
       </NavLink>
 
-      {hasChildren ? (
-        <AnimatePresence>
-          {isOpen ? (
-            <motion.div
-              variants={dropdown}
-              initial="hidden"
-              animate="show"
-              exit="exit"
-              onMouseEnter={open}
-              onMouseLeave={close}
-              className="absolute left-1/2 top-full z-50 -translate-x-1/2 pt-3"
-            >
-              <div className="overflow-hidden rounded-3xl border border-line bg-card shadow-lift">
-                <CategoryPanel onNavigate={onNavigate} />
-              </div>
-            </motion.div>
-          ) : null}
-        </AnimatePresence>
+      {hasChildren && isOpen ? (
+        <div
+          onMouseEnter={open}
+          onMouseLeave={close}
+          className="absolute left-1/2 top-full z-50 -translate-x-1/2 pt-3"
+        >
+          <div className="overflow-hidden rounded-3xl border border-line bg-card shadow-lift">
+            <CategoryPanel onNavigate={onNavigate} />
+          </div>
+        </div>
       ) : null}
     </li>
   );
@@ -164,14 +153,9 @@ export const Navbar = () => {
 
   return (
     <header className="fixed inset-x-0 top-0 z-50">
-      <motion.div
-        initial={false}
-        animate={{ height: scrolled ? 0 : 36, opacity: scrolled ? 0 : 1 }}
-        transition={{ duration: 0.45, ease: EASE }}
-        className="overflow-hidden"
-      >
+      <div className="overflow-hidden">
         <AnnouncementBar />
-      </motion.div>
+      </div>
 
       {/* The bar is opaque at every scroll position. It used to be fully
           transparent until 28px, which meant the logo and every nav label sat
@@ -214,7 +198,7 @@ export const Navbar = () => {
               aria-label="Search crackers"
               className="grid h-11 w-11 place-items-center rounded-full text-ink transition-colors duration-200 hover:bg-secondary-50 hover:text-primary-700 active:scale-95"
             >
-              <Search size={19} strokeWidth={2} />
+              <Search size={19} />
             </button>
 
             <button
@@ -223,22 +207,16 @@ export const Navbar = () => {
               aria-label={`Open cart, ${count} item${count === 1 ? '' : 's'}`}
               className="relative flex h-11 items-center gap-2 rounded-full bg-flame px-3.5 text-sm font-semibold text-dark transition-[filter] duration-200 hover:brightness-[1.04] active:scale-95 sm:px-4"
             >
-              <ShoppingBag size={18} strokeWidth={2.2} />
-              <span className="hidden sm:inline">Cart</span>
-              <AnimatePresence>
-                {count > 0 ? (
-                  <motion.span
-                    key={count}
-                    initial={{ scale: 0.4, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    exit={{ scale: 0.4, opacity: 0 }}
-                    transition={{ type: 'spring', stiffness: 520, damping: 22 }}
-                    className="absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-dark px-1 text-[10px] font-bold text-bg"
-                  >
-                    {count > 99 ? '99+' : count}
-                  </motion.span>
-                ) : null}
-              </AnimatePresence>
+              <ShoppingBag size={18} />
+            <span className="hidden sm:inline">Cart</span>
+              {count > 0 ? (
+                <span
+                  key={count}
+                  className="absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-dark px-1 text-[10px] font-bold text-bg"
+                >
+                  {count > 99 ? '99+' : count}
+                </span>
+              ) : null}
             </button>
 
             <button
@@ -247,11 +225,10 @@ export const Navbar = () => {
               aria-label="Open menu"
               className="grid h-11 w-11 place-items-center rounded-full text-ink transition-colors duration-200 hover:bg-secondary-50 hover:text-primary-700 active:scale-95 lg:hidden"
             >
-              <Menu size={20} strokeWidth={2} />
+              <Menu size={20} />
             </button>
           </div>
         </div>
-
       </div>
     </header>
   );

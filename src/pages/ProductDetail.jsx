@@ -1,17 +1,17 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import {
   AlertTriangle,
   Check,
   Heart,
+  HeartFilled,
   Info,
   ShieldAlert,
   ShoppingBag,
   Sparkles,
   Truck,
-} from 'lucide-react';
+} from '@/components/ui/icons';
 import { cn } from '@/utils/cn';
 import { findProduct, getRelated, findCategory, featuredOffers } from '@/data';
 import { SAFETY_RULES, SHIPPING } from '@/constants';
@@ -19,7 +19,6 @@ import { formatPrice, stockLevel, addWorkingDays, formatDay } from '@/utils/form
 import { toCartItem } from '@/utils/cart';
 import { artForCategory } from '@/utils/image';
 import { useCartStore, selectInCart, selectIsWishlisted } from '@/store/cartStore';
-import { fadeUp, inView, stagger } from '@/animations/variants';
 import PageHeader from '@/components/ui/PageHeader';
 import ProductGallery from '@/components/product/ProductGallery';
 import ProductGrid from '@/components/product/ProductGrid';
@@ -47,7 +46,7 @@ const SpecTable = ({ specs }) => (
 const SafetyPanel = ({ product }) => (
   <div className="space-y-5">
     <div className="flex items-start gap-4 rounded-3xl border border-amber-200 bg-amber-50/70 p-5">
-      <ShieldAlert size={20} className="mt-0.5 shrink-0 text-amber-600" strokeWidth={2.2} />
+      <ShieldAlert size={20} className="mt-0.5 shrink-0 text-amber-600" />
       <div>
         <p className="font-display text-base font-semibold text-amber-900">
           Keep {product.specs['Safe distance'] ?? '3 metres'} between people and this item
@@ -62,14 +61,14 @@ const SafetyPanel = ({ product }) => (
     <ul className="grid gap-2.5 sm:grid-cols-2">
       {SAFETY_RULES.map((rule) => (
         <li key={rule} className="flex items-start gap-3 rounded-2xl bg-card p-4 text-[13px] leading-relaxed text-ink">
-          <Check size={15} className="mt-0.5 shrink-0 text-emerald-500" strokeWidth={2.8} />
+          <Check size={15} className="mt-0.5 shrink-0 text-emerald-500" />
           {rule}
         </li>
       ))}
     </ul>
 
     <p className="flex items-start gap-3 rounded-2xl bg-rose-50 p-4 text-[13px] leading-relaxed text-rose-800">
-      <AlertTriangle size={15} className="mt-0.5 shrink-0" strokeWidth={2.4} />
+      <AlertTriangle size={15} className="mt-0.5 shrink-0" />
       If a cracker fails to light, wait ten full minutes before approaching it, then soak it in
       water before disposal. Never re-light and never inspect it up close.
     </p>
@@ -83,7 +82,7 @@ const DeliveryPanel = () => {
   return (
     <div className="space-y-4">
       <div className="flex items-start gap-4 rounded-3xl border border-line bg-card p-5">
-        <Truck size={20} className="mt-0.5 shrink-0 text-primary" strokeWidth={2.2} />
+        <Truck size={20} className="mt-0.5 shrink-0 text-primary" />
         <div>
           <p className="font-display text-base font-semibold text-dark">
             Arrives {formatDay(from)} – {formatDay(to)}
@@ -103,7 +102,7 @@ const DeliveryPanel = () => {
           'Damaged items replaced or refunded — photograph the carton first',
         ].map((line) => (
           <li key={line} className="flex items-start gap-3 rounded-2xl bg-card p-4">
-            <Check size={15} className="mt-0.5 shrink-0 text-emerald-500" strokeWidth={2.8} />
+            <Check size={15} className="mt-0.5 shrink-0 text-emerald-500" />
             {line}
           </li>
         ))}
@@ -175,7 +174,7 @@ export const ProductDetail = () => {
       <div className="container pb-12 sm:pb-16">
         <div className="grid gap-8 sm:gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,460px)] lg:gap-14">
           {/* gallery */}
-          <motion.div variants={fadeUp} initial="hidden" animate="show">
+          <div>
             <ProductGallery
               images={product.images}
               alt={product.name}
@@ -188,16 +187,11 @@ export const ProductDetail = () => {
                 </>
               }
             />
-          </motion.div>
+          </div>
 
           {/* purchase rail */}
-          <motion.div
-            variants={stagger(0.06)}
-            initial="hidden"
-            animate="show"
-            className="lg:sticky lg:top-28 lg:self-start"
-          >
-            <motion.div variants={fadeUp}>
+          <div className="lg:sticky lg:top-28 lg:self-start">
+            <div>
               <p className="text-2xs font-semibold uppercase tracking-[.2em] text-primary">
                 {product.brand} · {category?.name}
               </p>
@@ -208,17 +202,14 @@ export const ProductDetail = () => {
                 <Rating value={product.rating} reviews={product.reviews} size="md" />
                 <StockBadge level={level} />
               </div>
-            </motion.div>
+            </div>
 
-            <motion.p variants={fadeUp} className="mt-5 text-[15px] leading-[1.75] text-muted">
+            <p className="mt-5 text-[15px] leading-[1.75] text-muted">
               {product.description}
-            </motion.p>
+            </p>
 
             {/* price block */}
-            <motion.div
-              variants={fadeUp}
-              className="mt-7 rounded-4xl border border-line bg-card p-5 shadow-card sm:p-6"
-            >
+            <div className="mt-7 rounded-4xl border border-line bg-card p-5 shadow-card sm:p-6">
               <div className="flex flex-wrap items-end gap-x-3 gap-y-2">
                 <span className="font-display text-3xl font-semibold text-dark sm:text-4xl">
                   {formatPrice(product.price)}
@@ -282,35 +273,34 @@ export const ProductDetail = () => {
                       : 'border-line bg-card text-muted hover:border-secondary-300 hover:text-primary',
                   )}
                 >
-                  <Heart size={19} strokeWidth={2.2} fill={wishlisted ? 'currentColor' : 'none'} />
+                  {wishlisted ? <HeartFilled size={19} /> : <Heart size={19} />}
                 </button>
               </div>
 
               {inCart > 0 ? (
                 <p className="mt-4 flex items-center justify-center gap-2 rounded-2xl bg-emerald-50 py-2.5 text-xs font-semibold text-emerald-700">
-                  <Check size={14} strokeWidth={2.8} />
+                  <Check size={14} />
                   {inCart} already in your basket
                 </p>
               ) : null}
-            </motion.div>
+            </div>
 
             {/* highlights */}
-            <motion.ul variants={fadeUp} className="mt-6 grid gap-2.5">
+            <ul className="mt-6 grid gap-2.5">
               {product.highlights.map((line) => (
                 <li key={line} className="flex items-start gap-3 text-[14px] leading-relaxed text-ink">
-                  <Sparkles size={15} className="mt-0.5 shrink-0 text-secondary-500" strokeWidth={2.2} />
+                  <Sparkles size={15} className="mt-0.5 shrink-0 text-secondary-500" />
                   {line}
                 </li>
               ))}
-            </motion.ul>
+            </ul>
 
             {/* live offer */}
             {featuredOffers[1] ? (
-              <motion.div
-                variants={fadeUp}
+              <div
                 className="mt-6 flex items-start gap-3 rounded-3xl border border-dashed border-secondary-300 bg-secondary-50/60 p-5"
               >
-                <Info size={17} className="mt-0.5 shrink-0 text-primary" strokeWidth={2.2} />
+                <Info size={17} className="mt-0.5 shrink-0 text-primary" />
                 <p className="text-[13px] leading-relaxed text-ink">
                   <strong className="font-semibold text-dark">{featuredOffers[1].code}</strong> —{' '}
                   {featuredOffers[1].title.toLowerCase()} on orders above{' '}
@@ -319,13 +309,13 @@ export const ProductDetail = () => {
                     See all offers
                   </Link>
                 </p>
-              </motion.div>
+              </div>
             ) : null}
-          </motion.div>
+          </div>
         </div>
 
         {/* tabs */}
-        <motion.div variants={fadeUp} {...inView} className="mt-12 max-w-4xl sm:mt-16">
+        <div className="mt-12 max-w-4xl sm:mt-16">
           <Tabs
             tabs={[
               {
@@ -337,7 +327,7 @@ export const ProductDetail = () => {
                     <ul className="grid gap-2.5 sm:grid-cols-2">
                       {product.highlights.map((line) => (
                         <li key={line} className="flex items-start gap-3 rounded-2xl bg-card p-4 text-[13px] leading-relaxed text-ink">
-                          <Check size={15} className="mt-0.5 shrink-0 text-emerald-500" strokeWidth={2.8} />
+                          <Check size={15} className="mt-0.5 shrink-0 text-emerald-500" />
                           {line}
                         </li>
                       ))}
@@ -357,7 +347,7 @@ export const ProductDetail = () => {
               { id: 'delivery', label: 'Delivery', content: <DeliveryPanel /> },
             ]}
           />
-        </motion.div>
+        </div>
       </div>
 
       {/* related */}

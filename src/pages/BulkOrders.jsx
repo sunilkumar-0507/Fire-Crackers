@@ -1,12 +1,10 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
-import { Building2, Check, FileText, Phone, Send, Truck, UserCheck } from 'lucide-react';
+import { Building2, Check, FileText, Phone, Send, Truck, UserCheck } from '@/components/ui/icons';
 import { cn } from '@/utils/cn';
 import { BRAND, DISTRICTS } from '@/constants';
 import { api } from '@/data';
 import { formatPrice } from '@/utils/format';
-import { fadeUp, inView, stagger } from '@/animations/variants';
 import PageHeader from '@/components/ui/PageHeader';
 import Section, { SectionHeading } from '@/components/ui/Section';
 import Button from '@/components/ui/Button';
@@ -105,28 +103,26 @@ export const BulkOrders = () => {
 
       {/* benefits */}
       <div className="container">
-        <motion.ul
-          variants={stagger(0.06)}
-          {...inView}
+        <ul
           className="grid gap-px overflow-hidden rounded-4xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-4"
         >
           {BENEFITS.map(({ icon: Icon, title, text }) => (
-            <motion.li key={title} variants={fadeUp} className="group bg-card p-6 transition-colors hover:bg-card">
+            <li key={title} className="group bg-card p-6 transition-colors hover:bg-card">
               <span className="grid h-11 w-11 place-items-center rounded-2xl bg-secondary-50 text-primary transition-all duration-500 ease-luxe group-hover:scale-110 group-hover:bg-flame group-hover:text-dark">
-                <Icon size={19} strokeWidth={2.1} />
+                <Icon size={19} />
               </span>
               <h3 className="mt-5 font-display text-base font-semibold text-dark">{title}</h3>
               <p className="mt-1.5 text-[13px] leading-relaxed text-muted">{text}</p>
-            </motion.li>
+            </li>
           ))}
-        </motion.ul>
+        </ul>
       </div>
 
       <Section>
         <div className="container">
           <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)] lg:gap-16">
             {/* form */}
-            <motion.div variants={fadeUp} {...inView}>
+            <div>
               <SectionHeading
                 eyebrow="Request a quote"
                 title="Tell us roughly what you need"
@@ -137,7 +133,7 @@ export const BulkOrders = () => {
               {state === 'done' ? (
                 <div className="rounded-4xl border border-emerald-200 bg-emerald-50/70 p-6 text-center sm:p-10">
                   <span className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-emerald-500 text-white shadow-lift">
-                    <Check size={30} strokeWidth={3} />
+                    <Check size={30} />
                   </span>
                   <h3 className="mt-6 font-display text-2xl font-semibold text-emerald-900">
                     Enquiry received
@@ -270,10 +266,10 @@ export const BulkOrders = () => {
                   </div>
                 </form>
               )}
-            </motion.div>
+            </div>
 
             {/* aside */}
-            <motion.aside variants={fadeUp} {...inView} className="lg:sticky lg:top-28 lg:self-start">
+            <aside className="lg:sticky lg:top-28 lg:self-start">
               <div className="rounded-4xl border border-line bg-card p-5 shadow-card sm:p-7">
                 <h3 className="font-display text-xl font-semibold text-dark">How the pricing works</h3>
                 <ul className="mt-5 space-y-3.5">
@@ -309,7 +305,7 @@ export const BulkOrders = () => {
                   {BRAND.phone}
                 </Button>
               </div>
-            </motion.aside>
+            </aside>
           </div>
         </div>
       </Section>

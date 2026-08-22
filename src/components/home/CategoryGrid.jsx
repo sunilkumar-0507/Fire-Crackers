@@ -1,10 +1,8 @@
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight } from '@/components/ui/icons';
 import { cn } from '@/utils/cn';
 import { categoriesWithCounts } from '@/data';
 import { artForCategory } from '@/utils/image';
-import { fadeUp, inView, stagger } from '@/animations/variants';
 import Section, { SectionHeading } from '@/components/ui/Section';
 import CrackerArt from '@/components/ui/CrackerArt';
 import Button from '@/components/ui/Button';
@@ -21,7 +19,7 @@ const CategoryCard = ({ category, index }) => (
 
     // The first tile is the feature: full width in the two-column phone grid,
     // a 2×2 block from `sm` up.
-    <motion.div variants={fadeUp} className={index === 0 ? 'col-span-2 sm:row-span-2' : ''}>
+    <div className={index === 0 ? 'col-span-2 sm:row-span-2' : ''}>
       <Link
         to={`/category/${category.slug}`}
         className="group relative flex h-full flex-col overflow-hidden rounded-4xl border border-line bg-card p-4 shadow-card transition-shadow duration-300 ease-luxe hover:shadow-lift xs:p-5 sm:p-7"
@@ -48,7 +46,7 @@ const CategoryCard = ({ category, index }) => (
           </div>
 
           <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-secondary-50 text-primary transition-colors duration-300 group-hover:bg-dark group-hover:text-bg sm:h-9 sm:w-9">
-            <ArrowUpRight size={16} strokeWidth={2.4} />
+            <ArrowUpRight size={16} />
           </span>
         </div>
 
@@ -97,7 +95,7 @@ const CategoryCard = ({ category, index }) => (
           </span>
         </div>
       </Link>
-    </motion.div>
+    </div>
 );
 
 export const CategoryGrid = () => (
@@ -114,15 +112,11 @@ export const CategoryGrid = () => (
         }
       />
 
-      <motion.div
-        variants={stagger(0.07)}
-        {...inView}
-        className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4"
-      >
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4">
         {categoriesWithCounts.map((category, index) => (
           <CategoryCard key={category.id} category={category} index={index} />
         ))}
-      </motion.div>
+      </div>
     </div>
   </Section>
 );

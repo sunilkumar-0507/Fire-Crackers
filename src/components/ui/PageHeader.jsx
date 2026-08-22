@@ -1,9 +1,7 @@
 import { Fragment } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight } from '@/components/ui/icons';
 import { cn } from '@/utils/cn';
-import { fadeUp, stagger } from '@/animations/variants';
 import CrackerArt from '@/components/ui/CrackerArt';
 
 /** Breadcrumb + title block that opens every inner page. */
@@ -29,7 +27,7 @@ export const PageHeader = ({
           style={{ background: `radial-gradient(60% 60% at 70% 45%, ${accent}2e, transparent 70%)` }}
         />
         <div className="absolute right-[8%] top-1/2 h-40 w-40 -translate-y-1/2 opacity-70 sm:h-56 sm:w-56">
-          <div className="h-full w-full animate-float-slow">
+          <div className="h-full w-full">
             <CrackerArt type={art} variant={artVariant} className="h-full w-full" />
           </div>
         </div>
@@ -37,9 +35,9 @@ export const PageHeader = ({
     ) : null}
 
     <div className="container relative">
-      <motion.div variants={stagger(0.07)} initial="hidden" animate="show" className="max-w-2xl">
+      <div className="max-w-2xl">
         {breadcrumbs.length ? (
-          <motion.nav variants={fadeUp} aria-label="Breadcrumb" className="mb-5">
+          <nav aria-label="Breadcrumb" className="mb-5">
             <ol className="flex flex-wrap items-center gap-1.5 text-2xs text-muted">
               <li>
                 <Link to="/" className="transition-colors hover:text-primary">
@@ -65,38 +63,35 @@ export const PageHeader = ({
                 </Fragment>
               ))}
             </ol>
-          </motion.nav>
+          </nav>
         ) : null}
 
         {eyebrow ? (
-          <motion.p
-            variants={fadeUp}
-            className="mb-4 text-2xs font-semibold uppercase tracking-[.22em] text-primary"
-          >
+          <p className="mb-4 text-2xs font-semibold uppercase tracking-[.22em] text-primary">
             {eyebrow}
-          </motion.p>
+          </p>
         ) : null}
 
         {/* Optional: the product page supplies its own <h1> in the buy rail,
             and uses this header only for the breadcrumb trail. */}
         {title ? (
-          <motion.h1 variants={fadeUp} className="text-display-sm font-semibold text-dark">
+          <h1 className="text-display-sm font-semibold text-dark">
             {title}
-          </motion.h1>
+          </h1>
         ) : null}
 
         {description ? (
-          <motion.p variants={fadeUp} className="mt-4 text-[15px] leading-relaxed text-muted sm:mt-5 sm:text-base">
+          <p className="mt-4 text-[15px] leading-relaxed text-muted sm:mt-5 sm:text-base">
             {description}
-          </motion.p>
+          </p>
         ) : null}
 
         {children ? (
-          <motion.div variants={fadeUp} className="mt-6 sm:mt-7">
+          <div className="mt-6 sm:mt-7">
             {children}
-          </motion.div>
+          </div>
         ) : null}
-      </motion.div>
+      </div>
     </div>
   </header>
 );

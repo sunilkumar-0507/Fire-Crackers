@@ -1,4 +1,4 @@
-import { Minus, Plus } from 'lucide-react';
+import { Minus, Plus } from '@/components/ui/icons';
 import { cn } from '@/utils/cn';
 
 const SIZES = {
@@ -41,7 +41,7 @@ export const QtyStepper = ({
           s.btn,
         )}
       >
-        <Minus size={s.icon} strokeWidth={2.5} />
+        <Minus size={s.icon} />
       </button>
 
       <span
@@ -62,7 +62,7 @@ export const QtyStepper = ({
           s.btn,
         )}
       >
-        <Plus size={s.icon} strokeWidth={2.5} />
+        <Plus size={s.icon} />
       </button>
     </div>
   );

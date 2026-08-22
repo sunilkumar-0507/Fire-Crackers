@@ -23,9 +23,9 @@ npm run lint       # oxlint
 | Styling | Tailwind CSS 3.4, custom festival theme |
 | Routing | React Router 7 (`createBrowserRouter`, lazy routes) |
 | State | Zustand 5 (cart persisted to `localStorage`) |
-| Animation | Framer Motion (UI), GSAP (splash timeline), CSS (ambient) |
-| Carousels | SwiperJS 14 |
-| Icons | Lucide |
+| Animation | CSS transitions only — no animation library |
+| Carousels | SwiperJS 14 (manual advance, no autoplay) |
+| Icons | Themify + Font Awesome 6, via `react-icons` |
 | Toasts | react-hot-toast |
 | Fonts | Playfair Display + Inter, self-hosted via `@fontsource` |
 
@@ -83,17 +83,19 @@ The brief asked that it never feel slow. The decisions that carry that:
   A grid of forty tilting cards causes zero re-renders.
 - **One parallax listener for the whole site.** `useParallax` publishes `--px` /
   `--py` on the shell; every decorative layer reads them in CSS.
-- **Compositor-only animation.** Variants animate `opacity`/`x`/`y`/`scale`
-  only — nothing animates width, height, top or left.
+- **No animation library.** Decorative motion — reveal-on-scroll, idle
+  bobbing, drawer springs, click ripples, carousel autoplay — has been removed.
+  What is left is hover/focus colour transitions, the loading spinner and the
+  skeleton shimmer, all plain CSS.
 - **Deferred filtering.** Search and catalogue filters run through
   `useDeferredValue`, so typing stays responsive while results re-render at
   lower priority. No debounce lag, no dropped keystrokes.
-- **Split bundles.** React, Framer Motion, GSAP and Swiper are separate chunks;
-  only Home is eager, every other route is lazy.
+- **Split bundles.** React, the icon set and Swiper are separate chunks; only
+  Home is eager, every other route is lazy.
 - **Real skeletons, no fake latency.** `MOCK_LATENCY` is `0`. Skeletons appear
   during genuine route loading, not on an artificial timer.
-- **`prefers-reduced-motion` is honoured everywhere** — the splash collapses to
-  a fade, carousels stop autoplaying, the cursor and parallax switch off.
+- **`prefers-reduced-motion` is honoured everywhere** — a global rule collapses
+  every remaining transition and animation to near-zero duration.
 
 ---
 
@@ -118,7 +120,6 @@ and Escape/Enter/Space skip it too.
 
 ```
 src/
-├── animations/     Framer Motion variants, shared easings
 ├── components/
 │   ├── cart/       drawer, checkout stepper
 │   ├── combo/      bundle card
@@ -127,7 +128,7 @@ src/
 │   ├── layout/     navbar, mobile menu, search overlay, footer, scroll
 │   ├── offers/     offer card, countdown
 │   ├── product/    card, grid, gallery, filters, quick view
-│   └── ui/         button, badge, rating, modal, tabs, accordion, skeleton…
+│   └── ui/         button, badge, rating, modal, tabs, accordion, icons…
 ├── constants/      brand, nav, coupons, shipping, safety copy
 ├── data/           the seven JSON files + the service layer
 ├── hooks/          media query, scroll, tilt, parallax, countdown, lock-scroll

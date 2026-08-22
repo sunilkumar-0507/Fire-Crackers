@@ -1,9 +1,8 @@
 import { useRef } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { A11y, Autoplay, FreeMode, Navigation, Pagination } from 'swiper/modules';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { A11y, FreeMode, Navigation, Pagination } from 'swiper/modules';
+import { ChevronLeft, ChevronRight } from '@/components/ui/icons';
 import { bestSellers } from '@/data';
-import { usePrefersReducedMotion } from '@/hooks/useMediaQuery';
 import Section, { SectionHeading } from '@/components/ui/Section';
 import ProductCard from '@/components/product/ProductCard';
 
@@ -14,14 +13,12 @@ import 'swiper/css/free-mode';
 /**
  * Best sellers carousel.
  *
- * Autoplays, pauses on hover and on interaction, and turns autoplay off
- * entirely for reduced-motion visitors — a carousel that moves on its own is
- * exactly the kind of motion that setting exists to stop.
+ * It advances only when you do — by swipe, by arrow or by dot. It used to
+ * autoplay every 3.2 seconds, which moved the row you were reading.
  */
 export const BestSellers = () => {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
-  const reduced = usePrefersReducedMotion();
 
   return (
     <Section id="best-sellers" className="overflow-hidden">
@@ -40,7 +37,7 @@ export const BestSellers = () => {
                 aria-label="Previous products"
                 className="grid h-12 w-12 place-items-center rounded-full border border-line bg-card text-primary shadow-soft backdrop-blur transition-all duration-300 hover:-translate-x-0.5 hover:bg-card hover:shadow-lift active:scale-90"
               >
-                <ChevronLeft size={19} strokeWidth={2.4} />
+                <ChevronLeft size={19} />
               </button>
               <button
                 ref={nextRef}
@@ -48,7 +45,7 @@ export const BestSellers = () => {
                 aria-label="Next products"
                 className="grid h-12 w-12 place-items-center rounded-full border border-line bg-card text-primary shadow-soft backdrop-blur transition-all duration-300 hover:translate-x-0.5 hover:bg-card hover:shadow-lift active:scale-90"
               >
-                <ChevronRight size={19} strokeWidth={2.4} />
+                <ChevronRight size={19} />
               </button>
             </div>
           }
@@ -58,17 +55,12 @@ export const BestSellers = () => {
       {/* Full-bleed track so slides can run off the right edge of the viewport. */}
       <div className="container">
         <Swiper
-          modules={[Autoplay, Navigation, Pagination, FreeMode, A11y]}
+          modules={[Navigation, Pagination, FreeMode, A11y]}
           spaceBetween={20}
           slidesPerView={1.15}
           grabCursor
           watchSlidesProgress
-          autoplay={
-            reduced
-              ? false
-              : { delay: 3200, disableOnInteraction: false, pauseOnMouseEnter: true }
-          }
-          speed={750}
+          speed={400}
           loop={bestSellers.length > 4}
           pagination={{ clickable: true, el: '.bestseller-dots' }}
           onBeforeInit={(swiper) => {

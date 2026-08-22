@@ -1,9 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { AnimatePresence, motion } from 'framer-motion';
-import { X } from 'lucide-react';
+import { X } from '@/components/ui/icons';
 import { cn } from '@/utils/cn';
-import { backdrop, modal } from '@/animations/variants';
 import { useLockBodyScroll } from '@/hooks/useLockBodyScroll';
 
 /**
@@ -63,47 +61,34 @@ export const Modal = ({ open, onClose, children, className, label = 'Dialog' }) 
     };
   }, [open, onClose]);
 
+  if (!open) return null;
+
   return createPortal(
-    <AnimatePresence>
-      {open ? (
-        <div className="fixed inset-0 z-[80] flex items-center justify-center p-3 sm:p-6">
-          <motion.div
-            variants={backdrop}
-            initial="hidden"
-            animate="show"
-            exit="exit"
-            onClick={onClose}
-            className="absolute inset-0 bg-dark/45 backdrop-blur-md"
-          />
-          <motion.div
-            ref={panelRef}
-            variants={modal}
-            initial="hidden"
-            animate="show"
-            exit="exit"
-            role="dialog"
-            aria-modal="true"
-            aria-label={label}
-            className={cn(
-              // `svh` rather than `vh`: mobile browser chrome is counted out of
-              // `svh`, so the panel cannot end up taller than what is visible.
-              'relative max-h-[calc(100svh-1.5rem)] w-full max-w-3xl overflow-y-auto overscroll-contain rounded-4xl bg-card shadow-lift sm:max-h-[90vh]',
-              className,
-            )}
-          >
-            <button
-              type="button"
-              onClick={onClose}
-              aria-label="Close dialog"
-              className="absolute right-3 top-3 z-20 grid h-10 w-10 place-items-center rounded-full bg-card text-ink shadow-soft backdrop-blur transition-all duration-300 hover:rotate-90 hover:bg-card hover:text-primary sm:right-4 sm:top-4"
-            >
-              <X size={18} strokeWidth={2.4} />
-            </button>
-            {children}
-          </motion.div>
-        </div>
-      ) : null}
-    </AnimatePresence>,
+    <div className="fixed inset-0 z-[80] flex items-center justify-center p-3 sm:p-6">
+      <div onClick={onClose} className="absolute inset-0 bg-dark/45 backdrop-blur-md" />
+      <div
+        ref={panelRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label={label}
+        className={cn(
+          // `svh` rather than `vh`: mobile browser chrome is counted out of
+          // `svh`, so the panel cannot end up taller than what is visible.
+          'relative max-h-[calc(100svh-1.5rem)] w-full max-w-3xl overflow-y-auto overscroll-contain rounded-4xl bg-card shadow-lift sm:max-h-[90vh]',
+          className,
+        )}
+      >
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Close dialog"
+          className="absolute right-3 top-3 z-20 grid h-10 w-10 place-items-center rounded-full bg-card text-ink shadow-soft backdrop-blur transition-all duration-300 hover:rotate-90 hover:bg-card hover:text-primary sm:right-4 sm:top-4"
+        >
+          <X size={18} />
+        </button>
+        {children}
+      </div>
+    </div>,
     document.body,
   );
 };

@@ -1,4 +1,4 @@
-import { forwardRef, useCallback, useRef, useState } from 'react';
+import { forwardRef } from 'react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/utils/cn';
 
@@ -31,9 +31,8 @@ const SIZES = {
 /**
  * The one button in the system.
  *
- * Renders as `<button>`, `<a>` or router `<Link>` depending on props, and
- * paints a material-style ripple from the exact click point. Ripples are held
- * in local state and self-remove on animation end, so no timers leak.
+ * Renders as `<button>`, `<a>` or router `<Link>` depending on props. Feedback
+ * is a colour change and a small press-down on `:active` — no ripple, no lift.
  */
 export const Button = forwardRef(function Button(
   {
@@ -47,41 +46,11 @@ export const Button = forwardRef(function Button(
     rightIcon,
     loading = false,
     disabled = false,
-    ripple = true,
     onClick,
     ...rest
   },
   forwardedRef,
 ) {
-  const [ripples, setRipples] = useState([]);
-  const seed = useRef(0);
-
-  const handleClick = useCallback(
-    (event) => {
-      if (ripple && !disabled && !loading) {
-        const rect = event.currentTarget.getBoundingClientRect();
-        const size = Math.max(rect.width, rect.height);
-        seed.current += 1;
-        setRipples((prev) => [
-          ...prev,
-          {
-            key: seed.current,
-            x: event.clientX - rect.left - size / 2,
-            y: event.clientY - rect.top - size / 2,
-            size,
-          },
-        ]);
-      }
-      onClick?.(event);
-    },
-    [ripple, disabled, loading, onClick],
-  );
-
-  const dropRipple = useCallback(
-    (key) => setRipples((prev) => prev.filter((r) => r.key !== key)),
-    [],
-  );
-
   const classes = cn(
     'relative isolate inline-flex select-none items-center justify-center overflow-hidden',
     'transition-[box-shadow,background-color,border-color,filter] duration-200 ease-luxe',
@@ -107,20 +76,12 @@ export const Button = forwardRef(function Button(
       )}
       {children ? <span className="relative z-10">{children}</span> : null}
       {rightIcon}
-      {ripples.map((r) => (
-        <span
-          key={r.key}
-          onAnimationEnd={() => dropRipple(r.key)}
-          className="pointer-events-none absolute z-0 animate-ripple-out rounded-full bg-current opacity-20"
-          style={{ left: r.x, top: r.y, width: r.size, height: r.size }}
-        />
-      ))}
     </>
   );
 
   if (to) {
     return (
-      <Link ref={forwardedRef} to={to} className={classes} onClick={handleClick} {...rest}>
+      <Link ref={forwardedRef} to={to} className={classes} onClick={onClick} {...rest}>
         {inner}
       </Link>
     );
@@ -132,7 +93,7 @@ export const Button = forwardRef(function Button(
         ref={forwardedRef}
         href={href}
         className={classes}
-        onClick={handleClick}
+        onClick={onClick}
         rel="noreferrer"
         {...rest}
       >
@@ -146,7 +107,7 @@ export const Button = forwardRef(function Button(
       ref={forwardedRef}
       type="button"
       className={classes}
-      onClick={handleClick}
+      onClick={onClick}
       disabled={disabled || loading}
       {...rest}
     >

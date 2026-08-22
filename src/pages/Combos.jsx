@@ -1,9 +1,7 @@
 import { useMemo, useState } from 'react';
-import { motion } from 'framer-motion';
-import { Package, Users, Wallet } from 'lucide-react';
+import { Package, Users, Wallet } from '@/components/ui/icons';
 import { combos } from '@/data';
 import { formatPrice } from '@/utils/format';
-import { fadeUp, inView, stagger } from '@/animations/variants';
 import PageHeader from '@/components/ui/PageHeader';
 import ComboCard from '@/components/combo/ComboCard';
 import Chip from '@/components/ui/Chip';
@@ -50,9 +48,7 @@ export const Combos = () => {
 
       {/* value strip */}
       <div className="container">
-        <motion.dl
-          variants={stagger(0.06)}
-          {...inView}
+        <dl
           className="grid gap-px overflow-hidden rounded-4xl border border-line bg-line sm:grid-cols-3"
         >
           {[
@@ -60,31 +56,28 @@ export const Combos = () => {
             { icon: Wallet, value: formatPrice(totalSaved), label: 'Total saved across the range' },
             { icon: Users, value: '2 – 25', label: 'People served per box' },
           ].map(({ icon: Icon, value, label }) => (
-            <motion.div key={label} variants={fadeUp} className="flex items-center gap-3.5 bg-card px-5 py-5 sm:gap-4 sm:px-6 sm:py-6">
+            <div
+              key={label}
+              className="flex items-center gap-3.5 bg-card px-5 py-5 sm:gap-4 sm:px-6 sm:py-6"
+            >
               <span className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-secondary-50 text-primary sm:h-11 sm:w-11">
-                <Icon size={19} strokeWidth={2.1} />
+                <Icon size={19} />
               </span>
               <span className="min-w-0">
                 <dd className="font-display text-lg font-semibold text-dark sm:text-xl">{value}</dd>
                 <dt className="mt-0.5 text-2xs uppercase tracking-[.14em] text-muted">{label}</dt>
               </span>
-            </motion.div>
+            </div>
           ))}
-        </motion.dl>
+        </dl>
       </div>
 
       <div className="container py-10 sm:py-14">
-        <motion.div
-          key={budget}
-          variants={stagger(0.07)}
-          initial="hidden"
-          animate="show"
-          className="grid gap-5 sm:gap-6 md:grid-cols-2 xl:grid-cols-3"
-        >
+        <div key={budget} className="grid gap-5 sm:gap-6 md:grid-cols-2 xl:grid-cols-3">
           {visible.map((combo) => (
             <ComboCard key={combo.id} combo={combo} />
           ))}
-        </motion.div>
+        </div>
       </div>
 
       <Section spacing="sm" className="bg-gradient-to-b from-transparent via-white/50 to-transparent">

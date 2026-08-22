@@ -1,13 +1,11 @@
 import { useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
-import { Check, Clock, Package, ShoppingBag, Truck, Users } from 'lucide-react';
+import { Check, Clock, Package, ShoppingBag, Truck, Users } from '@/components/ui/icons';
 import { combos, findCombo } from '@/data';
 import { formatPrice, addWorkingDays, formatDay } from '@/utils/format';
 import { comboToCartItem } from '@/utils/cart';
 import { useCartStore, selectInCart } from '@/store/cartStore';
-import { fadeUp, inView, stagger } from '@/animations/variants';
 import PageHeader from '@/components/ui/PageHeader';
 import Section, { SectionHeading } from '@/components/ui/Section';
 import ComboCard from '@/components/combo/ComboCard';
@@ -68,10 +66,7 @@ export const ComboDetail = () => {
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,440px)] lg:gap-14">
           {/* left: contents */}
           <div>
-            <motion.div
-              variants={fadeUp}
-              initial="hidden"
-              animate="show"
+            <div
               className="relative grid aspect-[4/3] place-items-center overflow-hidden rounded-[2rem] border border-line shadow-card"
               style={{ background: `linear-gradient(140deg, ${combo.accent}26, #FFFFFF 55%, ${combo.accent}1a)` }}
             >
@@ -80,54 +75,45 @@ export const ComboDetail = () => {
                 className="absolute inset-x-0 bottom-0 h-40 opacity-45"
                 style={{ background: `radial-gradient(55% 100% at 50% 100%, ${combo.accent}, transparent 72%)` }}
               />
-              <div className="relative h-3/4 w-3/4 animate-float">
+              <div className="relative h-3/4 w-3/4">
                 <CrackerArt type={combo.art} variant={2} className="h-full w-full" />
               </div>
               <Badge tone="gold" className="absolute left-4 top-4 sm:left-6 sm:top-6">
                 {combo.badge}
               </Badge>
-            </motion.div>
+            </div>
 
-            <motion.div variants={stagger(0.05)} {...inView} className="mt-10">
-              <motion.h2 variants={fadeUp} className="font-display text-2xl font-semibold text-dark">
+            <div className="mt-10">
+              <h2 className="font-display text-2xl font-semibold text-dark">
                 Everything inside the box
-              </motion.h2>
-              <motion.p variants={fadeUp} className="mt-2 text-sm text-muted">
+              </h2>
+              <p className="mt-2 text-sm text-muted">
                 {itemTotal} pieces across {combo.includes.length} product types. The same list is
                 printed inside the lid.
-              </motion.p>
+              </p>
 
-              <motion.ul variants={stagger(0.04)} className="mt-6 grid gap-px overflow-hidden rounded-3xl border border-line bg-line">
+              <ul className="mt-6 grid gap-px overflow-hidden rounded-3xl border border-line bg-line">
                 {combo.includes.map((line) => (
-                  <motion.li
+                  <li
                     key={line.name}
-                    variants={fadeUp}
                     className="flex items-center gap-3 bg-card px-4 py-3.5 sm:gap-4 sm:px-5 sm:py-4"
                   >
                     <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-emerald-50 text-emerald-600">
-                      <Check size={15} strokeWidth={2.8} />
+                      <Check size={15} />
                     </span>
                     <span className="flex-1 text-sm font-medium text-dark">{line.name}</span>
                     <span className="shrink-0 rounded-full bg-secondary-50 px-3 py-1 text-2xs font-bold text-primary">
                       × {line.qty}
                     </span>
-                  </motion.li>
+                  </li>
                 ))}
-              </motion.ul>
-            </motion.div>
+              </ul>
+            </div>
           </div>
 
           {/* right: buy rail */}
-          <motion.div
-            variants={stagger(0.06)}
-            initial="hidden"
-            animate="show"
-            className="lg:sticky lg:top-28 lg:self-start"
-          >
-            <motion.div
-              variants={fadeUp}
-              className="rounded-4xl border border-line bg-card p-5 shadow-card sm:p-7"
-            >
+          <div className="lg:sticky lg:top-28 lg:self-start">
+            <div className="rounded-4xl border border-line bg-card p-5 shadow-card sm:p-7">
               <p className="text-sm italic text-primary">{combo.tagline}</p>
 
               <div className="mt-5 flex flex-wrap items-end gap-x-3 gap-y-2">
@@ -149,7 +135,7 @@ export const ComboDetail = () => {
                   { icon: Clock, value: combo.duration === '—' ? 'N/A' : combo.duration.replace('About ', ''), label: 'Runs for' },
                 ].map(({ icon: Icon, value, label }) => (
                   <div key={label} className="bg-card px-2 py-4">
-                    <Icon size={15} className="mx-auto text-primary" strokeWidth={2.2} />
+                    <Icon size={15} className="mx-auto text-primary" />
                     <dd className="mt-2 text-xs font-semibold leading-tight text-dark">{value}</dd>
                     <dt className="mt-1 text-[9px] uppercase tracking-[.14em] text-muted">{label}</dt>
                   </div>
@@ -174,19 +160,19 @@ export const ComboDetail = () => {
 
               {inCart > 0 ? (
                 <p className="mt-4 flex items-center justify-center gap-2 rounded-2xl bg-emerald-50 py-2.5 text-xs font-semibold text-emerald-700">
-                  <Check size={14} strokeWidth={2.8} />
+                  <Check size={14} />
                   {inCart} already in your basket
                 </p>
               ) : null}
 
               <div className="mt-6 space-y-3 border-t border-line pt-5 text-[13px] text-muted">
                 <p className="flex items-start gap-2.5">
-                  <Truck size={15} className="mt-0.5 shrink-0 text-primary" strokeWidth={2.2} />
+                  <Truck size={15} className="mt-0.5 shrink-0 text-primary" />
                   Arrives {formatDay(addWorkingDays(2))} – {formatDay(addWorkingDays(4))}, free
                   above {formatPrice(2000)}
                 </p>
                 <p className="flex items-start gap-2.5">
-                  <Check size={15} className="mt-0.5 shrink-0 text-emerald-500" strokeWidth={2.8} />
+                  <Check size={15} className="mt-0.5 shrink-0 text-emerald-500" />
                   Use <strong className="font-semibold text-dark">COMBO500</strong> for a further ₹500 off
                 </p>
               </div>
@@ -195,8 +181,8 @@ export const ComboDetail = () => {
                 <Rating value={combo.rating} reviews={combo.reviews} size="sm" />
                 <span className="text-2xs text-muted">{combo.stock} boxes left</span>
               </div>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -204,11 +190,11 @@ export const ComboDetail = () => {
         <Section spacing="sm" className="bg-gradient-to-b from-transparent via-white/50 to-transparent">
           <div className="container">
             <SectionHeading eyebrow="Also consider" title="Other boxes in the range" className="pb-8" />
-            <motion.div variants={stagger(0.07)} {...inView} className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
               {others.map((other) => (
                 <ComboCard key={other.id} combo={other} showContents={false} />
               ))}
-            </motion.div>
+            </div>
           </div>
         </Section>
       ) : null}

@@ -1,6 +1,4 @@
-import { motion } from 'framer-motion';
 import { cn } from '@/utils/cn';
-import { EASE } from '@/animations/variants';
 
 /* --------------------------- illustrations -------------------------------- */
 
@@ -107,17 +105,14 @@ export const EmptyState = ({
   className,
   compact = false,
 }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 16 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.55, ease: EASE }}
+  <div
     className={cn(
       'flex flex-col items-center justify-center text-center',
       compact ? 'gap-3 px-6 py-10' : 'gap-4 px-6 py-16',
       className,
     )}
   >
-    <div className={cn('w-full animate-float', compact ? 'max-w-[150px]' : 'max-w-[230px]')}>
+    <div className={cn('w-full', compact ? 'max-w-[150px]' : 'max-w-[230px]')}>
       {Illustrations[illustration] ?? Illustrations.crate}
     </div>
 
@@ -134,7 +129,7 @@ export const EmptyState = ({
         {secondaryAction}
       </div>
     ) : null}
-  </motion.div>
+  </div>
 );
 
 export default EmptyState;

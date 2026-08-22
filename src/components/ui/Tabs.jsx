@@ -1,7 +1,5 @@
 import { useId, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
 import { cn } from '@/utils/cn';
-import { EASE } from '@/animations/variants';
 
 /**
  * Animated tab set. The active pill is a shared `layoutId`, so it slides
@@ -35,11 +33,7 @@ export const Tabs = ({ tabs, initial = 0, className, panelClassName }) => {
               )}
             >
               {isActive ? (
-                <motion.span
-                  layoutId={`${uid}-pill`}
-                  transition={{ type: 'spring', stiffness: 380, damping: 32 }}
-                  className="absolute inset-0 rounded-full bg-flame shadow-soft"
-                />
+                <span className="absolute inset-0 rounded-full bg-flame shadow-soft" />
               ) : null}
               <span className="relative z-10 flex items-center gap-2">
                 {tab.icon}
@@ -51,20 +45,14 @@ export const Tabs = ({ tabs, initial = 0, className, panelClassName }) => {
       </div>
 
       <div className={cn('pt-6 sm:pt-7', panelClassName)}>
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={current.id}
-            role="tabpanel"
-            id={`${uid}-panel-${current.id}`}
-            aria-labelledby={`${uid}-tab-${current.id}`}
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.3, ease: EASE }}
-          >
-            {current.content}
-          </motion.div>
-        </AnimatePresence>
+        <div
+          key={current.id}
+          role="tabpanel"
+          id={`${uid}-panel-${current.id}`}
+          aria-labelledby={`${uid}-tab-${current.id}`}
+        >
+          {current.content}
+        </div>
       </div>
     </div>
   );

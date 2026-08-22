@@ -1,11 +1,9 @@
 import { useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight } from '@/components/ui/icons';
 import { categoriesWithCounts, findCategory, products } from '@/data';
 import { filterProducts, SORT_OPTIONS } from '@/utils/search';
 import { artForCategory } from '@/utils/image';
-import { fadeUp, inView, stagger } from '@/animations/variants';
 import PageHeader from '@/components/ui/PageHeader';
 import ProductGrid from '@/components/product/ProductGrid';
 import Section from '@/components/ui/Section';
@@ -115,13 +113,9 @@ export const Category = () => {
             </Link>
           </div>
 
-          <motion.div
-            variants={stagger(0.05)}
-            {...inView}
-            className="grid grid-cols-2 gap-3 xs:gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7"
-          >
+          <div className="grid grid-cols-2 gap-3 xs:gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7">
             {others.map((other) => (
-              <motion.div key={other.id} variants={fadeUp}>
+              <div key={other.id}>
                 <Link
                   to={`/category/${other.slug}`}
                   className="group flex h-full flex-col items-center gap-2.5 rounded-3xl border border-line bg-card p-4 text-center shadow-soft transition-all duration-500 ease-luxe hover:-translate-y-1.5 hover:shadow-lift sm:gap-3 sm:p-5"
@@ -137,9 +131,9 @@ export const Category = () => {
                   </span>
                   <span className="mt-auto text-2xs text-muted">{other.productCount} items</span>
                 </Link>
-              </motion.div>
+              </div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </Section>
     </>

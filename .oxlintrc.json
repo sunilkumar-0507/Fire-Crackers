@@ -10,7 +10,13 @@
   },
   "overrides": [
     {
-      "files": ["src/routes/**", "src/data/**", "src/store/**", "src/animations/**", "src/utils/**"],
+      "files": [
+        "src/routes/**",
+        "src/data/**",
+        "src/store/**",
+        "src/utils/**",
+        "src/components/ui/icons.jsx"
+      ],
       "rules": {
         "react/only-export-components": "off"
       }

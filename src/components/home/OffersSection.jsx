@@ -1,7 +1,5 @@
-import { motion } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight } from '@/components/ui/icons';
 import { featuredOffers } from '@/data';
-import { inView, stagger } from '@/animations/variants';
 import Section, { SectionHeading } from '@/components/ui/Section';
 import OfferCard from '@/components/offers/OfferCard';
 import Button from '@/components/ui/Button';
@@ -23,12 +21,12 @@ export const OffersSection = () => {
           }
         />
 
-        <motion.div variants={stagger(0.09)} {...inView} className="grid gap-5 lg:grid-cols-2">
+        <div className="grid gap-5 lg:grid-cols-2">
           {headline ? <OfferCard offer={headline} featured className="lg:row-span-2" /> : null}
           {rest.slice(0, 2).map((offer) => (
             <OfferCard key={offer.id} offer={offer} />
           ))}
-        </motion.div>
+        </div>
       </div>
     </Section>
   );

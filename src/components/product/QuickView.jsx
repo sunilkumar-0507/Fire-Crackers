@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { ArrowRight, Check, ShieldCheck } from 'lucide-react';
+import { ArrowRight, Check, ShieldCheck } from '@/components/ui/icons';
 import { formatPrice, stockLevel } from '@/utils/format';
 import { toCartItem } from '@/utils/cart';
 import { artForCategory } from '@/utils/image';
@@ -114,7 +114,7 @@ export const QuickView = () => {
           <ul className="grid gap-2">
             {product.highlights.slice(0, 3).map((line) => (
               <li key={line} className="flex items-start gap-2.5 text-[13px] text-ink">
-                <Check size={15} className="mt-0.5 shrink-0 text-emerald-500" strokeWidth={2.6} />
+                <Check size={15} className="mt-0.5 shrink-0 text-emerald-500" />
                 {line}
               </li>
             ))}

@@ -1,9 +1,7 @@
 import { useMemo, useState } from 'react';
-import { motion } from 'framer-motion';
-import { MessageCircle } from 'lucide-react';
+import { MessageCircle } from '@/components/ui/icons';
 import { faqs } from '@/data';
 import { BRAND } from '@/constants';
-import { fadeUp, inView } from '@/animations/variants';
 import Section, { SectionHeading } from '@/components/ui/Section';
 import Accordion from '@/components/ui/Accordion';
 import Chip from '@/components/ui/Chip';
@@ -24,7 +22,7 @@ export const FaqSection = ({ limit = null }) => {
       <div className="container">
         <div className="grid gap-10 lg:grid-cols-[minmax(0,.85fr)_minmax(0,1.15fr)] lg:gap-16">
           {/* left rail */}
-          <motion.div variants={fadeUp} {...inView} className="lg:sticky lg:top-28 lg:self-start">
+          <div className="lg:sticky lg:top-28 lg:self-start">
             <SectionHeading
               eyebrow="Questions"
               title="Everything people ask before ordering"
@@ -47,7 +45,7 @@ export const FaqSection = ({ limit = null }) => {
 
             <div className="mt-8 rounded-4xl border border-line bg-card p-5 shadow-card sm:mt-10 sm:p-7">
               <span className="grid h-11 w-11 place-items-center rounded-2xl bg-flame text-dark shadow-glow">
-                <MessageCircle size={19} strokeWidth={2.2} />
+                <MessageCircle size={19} />
               </span>
               <h3 className="mt-5 font-display text-xl font-semibold text-dark">
                 Still not sure what to order?
@@ -65,13 +63,13 @@ export const FaqSection = ({ limit = null }) => {
                 </Button>
               </div>
             </div>
-          </motion.div>
+          </div>
 
           {/* accordion */}
-          <motion.div variants={fadeUp} {...inView}>
+          <div>
             {/* Remount on filter change so the first answer of each set opens. */}
             <Accordion key={category} items={visible} defaultOpen={visible[0]?.id} />
-          </motion.div>
+          </div>
         </div>
       </div>
     </Section>

@@ -1,10 +1,8 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
-import { Check, Copy, Sparkles } from 'lucide-react';
+import { Check, Copy, Sparkles } from '@/components/ui/icons';
 import { cn } from '@/utils/cn';
 import { formatPrice, resolveDeadline } from '@/utils/format';
-import { fadeUp } from '@/animations/variants';
 import CrackerArt from '@/components/ui/CrackerArt';
 import Countdown from './Countdown';
 
@@ -37,8 +35,7 @@ export const OfferCard = ({ offer, featured = false, className }) => {
         : 'Free delivery';
 
   return (
-    <motion.article
-      variants={fadeUp}
+    <article
       className={cn(
         'border-glow group relative flex flex-col overflow-hidden rounded-4xl p-5 sm:p-8',
         featured ? 'text-bg' : 'border border-line bg-card text-ink shadow-card',
@@ -59,7 +56,6 @@ export const OfferCard = ({ offer, featured = false, className }) => {
           )}
         >
           {offer.badge}
-          <span className="absolute inset-0 -translate-x-full animate-shimmer bg-gold-sheen" />
         </div>
       </div>
 
@@ -143,7 +139,7 @@ export const OfferCard = ({ offer, featured = false, className }) => {
           )}
         >
           <span className="flex items-center gap-2.5">
-            <Sparkles size={15} className={featured ? 'text-gold' : 'text-primary'} strokeWidth={2.2} />
+            <Sparkles size={15} className={featured ? 'text-gold' : 'text-primary'} />
             <span className={cn('font-mono text-base font-bold tracking-[.14em]', featured ? 'text-bg' : 'text-dark')}>
               {offer.code}
             </span>
@@ -155,12 +151,12 @@ export const OfferCard = ({ offer, featured = false, className }) => {
               featured ? 'text-white/70' : 'text-primary',
             )}
           >
-            {copied ? <Check size={13} strokeWidth={2.6} /> : <Copy size={13} strokeWidth={2.4} />}
+            {copied ? <Check size={13} /> : <Copy size={13} />}
             {copied ? 'Copied' : 'Copy'}
           </span>
         </button>
       </div>
-    </motion.article>
+    </article>
   );
 };
 

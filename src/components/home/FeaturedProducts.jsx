@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight } from '@/components/ui/icons';
 import { featuredProducts, categoriesWithCounts } from '@/data';
 import Section, { SectionHeading } from '@/components/ui/Section';
 import ProductGrid from '@/components/product/ProductGrid';

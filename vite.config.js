@@ -21,8 +21,11 @@ export default defineConfig({
         // Vite 8 runs on rolldown, which requires the function form.
         manualChunks(id) {
           if (!id.includes('node_modules')) return undefined;
-          if (/[\\/]node_modules[\\/](react|react-dom|scheduler|react-router)/.test(id)) return 'react';
-          if (id.includes('framer-motion') || id.includes('motion-dom') || id.includes('motion-utils')) return 'motion';
+          // Anchored on the trailing separator so `react-icons` does not fall
+          // into the core React chunk and invalidate it on every icon change.
+          if (/[\\/]node_modules[\\/](react|react-dom|scheduler|react-router|react-router-dom)[\\/]/.test(id))
+            return 'react';
+          if (id.includes('react-icons')) return 'icons';
           if (id.includes('swiper')) return 'swiper';
           return 'vendor';
         },

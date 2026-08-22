@@ -1,12 +1,10 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { ArrowRight, Phone, Search, Star } from 'lucide-react';
+import { ArrowRight, Phone, Search, Star } from '@/components/ui/icons';
 import { BRAND, POPULAR_SEARCHES } from '@/constants';
 import { products, categoriesWithCounts } from '@/data';
 import { searchProducts } from '@/utils/search';
 import { formatPrice } from '@/utils/format';
-import { fadeUp, stagger } from '@/animations/variants';
 import CrackerArt from '@/components/ui/CrackerArt';
 import Button from '@/components/ui/Button';
 import Chip from '@/components/ui/Chip';
@@ -62,39 +60,28 @@ export const Hero = () => {
       </div>
 
       <div className="container relative">
-        <motion.div
-          variants={stagger(0.06)}
-          initial="hidden"
-          animate="show"
-          className="mx-auto flex max-w-3xl flex-col items-center text-center"
-        >
-          <motion.div variants={fadeUp}>
+        <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
+          <div>
             <span className="inline-flex items-center gap-2 rounded-full border border-secondary-200 bg-card px-4 py-2 text-2xs font-semibold text-primary-700">
               <Star size={13} className="shrink-0 fill-secondary-500 text-secondary-500" />
               32 years in Sivakasi · Flat 75% off
             </span>
-          </motion.div>
+          </div>
 
-          <motion.h1
-            variants={fadeUp}
-            className="mt-5 font-display text-display-lg font-semibold text-dark"
-          >
+          <h1 className="mt-5 font-display text-display-lg font-semibold text-dark">
             Light up the night,{' '}
             <span className="text-primary-700">the Sivakasi way.</span>
-          </motion.h1>
+          </h1>
 
-          <motion.p
-            variants={fadeUp}
-            className="mt-5 max-w-xl text-balance text-base leading-relaxed text-muted sm:text-lg"
-          >
+          <p className="mt-5 max-w-xl text-balance text-base leading-relaxed text-muted sm:text-lg">
             {products.length} crackers made on our own floor and sold at factory price. Search a
             name, open a category, or let a curated box decide for you.
-          </motion.p>
+          </p>
 
           {/* search */}
-          <motion.form variants={fadeUp} onSubmit={submit} className="mt-7 w-full max-w-2xl">
+          <form onSubmit={submit} className="mt-7 w-full max-w-2xl">
             <div className="flex items-center gap-2 rounded-full border border-line bg-card p-1.5 pl-4 shadow-card focus-within:border-primary sm:pl-5">
-              <Search size={20} className="shrink-0 text-primary" strokeWidth={2.2} />
+              <Search size={20} className="shrink-0 text-primary" />
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
@@ -134,25 +121,21 @@ export const Hero = () => {
                 </p>
               ) : null}
             </div>
-          </motion.form>
+          </form>
 
-          <motion.div
-            variants={fadeUp}
-            className="mt-3 flex flex-wrap items-center justify-center gap-2"
-          >
+          <div className="mt-3 flex flex-wrap items-center justify-center gap-2">
             {POPULAR_SEARCHES.slice(0, 4).map((term) => (
               <Chip key={term} onClick={() => navigate(`/products?q=${encodeURIComponent(term)}`)}>
                 {term}
               </Chip>
             ))}
-          </motion.div>
+          </div>
 
           {/* CTAs — full-width stacked on a phone, so neither wraps to a
               two-line pill and both stay comfortably thumb-sized. A phone
               number sits alongside them because a good share of orders here
               are still placed by call. */}
-          <motion.div
-            variants={fadeUp}
+          <div
             className="mt-7 flex w-full flex-col items-stretch gap-3 xs:w-auto xs:flex-row xs:flex-wrap xs:items-center xs:justify-center"
           >
             <Button to="/products" size="lg" rightIcon={<ArrowRight size={18} />}>
@@ -165,15 +148,14 @@ export const Hero = () => {
               href={BRAND.phoneHref}
               size="lg"
               variant="ghost"
-              leftIcon={<Phone size={17} strokeWidth={2.3} />}
+              leftIcon={<Phone size={17} />}
             >
               {BRAND.phone}
             </Button>
-          </motion.div>
+          </div>
 
           {/* stat strip */}
-          <motion.dl
-            variants={fadeUp}
+          <dl
             className="mt-9 grid w-full max-w-2xl grid-cols-2 gap-px overflow-hidden rounded-3xl border border-line bg-line sm:grid-cols-4"
           >
             {[
@@ -192,8 +174,8 @@ export const Hero = () => {
                 <dt className="mt-1 text-2xs text-muted">{stat.label}</dt>
               </div>
             ))}
-          </motion.dl>
-        </motion.div>
+          </dl>
+        </div>
       </div>
     </section>
   );

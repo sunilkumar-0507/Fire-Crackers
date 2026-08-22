@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import { cn } from '@/utils/cn';
 import { useCountdown } from '@/hooks/useCountdown';
 
@@ -11,15 +10,9 @@ const Unit = ({ value, label, tone }) => (
       )}
     >
       {/* The digit slides up on change, so seconds tick rather than blink. */}
-      <motion.span
-        key={value}
-        initial={{ y: '-70%', opacity: 0 }}
-        animate={{ y: '0%', opacity: 1 }}
-        transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
-        className="block"
-      >
+      <span key={value} className="block">
         {value}
-      </motion.span>
+      </span>
     </div>
     <span
       className={cn(

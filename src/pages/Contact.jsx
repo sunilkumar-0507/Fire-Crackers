@@ -1,11 +1,9 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
-import { Check, Clock, Mail, MapPin, MessageCircle, Phone, Send, Truck } from 'lucide-react';
+import { Check, Clock, Mail, MapPin, MessageCircle, Phone, Send, Truck } from '@/components/ui/icons';
 import { cn } from '@/utils/cn';
 import { BRAND, SOCIALS } from '@/constants';
 import { api } from '@/data';
-import { fadeUp, inView, stagger } from '@/animations/variants';
 import PageHeader from '@/components/ui/PageHeader';
 import Section, { SectionHeading } from '@/components/ui/Section';
 import Button from '@/components/ui/Button';
@@ -90,18 +88,17 @@ export const Contact = () => {
 
       {/* channels */}
       <div className="container">
-        <motion.div variants={stagger(0.07)} {...inView} className="grid gap-5 md:grid-cols-3">
+        <div className="grid gap-5 md:grid-cols-3">
           {CHANNELS.map(({ icon: Icon, title, value, href, hint }) => (
-            <motion.a
+            <a
               key={title}
-              variants={fadeUp}
               href={href}
               target={href.startsWith('http') ? '_blank' : undefined}
               rel="noreferrer"
               className="group rounded-4xl border border-line bg-card p-5 shadow-card transition-all duration-500 ease-luxe hover:-translate-y-1.5 hover:shadow-lift sm:p-7"
             >
               <span className="grid h-12 w-12 place-items-center rounded-2xl bg-secondary-50 text-primary transition-all duration-500 ease-luxe group-hover:scale-110 group-hover:bg-flame group-hover:text-dark">
-                <Icon size={20} strokeWidth={2.1} />
+                <Icon size={20} />
               </span>
               <h2 className="mt-5 text-2xs font-semibold uppercase tracking-[.16em] text-muted">
                 {title}
@@ -110,16 +107,16 @@ export const Contact = () => {
                 {value}
               </p>
               <p className="mt-2.5 text-[13px] leading-relaxed text-muted">{hint}</p>
-            </motion.a>
+            </a>
           ))}
-        </motion.div>
+        </div>
       </div>
 
       <Section>
         <div className="container">
           <div className="grid gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,.9fr)] lg:gap-16">
             {/* form */}
-            <motion.div variants={fadeUp} {...inView}>
+            <div>
               <SectionHeading
                 eyebrow="Write to us"
                 title="Send a message"
@@ -130,7 +127,7 @@ export const Contact = () => {
               {state === 'done' ? (
                 <div className="rounded-4xl border border-emerald-200 bg-emerald-50/70 p-6 text-center sm:p-10">
                   <span className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-emerald-500 text-white shadow-lift">
-                    <Check size={30} strokeWidth={3} />
+                    <Check size={30} />
                   </span>
                   <h3 className="mt-6 font-display text-2xl font-semibold text-emerald-900">
                     Message sent
@@ -234,33 +231,29 @@ export const Contact = () => {
                   </div>
                 </form>
               )}
-            </motion.div>
+            </div>
 
             {/* aside */}
-            <motion.aside variants={stagger(0.06)} {...inView} className="space-y-5">
-              <motion.div variants={fadeUp} className="rounded-4xl border border-line bg-card p-5 shadow-card sm:p-7">
+            <aside className="space-y-5">
+              <div className="rounded-4xl border border-line bg-card p-5 shadow-card sm:p-7">
                 <span className="grid h-11 w-11 place-items-center rounded-2xl bg-secondary-50 text-primary">
-                  <MapPin size={19} strokeWidth={2.1} />
+                  <MapPin size={19} />
                 </span>
                 <h3 className="mt-5 font-display text-lg font-semibold text-dark">The unit</h3>
                 <p className="mt-2 text-[14px] leading-relaxed text-muted">{BRAND.address}</p>
                 <p className="mt-4 flex items-center gap-2 text-[13px] text-muted">
-                  <Clock size={14} className="shrink-0 text-primary" strokeWidth={2.2} />
+                  <Clock size={14} className="shrink-0 text-primary" />
                   {BRAND.hours}
                 </p>
                 <p className="mt-5 rounded-2xl bg-amber-50 p-4 text-[13px] leading-relaxed text-amber-800">
                   Visitors are welcome, but the production sheds are a licensed explosives area —
                   please call before you come so someone can walk you through.
                 </p>
-              </motion.div>
+              </div>
 
-              <motion.div
-                id="delivery"
-                variants={fadeUp}
-                className="rounded-4xl border border-line bg-card p-5 shadow-card sm:p-7"
-              >
+              <div id="delivery" className="rounded-4xl border border-line bg-card p-5 shadow-card sm:p-7">
                 <span className="grid h-11 w-11 place-items-center rounded-2xl bg-secondary-50 text-primary">
-                  <Truck size={19} strokeWidth={2.1} />
+                  <Truck size={19} />
                 </span>
                 <h3 className="mt-5 font-display text-lg font-semibold text-dark">Delivery & returns</h3>
                 <ul className="mt-4 space-y-2.5 text-[13px] leading-relaxed text-muted">
@@ -272,14 +265,14 @@ export const Contact = () => {
                     'We never ask you to send fireworks back; it is neither legal nor safe',
                   ].map((line) => (
                     <li key={line} className="flex items-start gap-2.5">
-                      <Check size={14} className="mt-0.5 shrink-0 text-emerald-500" strokeWidth={2.8} />
+                      <Check size={14} className="mt-0.5 shrink-0 text-emerald-500" />
                       {line}
                     </li>
                   ))}
                 </ul>
-              </motion.div>
+              </div>
 
-              <motion.div variants={fadeUp} className="rounded-4xl border border-line bg-dark p-5 text-bg sm:p-7">
+              <div className="rounded-4xl border border-line bg-dark p-5 text-bg sm:p-7">
                 <h3 className="font-display text-lg font-semibold">Find us elsewhere</h3>
                 <p className="mt-2 text-[13px] leading-relaxed text-bg/75">
                   Mostly photographs of things going off, which is the point.
@@ -297,8 +290,8 @@ export const Contact = () => {
                     </a>
                   ))}
                 </div>
-              </motion.div>
-            </motion.aside>
+              </div>
+            </aside>
           </div>
         </div>
       </Section>

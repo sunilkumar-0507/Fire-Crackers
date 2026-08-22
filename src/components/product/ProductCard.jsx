@@ -1,15 +1,13 @@
 import { memo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
-import { Eye, Heart, ShoppingCart, Check } from 'lucide-react';
+import { Check, Eye, Heart, HeartFilled, ShoppingCart } from '@/components/ui/icons';
 import { cn } from '@/utils/cn';
 import { formatPrice, stockLevel } from '@/utils/format';
 import { toCartItem } from '@/utils/cart';
 import { artForCategory } from '@/utils/image';
 import { useCartStore, selectInCart, selectIsWishlisted } from '@/store/cartStore';
 import { useUIStore } from '@/store/uiStore';
-import { fadeUp } from '@/animations/variants';
 import ProductImage from '@/components/ui/ProductImage';
 import Badge, { StockBadge } from '@/components/ui/Badge';
 import Rating from '@/components/ui/Rating';
@@ -81,7 +79,7 @@ export const ProductCard = memo(function ProductCard({ product, className, compa
   );
 
   return (
-    <motion.article variants={fadeUp} className={cn('group relative h-full', className)}>
+    <article className={cn('group relative h-full', className)}>
       <div
         className={cn(
           'relative flex h-full flex-col overflow-hidden rounded-3xl border border-line bg-card',
@@ -110,7 +108,7 @@ export const ProductCard = memo(function ProductCard({ product, className, compa
                 : 'bg-card text-muted shadow-soft hover:text-berry-500',
             )}
           >
-            <Heart size={17} strokeWidth={2.2} fill={wishlisted ? 'currentColor' : 'none'} />
+            {wishlisted ? <HeartFilled size={17} /> : <Heart size={17} />}
           </button>
 
           <div
@@ -135,7 +133,7 @@ export const ProductCard = memo(function ProductCard({ product, className, compa
             onClick={handleQuickView}
             className="absolute bottom-2.5 right-2.5 z-10 hidden items-center gap-1.5 rounded-full bg-card/95 px-3 py-2 text-xs font-semibold text-ink shadow-soft transition-colors hover:text-primary [@media(pointer:fine)]:inline-flex"
           >
-            <Eye size={14} strokeWidth={2.2} />
+            <Eye size={14} />
             Quick view
           </button>
         </Link>
@@ -196,12 +194,12 @@ export const ProductCard = memo(function ProductCard({ product, className, compa
             >
               {qtyInCart > 0 ? (
                 <>
-                  <Check size={16} strokeWidth={2.8} />
+                  <Check size={16} />
                   In cart ({qtyInCart})
                 </>
               ) : (
                 <>
-                  <ShoppingCart size={16} strokeWidth={2.4} />
+                  <ShoppingCart size={16} />
                   {soldOut ? 'Out of stock' : 'Add to cart'}
                 </>
               )}
@@ -217,7 +215,7 @@ export const ProductCard = memo(function ProductCard({ product, className, compa
           </div>
         ) : null}
       </div>
-    </motion.article>
+    </article>
   );
 });
 

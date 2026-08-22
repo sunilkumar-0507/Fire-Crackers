@@ -161,61 +161,19 @@ export default {
         // with white text. See the palette note above.
         flame: 'linear-gradient(135deg,#FFCB70 0%,#FFB238 55%,#FFA51F 100%)',
         'flame-soft': 'linear-gradient(120deg,#FFE7BC 0%,#FFCB70 50%,#FFB238 100%)',
-        'gold-sheen':
-          'linear-gradient(100deg,transparent 20%,rgba(255,255,255,.55) 50%,transparent 80%)',
         'warm-fade': 'linear-gradient(180deg,#FDF3E2 0%,#FBEBD3 40%,#FDF3E2 100%)',
         'radial-glow': 'radial-gradient(closest-side,var(--tw-gradient-stops))',
       },
       keyframes: {
-        // Idle motion is halved. A 22px bob with a 3deg rotation is hard to
-        // read past, and there were six of them on the hero at once.
-        float: {
-          '0%,100%': { transform: 'translate3d(0,0,0)' },
-          '50%': { transform: 'translate3d(0,-8px,0)' },
-        },
-        'float-slow': {
-          '0%,100%': { transform: 'translate3d(0,0,0)' },
-          '50%': { transform: 'translate3d(0,-12px,0)' },
-        },
+        // The only motion left in the theme: the sweep across a loading
+        // skeleton. Everything else — idle bobbing, panning gradients,
+        // marquees, click ripples — has been removed.
         shimmer: {
           '100%': { transform: 'translateX(100%)' },
         },
-        'gradient-pan': {
-          '0%,100%': { backgroundPosition: '0% 50%' },
-          '50%': { backgroundPosition: '100% 50%' },
-        },
-        // Opacity only — the scale pulse made low-stock dots twitch.
-        'pulse-glow': {
-          '0%,100%': { opacity: '.6' },
-          '50%': { opacity: '1' },
-        },
-        'spark-rise': {
-          '0%': { transform: 'translateY(0) scale(1)', opacity: '0' },
-          '10%': { opacity: '1' },
-          '100%': { transform: 'translateY(-140px) scale(.2)', opacity: '0' },
-        },
-        'draw-line': {
-          '0%': { transform: 'scaleX(0)' },
-          '100%': { transform: 'scaleX(1)' },
-        },
-        marquee: {
-          '0%': { transform: 'translateX(0)' },
-          '100%': { transform: 'translateX(-50%)' },
-        },
-        'ripple-out': {
-          '0%': { transform: 'scale(0)', opacity: '.45' },
-          '100%': { transform: 'scale(2.6)', opacity: '0' },
-        },
       },
       animation: {
-        float: 'float 7s ease-in-out infinite',
-        'float-slow': 'float-slow 12s ease-in-out infinite',
         shimmer: 'shimmer 2.2s ease-in-out infinite',
-        'gradient-pan': 'gradient-pan 12s ease infinite',
-        'pulse-glow': 'pulse-glow 4s ease-in-out infinite',
-        'spark-rise': 'spark-rise 3s ease-out infinite',
-        marquee: 'marquee 32s linear infinite',
-        'ripple-out': 'ripple-out .6s ease-out forwards',
       },
       transitionTimingFunction: {
         luxe: 'cubic-bezier(.22,1,.36,1)',

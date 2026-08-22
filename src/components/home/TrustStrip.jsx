@@ -1,28 +1,20 @@
-import { motion } from 'framer-motion';
-import { Factory, ShieldCheck, Truck, Award } from 'lucide-react';
+import { Factory, ShieldCheck, Truck, Award } from '@/components/ui/icons';
 import { TRUST_POINTS } from '@/constants';
-import { fadeUp, inView, stagger } from '@/animations/variants';
 
 const ICONS = [Factory, ShieldCheck, Truck, Award];
 
 export const TrustStrip = () => (
   <section className="relative pb-4 pt-2">
     <div className="container">
-      <motion.ul
-        variants={stagger(0.07)}
-        {...inView}
+      <ul
         className="grid gap-px overflow-hidden rounded-3xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-4"
       >
         {TRUST_POINTS.map((point, i) => {
           const Icon = ICONS[i] ?? ShieldCheck;
           return (
-            <motion.li
-              key={point.title}
-              variants={fadeUp}
-              className="flex items-start gap-3.5 bg-card p-5 sm:gap-4 sm:p-6"
-            >
+            <li key={point.title} className="flex items-start gap-3.5 bg-card p-5 sm:gap-4 sm:p-6">
               <span className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-secondary-100 text-primary-700 sm:h-11 sm:w-11">
-                <Icon size={19} strokeWidth={2.1} />
+                <Icon size={19} />
               </span>
               <span>
                 <span className="block font-display text-base font-semibold text-dark">
@@ -32,10 +24,10 @@ export const TrustStrip = () => (
                   {point.text}
                 </span>
               </span>
-            </motion.li>
+            </li>
           );
         })}
-      </motion.ul>
+      </ul>
     </div>
   </section>
 );

@@ -1,8 +1,6 @@
-import { motion } from 'framer-motion';
-import { Check, Factory, Flame, ShieldCheck, Users } from 'lucide-react';
+import { Check, Factory, Flame, ShieldCheck, Users } from '@/components/ui/icons';
 import { BRAND, SAFETY_RULES } from '@/constants';
 import { products, categoriesWithCounts } from '@/data';
-import { fadeUp, inView, stagger } from '@/animations/variants';
 import PageHeader from '@/components/ui/PageHeader';
 import Section, { SectionHeading } from '@/components/ui/Section';
 import FaqSection from '@/components/home/FaqSection';
@@ -57,26 +55,24 @@ export const About = () => (
 
     {/* stats */}
     <div className="container">
-      <motion.dl
-        variants={stagger(0.06)}
-        {...inView}
+      <dl
         className="grid gap-px overflow-hidden rounded-4xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-4"
       >
         {STATS.map(({ icon: Icon, value, label }) => (
-          <motion.div key={label} variants={fadeUp} className="bg-card px-5 py-6 text-center sm:px-6 sm:py-7">
-            <Icon size={20} className="mx-auto text-primary" strokeWidth={2.1} />
+          <div key={label} className="bg-card px-5 py-6 text-center sm:px-6 sm:py-7">
+            <Icon size={20} className="mx-auto text-primary" />
             <dd className="mt-3 font-display text-2xl font-semibold text-dark sm:text-3xl">{value}</dd>
             <dt className="mt-1 text-2xs uppercase tracking-[.14em] text-muted">{label}</dt>
-          </motion.div>
+          </div>
         ))}
-      </motion.dl>
+      </dl>
     </div>
 
     {/* story */}
     <Section>
       <div className="container">
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
-          <motion.div variants={fadeUp} {...inView}>
+          <div>
             <SectionHeading
               eyebrow="Why we sell direct"
               title="The price on the box was never the price"
@@ -100,16 +96,16 @@ export const About = () => (
                 Visit the unit
               </Button>
             </div>
-          </motion.div>
+          </div>
 
           {/* timeline */}
-          <motion.ol variants={stagger(0.08)} {...inView} className="relative space-y-8 pl-8">
+          <ol className="relative space-y-8 pl-8">
             <span
               aria-hidden="true"
               className="absolute bottom-2 left-[7px] top-2 w-px bg-gradient-to-b from-secondary-300 via-secondary-200 to-transparent"
             />
             {TIMELINE.map((entry) => (
-              <motion.li key={entry.year} variants={fadeUp} className="relative">
+              <li key={entry.year} className="relative">
                 <span
                   aria-hidden="true"
                   className="absolute -left-8 top-1.5 grid h-4 w-4 place-items-center rounded-full border-2 border-secondary-300 bg-bg"
@@ -119,9 +115,9 @@ export const About = () => (
                 <p className="font-display text-2xl font-semibold text-primary">{entry.year}</p>
                 <h3 className="mt-1 font-display text-lg font-semibold text-dark">{entry.title}</h3>
                 <p className="mt-2 text-[14px] leading-relaxed text-muted">{entry.text}</p>
-              </motion.li>
+              </li>
             ))}
-          </motion.ol>
+          </ol>
         </div>
       </div>
     </Section>
@@ -130,7 +126,7 @@ export const About = () => (
     <Section id="safety" className="bg-gradient-to-b from-transparent via-white/50 to-transparent">
       <div className="container">
         <div className="grid gap-12 lg:grid-cols-[minmax(0,.9fr)_minmax(0,1.1fr)] lg:gap-16">
-          <motion.div variants={fadeUp} {...inView}>
+          <div>
             <SectionHeading
               eyebrow="Safety"
               title="Eight rules we would like every customer to read"
@@ -138,26 +134,25 @@ export const About = () => (
               className="pb-8"
             />
             <div className="relative grid h-56 place-items-center overflow-hidden rounded-4xl border border-line bg-gradient-to-br from-secondary-50 to-white">
-              <div className="h-40 w-40 animate-float">
+              <div className="h-40 w-40">
                 <CrackerArt type="flowerpot" variant={1} className="h-full w-full" />
               </div>
             </div>
-          </motion.div>
+          </div>
 
-          <motion.ul variants={stagger(0.05)} {...inView} className="grid gap-3 sm:grid-cols-2">
+          <ul className="grid gap-3 sm:grid-cols-2">
             {SAFETY_RULES.map((rule, i) => (
-              <motion.li
+              <li
                 key={rule}
-                variants={fadeUp}
                 className="flex items-start gap-3 rounded-3xl border border-line bg-card p-5 shadow-soft"
               >
                 <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-flame text-[11px] font-bold text-dark">
                   {i + 1}
                 </span>
                 <span className="text-[13px] leading-relaxed text-ink">{rule}</span>
-              </motion.li>
+              </li>
             ))}
-          </motion.ul>
+          </ul>
         </div>
       </div>
     </Section>
@@ -165,13 +160,11 @@ export const About = () => (
     {/* licence */}
     <Section spacing="sm">
       <div className="container">
-        <motion.div
-          variants={fadeUp}
-          {...inView}
+        <div
           className="flex flex-col items-start gap-6 rounded-4xl border border-line bg-card p-6 shadow-card sm:p-10 lg:flex-row lg:items-center"
         >
           <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-emerald-50 text-emerald-600">
-            <ShieldCheck size={26} strokeWidth={2.1} />
+            <ShieldCheck size={26} />
           </span>
           <div className="flex-1">
             <h3 className="font-display text-xl font-semibold text-dark">Licensed and compliant</h3>
@@ -184,12 +177,12 @@ export const About = () => (
           <ul className="grid gap-2 text-[13px] text-ink">
             {['PESO licensed unit', 'Batch-level dB testing', 'Licensed surface transport'].map((line) => (
               <li key={line} className="flex items-center gap-2">
-                <Check size={14} className="shrink-0 text-emerald-500" strokeWidth={2.8} />
+                <Check size={14} className="shrink-0 text-emerald-500" />
                 {line}
               </li>
             ))}
           </ul>
-        </motion.div>
+        </div>
       </div>
     </Section>
 
