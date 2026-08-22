@@ -24,6 +24,7 @@ export const Testimonials = () => (
       <SectionHeading
         align="center"
         eyebrow="From the doorstep"
+        icon={<Quote size={13} />}
         title="What people write back"
         description="Unedited notes from orders across Tamil Nadu and Kerala — the good and the mildly critical."
       />

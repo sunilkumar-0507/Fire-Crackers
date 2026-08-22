@@ -125,6 +125,7 @@ export const BulkOrders = () => {
             <div>
               <SectionHeading
                 eyebrow="Request a quote"
+                icon={<FileText size={13} />}
                 title="Tell us roughly what you need"
                 description="No commitment. We will come back with a written quote, a suggested product list and a delivery date."
                 className="pb-8"
@@ -297,7 +298,7 @@ export const BulkOrders = () => {
               </div>
 
               <div className="mt-5 rounded-4xl border border-line bg-dark p-5 text-bg sm:p-7">
-                <h3 className="font-display text-lg font-semibold">Rather just talk?</h3>
+                <h3 className="font-display text-lg font-semibold text-bg">Rather just talk?</h3>
                 <p className="mt-2 text-[13px] leading-relaxed text-bg/75">
                   Call the shop and describe the event. We have quoted a few thousand of these.
                 </p>

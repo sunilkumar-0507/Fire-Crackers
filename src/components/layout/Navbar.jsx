@@ -153,23 +153,14 @@ export const Navbar = () => {
 
   return (
     <header className="fixed inset-x-0 top-0 z-50">
-      <div className="overflow-hidden">
-        <AnnouncementBar />
-      </div>
-
       {/* The bar is opaque at every scroll position. It used to be fully
           transparent until 28px, which meant the logo and every nav label sat
           directly on whatever the page happened to be showing underneath —
           legible over the hero, unreadable over a product image. */}
-      <div
-        className={cn(
-          'relative border-b border-line bg-card transition-shadow duration-300 ease-luxe',
-          scrolled && 'shadow-soft',
-        )}
-      >
+      <div className={cn('relative bg-card', scrolled && 'shadow-soft')}>
         <div
           className={cn(
-            'container flex items-center justify-between gap-2 transition-all duration-500 ease-luxe sm:gap-4',
+            'container flex items-center gap-2 sm:gap-4',
             // `h-nav` is the CSS var the shell also reserves as top padding, so
             // the bar and the content offset can never disagree.
             scrolled ? 'h-14 sm:h-16' : 'h-nav',
@@ -177,8 +168,10 @@ export const Navbar = () => {
         >
           <Logo className="shrink-0" onClick={closeDropdown} />
 
-          <nav aria-label="Primary">
-            <ul className="hidden items-center gap-0.5 lg:flex">
+          {/* `flex-1` on both the nav and nothing else keeps the links optically
+              centred between an unequal logo and action cluster. */}
+          <nav aria-label="Primary" className="hidden flex-1 justify-center lg:flex">
+            <ul className="flex items-center gap-0.5">
               {NAV_LINKS.map((link) => (
                 <NavItem
                   key={link.label}
@@ -191,7 +184,7 @@ export const Navbar = () => {
             </ul>
           </nav>
 
-          <div className="flex shrink-0 items-center gap-0.5 sm:gap-2">
+          <div className="ml-auto flex shrink-0 items-center gap-0.5 sm:gap-2 lg:ml-0">
             <button
               type="button"
               onClick={openSearch}
@@ -230,6 +223,8 @@ export const Navbar = () => {
           </div>
         </div>
       </div>
+
+      <AnnouncementBar />
     </header>
   );
 };

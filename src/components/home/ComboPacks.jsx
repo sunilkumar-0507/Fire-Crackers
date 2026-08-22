@@ -1,4 +1,4 @@
-import { ArrowRight } from '@/components/ui/icons';
+import { ArrowRight, Sparkles } from '@/components/ui/icons';
 import { featuredCombos } from '@/data';
 import Section, { SectionHeading } from '@/components/ui/Section';
 import ComboCard from '@/components/combo/ComboCard';
@@ -8,9 +8,10 @@ export const ComboPacks = () => (
   <Section id="combos" className="bg-gradient-to-b from-transparent via-white/50 to-transparent">
     <div className="container">
       <SectionHeading
-        eyebrow="Combo packs"
-        title="Let somebody else do the deciding"
-        description="Each box is assembled from what families actually run out of first, priced below the sum of its parts, and shipped with a printed running order inside the lid."
+        eyebrow="Quick purchase"
+        icon={<Sparkles size={13} />}
+        title="Ready-made festival packages"
+        description="Curated bundles, one tap to fill your cart. Adjust any quantity afterwards — nothing is locked."
         action={
           <Button to="/combos" variant="outline" rightIcon={<ArrowRight size={16} />}>
             All combo packs
@@ -18,7 +19,7 @@ export const ComboPacks = () => (
         }
       />
 
-      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
         {featuredCombos.map((combo) => (
           <ComboCard key={combo.id} combo={combo} />
         ))}

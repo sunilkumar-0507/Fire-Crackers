@@ -119,6 +119,7 @@ export const Contact = () => {
             <div>
               <SectionHeading
                 eyebrow="Write to us"
+                icon={<Send size={13} />}
                 title="Send a message"
                 description="We read everything and reply from a real inbox, usually the same day during business hours."
                 className="pb-8"
@@ -273,7 +274,7 @@ export const Contact = () => {
               </div>
 
               <div className="rounded-4xl border border-line bg-dark p-5 text-bg sm:p-7">
-                <h3 className="font-display text-lg font-semibold">Find us elsewhere</h3>
+                <h3 className="font-display text-lg font-semibold text-bg">Find us elsewhere</h3>
                 <p className="mt-2 text-[13px] leading-relaxed text-bg/75">
                   Mostly photographs of things going off, which is the point.
                 </p>

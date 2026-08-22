@@ -9,8 +9,8 @@
     "value": 75,
     "minOrder": 0,
     "art": "flowerpot",
-    "accent": "#C84D0E",
-    "accentTo": "#FF8A00",
+    "accent": "#FFB238",
+    "accentTo": "#FFF1D6",
     "endsAt": "2026-11-08T23:59:59+05:30",
     "fallbackHours": 72,
     "badge": "Always on",
@@ -19,7 +19,8 @@
       "Applied automatically to catalogue pricing",
       "Cannot be combined with combo-pack coupons",
       "Valid on all categories including gift boxes"
-    ]
+    ],
+    "tone": "amber"
   },
   {
     "id": "off-02",
@@ -31,8 +32,8 @@
     "value": 10,
     "minOrder": 1500,
     "art": "rocket",
-    "accent": "#A6357A",
-    "accentTo": "#D9539B",
+    "accent": "#F5567F",
+    "accentTo": "#FFEAF1",
     "endsAt": "2026-10-24T23:59:59+05:30",
     "fallbackHours": 48,
     "badge": "Ends soon",
@@ -41,7 +42,8 @@
       "Minimum order value ₹1,500",
       "Priority despatch within 24 hours",
       "One use per phone number"
-    ]
+    ],
+    "tone": "berry"
   },
   {
     "id": "off-03",
@@ -53,8 +55,8 @@
     "value": 0,
     "minOrder": 2000,
     "art": "giftbox",
-    "accent": "#0F7B6C",
-    "accentTo": "#3AAE9B",
+    "accent": "#22C9AE",
+    "accentTo": "#E4FBF6",
     "endsAt": "2026-11-08T23:59:59+05:30",
     "fallbackHours": 96,
     "badge": "Free shipping",
@@ -63,7 +65,8 @@
       "Minimum cart value ₹2,000",
       "Tamil Nadu and Kerala pincodes only",
       "Fireworks move by licensed surface transport — no air freight"
-    ]
+    ],
+    "tone": "mint"
   },
   {
     "id": "off-04",
@@ -75,8 +78,8 @@
     "value": 500,
     "minOrder": 1899,
     "art": "aerial",
-    "accent": "#C84D0E",
-    "accentTo": "#FFD56A",
+    "accent": "#C273F5",
+    "accentTo": "#F6EAFF",
     "endsAt": "2026-10-31T23:59:59+05:30",
     "fallbackHours": 36,
     "badge": "Combo only",
@@ -85,7 +88,8 @@
       "Valid on combo packs only",
       "Minimum combo value ₹1,899",
       "Cannot be combined with EARLYBIRD"
-    ]
+    ],
+    "tone": "royal"
   },
   {
     "id": "off-05",
@@ -97,8 +101,8 @@
     "value": 20,
     "minOrder": 25000,
     "art": "bomb",
-    "accent": "#2C0F05",
-    "accentTo": "#8C3A12",
+    "accent": "#E67A00",
+    "accentTo": "#FFE7C6",
     "endsAt": "2026-11-08T23:59:59+05:30",
     "fallbackHours": 120,
     "badge": "Bulk",
@@ -107,7 +111,8 @@
       "Minimum order value ₹25,000",
       "GST invoice issued against your GSTIN",
       "Delivery date scheduled with your coordinator"
-    ]
+    ],
+    "tone": "ember"
   },
   {
     "id": "off-06",
@@ -119,8 +124,8 @@
     "value": 15,
     "minOrder": 999,
     "art": "sparkler",
-    "accent": "#E5B23C",
-    "accentTo": "#FFE9AE",
+    "accent": "#FFB238",
+    "accentTo": "#FFF1D6",
     "endsAt": "2026-11-05T23:59:59+05:30",
     "fallbackHours": 60,
     "badge": "Green Diwali",
@@ -129,6 +134,7 @@
       "Valid on items tagged silent or low-noise",
       "Minimum order value ₹999",
       "Applies to the Silent Celebration Pack as well"
-    ]
+    ],
+    "tone": "amber"
   }
 ]

@@ -189,7 +189,7 @@ export const ComboDetail = () => {
       {others.length ? (
         <Section spacing="sm" className="bg-gradient-to-b from-transparent via-white/50 to-transparent">
           <div className="container">
-            <SectionHeading eyebrow="Also consider" title="Other boxes in the range" className="pb-8" />
+            <SectionHeading eyebrow="Also consider" icon={<Package size={13} />} title="Other boxes in the range" className="pb-8" />
             <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
               {others.map((other) => (
                 <ComboCard key={other.id} combo={other} showContents={false} />

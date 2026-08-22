@@ -1,9 +1,11 @@
 import { useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ArrowRight } from '@/components/ui/icons';
+import { cn } from '@/utils/cn';
 import { categoriesWithCounts, findCategory, products } from '@/data';
 import { filterProducts, SORT_OPTIONS } from '@/utils/search';
 import { artForCategory } from '@/utils/image';
+import { accentOf } from '@/constants/accents';
 import PageHeader from '@/components/ui/PageHeader';
 import ProductGrid from '@/components/product/ProductGrid';
 import Section from '@/components/ui/Section';
@@ -60,8 +62,10 @@ export const Category = () => {
       >
         <div className="flex flex-wrap items-center gap-3">
           <span
-            className="rounded-full px-4 py-2 text-2xs font-semibold uppercase tracking-[.14em]"
-            style={{ background: category.accentSoft, color: category.accent }}
+            className={cn(
+              'rounded-full px-4 py-2 text-2xs font-semibold uppercase tracking-[.14em]',
+              accentOf(category.tone).pill,
+            )}
           >
             {NOISE_COPY[category.noiseLevel]}
           </span>

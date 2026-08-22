@@ -7,11 +7,12 @@
     "tagline": "Hand-held light, zero bang",
     "description": "The gentlest way to celebrate. Cold-glow and colour sparklers in 7cm to 90cm lengths — the safest first cracker for children and the prettiest for photographs.",
     "art": "sparkler",
-    "accent": "#FFD56A",
-    "accentSoft": "#FFF3D2",
+    "accent": "#FFB238",
+    "accentSoft": "#FFF1D6",
     "productCount": 6,
     "noiseLevel": "silent",
-    "featured": true
+    "featured": true,
+    "tone": "amber"
   },
   {
     "id": "cat-flower-pots",
@@ -21,11 +22,12 @@
     "tagline": "Fountains of golden rain",
     "description": "Ground fountains that throw a steady column of crackling gold. Our deluxe pots run 45–70 seconds with layered colour changes and almost no smoke.",
     "art": "flowerpot",
-    "accent": "#FF8A00",
-    "accentSoft": "#FFEAC9",
+    "accent": "#E67A00",
+    "accentSoft": "#FFE7C6",
     "productCount": 6,
     "noiseLevel": "low",
-    "featured": true
+    "featured": true,
+    "tone": "ember"
   },
   {
     "id": "cat-ground-chakkar",
@@ -35,11 +37,12 @@
     "tagline": "Spinning wheels of fire",
     "description": "Classic ground spinners that whirl into a disc of colour. Balanced hubs for a longer, wobble-free spin and a bright colour-shift finish.",
     "art": "chakkar",
-    "accent": "#E2762F",
-    "accentSoft": "#FFE3CE",
+    "accent": "#22C9AE",
+    "accentSoft": "#E4FBF6",
     "productCount": 5,
     "noiseLevel": "low",
-    "featured": true
+    "featured": true,
+    "tone": "mint"
   },
   {
     "id": "cat-rockets",
@@ -49,11 +52,12 @@
     "tagline": "Send the sky a message",
     "description": "Stick and bottle rockets with stabilised flight paths, rising 25–60 metres before opening into colour, crackle or a single deep report.",
     "art": "rocket",
-    "accent": "#C84D0E",
-    "accentSoft": "#FBDCC8",
+    "accent": "#C273F5",
+    "accentSoft": "#F6EAFF",
     "productCount": 5,
     "noiseLevel": "medium",
-    "featured": true
+    "featured": true,
+    "tone": "royal"
   },
   {
     "id": "cat-aerial-shots",
@@ -63,11 +67,12 @@
     "tagline": "Multi-shot sky shows",
     "description": "Repeating aerial cakes from 12 to 240 shots. Pre-fused, single-ignition sequences that run a complete choreographed show on their own.",
     "art": "aerial",
-    "accent": "#B4432E",
-    "accentSoft": "#FCDBD5",
+    "accent": "#F5567F",
+    "accentSoft": "#FFEAF1",
     "productCount": 6,
     "noiseLevel": "high",
-    "featured": true
+    "featured": true,
+    "tone": "berry"
   },
   {
     "id": "cat-sound-crackers",
@@ -77,11 +82,12 @@
     "tagline": "For the ones who want the boom",
     "description": "Garland chains, atom bombs and deluxe single reports. All within the 125 dB PESO limit, tested batch by batch at our Sivakasi unit.",
     "art": "bomb",
-    "accent": "#8C3A12",
-    "accentSoft": "#F5DAC9",
+    "accent": "#E67A00",
+    "accentSoft": "#FFE7C6",
     "productCount": 5,
     "noiseLevel": "high",
-    "featured": false
+    "featured": false,
+    "tone": "ember"
   },
   {
     "id": "cat-kids-zone",
@@ -91,11 +97,12 @@
     "tagline": "Tiny hands, big smiles",
     "description": "Pop-pops, snake tablets, colour smoke, magic whips and ground novelties. Low-noise, low-flame and endlessly entertaining.",
     "art": "kids",
-    "accent": "#D9539B",
-    "accentSoft": "#FFDDEE",
+    "accent": "#F5567F",
+    "accentSoft": "#FFEAF1",
     "productCount": 6,
     "noiseLevel": "silent",
-    "featured": true
+    "featured": true,
+    "tone": "berry"
   },
   {
     "id": "cat-gift-boxes",
@@ -105,10 +112,11 @@
     "tagline": "Curated, wrapped, ready",
     "description": "Hand-packed assortment boxes with a printed cracker list inside the lid. The default answer for office gifting and family visits.",
     "art": "giftbox",
-    "accent": "#A6357A",
-    "accentSoft": "#F6D9EC",
+    "accent": "#C273F5",
+    "accentSoft": "#F6EAFF",
     "productCount": 4,
     "noiseLevel": "mixed",
-    "featured": false
+    "featured": false,
+    "tone": "royal"
   }
 ]

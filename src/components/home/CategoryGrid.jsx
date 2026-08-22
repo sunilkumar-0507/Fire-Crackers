@@ -1,10 +1,12 @@
 import { Link } from 'react-router-dom';
-import { ArrowUpRight } from '@/components/ui/icons';
+import { ArrowUpRight, SlidersHorizontal } from '@/components/ui/icons';
 import { cn } from '@/utils/cn';
 import { categoriesWithCounts } from '@/data';
+import { accentOf } from '@/constants/accents';
 import { artForCategory } from '@/utils/image';
 import Section, { SectionHeading } from '@/components/ui/Section';
 import CrackerArt from '@/components/ui/CrackerArt';
+import ArtIcon from '@/components/ui/ArtIcon';
 import Button from '@/components/ui/Button';
 
 const NOISE_LABEL = {
@@ -15,40 +17,51 @@ const NOISE_LABEL = {
   mixed: 'Mixed',
 };
 
-const CategoryCard = ({ category, index }) => (
+/**
+ * One category tile.
+ *
+ * Carries the same accent tile as a package card, so a category and a bundle
+ * announce themselves the same way. The illustration stays — it is the only
+ * place a shopper sees what the category physically looks like.
+ */
+const CategoryCard = ({ category, index }) => {
+  const accent = accentOf(category.tone);
+  const art = artForCategory(category.slug);
 
+  return (
     // The first tile is the feature: full width in the two-column phone grid,
     // a 2×2 block from `sm` up.
     <div className={index === 0 ? 'col-span-2 sm:row-span-2' : ''}>
       <Link
         to={`/category/${category.slug}`}
-        className="group relative flex h-full flex-col overflow-hidden rounded-4xl border border-line bg-card p-4 shadow-card transition-shadow duration-300 ease-luxe hover:shadow-lift xs:p-5 sm:p-7"
+        className={cn(
+          'group relative flex h-full flex-col overflow-hidden rounded-4xl border border-line bg-card p-4 shadow-card transition-colors duration-200 xs:p-5 sm:p-7',
+          accent.ring,
+        )}
       >
-        {/* A single accent wash at the top edge, so the tile is tinted by
-            its category without the text ever sitting on the colour. */}
-        <span
-          aria-hidden="true"
-          className="absolute inset-x-0 top-0 -z-10 h-24"
-          style={{
-            background: `linear-gradient(180deg, ${category.accentSoft} 0%, transparent 100%)`,
-          }}
-        />
-
         <div className="flex items-start justify-between gap-3 sm:gap-4">
-          <div className="min-w-0">
-            <p className="truncate text-2xs font-semibold uppercase tracking-[.1em] text-primary-700">
-              {NOISE_LABEL[category.noiseLevel]}
-            </p>
-            <h3 className="mt-1.5 font-display text-base font-semibold leading-snug text-dark xs:text-lg sm:mt-2 sm:text-2xl">
-              {category.name}
-            </h3>
-            <p className="mt-1 font-display text-xs text-muted sm:text-sm">{category.tamilName}</p>
-          </div>
+          <span
+            className={cn(
+              'grid h-11 w-11 shrink-0 place-items-center rounded-2xl sm:h-12 sm:w-12',
+              accent.tile,
+              accent.glow,
+            )}
+          >
+            <ArtIcon art={art} size={20} />
+          </span>
 
-          <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-secondary-50 text-primary transition-colors duration-300 group-hover:bg-dark group-hover:text-bg sm:h-9 sm:w-9">
-            <ArrowUpRight size={16} />
+          <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-secondary-50 text-primary transition-colors duration-200 group-hover:bg-dark group-hover:text-bg sm:h-9 sm:w-9">
+            <ArrowUpRight size={15} />
           </span>
         </div>
+
+        <p className={cn('mt-4 truncate text-2xs font-semibold uppercase tracking-[.12em]', accent.text)}>
+          {NOISE_LABEL[category.noiseLevel]}
+        </p>
+        <h3 className="mt-1.5 font-display text-base font-semibold leading-snug text-dark xs:text-lg sm:text-2xl">
+          {category.name}
+        </h3>
+        <p className="mt-1 font-display text-xs text-muted sm:text-sm">{category.tamilName}</p>
 
         {/* Two lines of blurb do not fit a half-width tile without crowding
             the art out; the feature tile keeps them at every size. */}
@@ -73,14 +86,16 @@ const CategoryCard = ({ category, index }) => (
         >
           <span
             aria-hidden="true"
-            className="absolute inset-x-0 bottom-0 h-20 opacity-30"
-            style={{ background: `radial-gradient(55% 100% at 50% 100%, ${category.accent}, transparent 72%)` }}
+            className="absolute inset-x-0 bottom-0 h-20 opacity-25"
+            style={{
+              background: `radial-gradient(55% 100% at 50% 100%, ${category.accent}, transparent 72%)`,
+            }}
           />
           <CrackerArt
-            type={artForCategory(category.slug)}
+            type={art}
             variant={(index % 4) + 1}
             className={cn(
-              'relative w-auto transition-transform duration-400 ease-luxe group-hover:scale-105',
+              'relative w-auto',
               index === 0 ? 'h-full max-h-72 sm:min-h-40' : 'h-full',
             )}
           />
@@ -96,13 +111,15 @@ const CategoryCard = ({ category, index }) => (
         </div>
       </Link>
     </div>
-);
+  );
+};
 
 export const CategoryGrid = () => (
   <Section id="categories">
     <div className="container">
       <SectionHeading
         eyebrow="Shop by category"
+        icon={<SlidersHorizontal size={13} />}
         title="Eight ways to fill a night sky"
         description="From a silent sparkler a four-year-old can hold to a 240-shot battery that needs a licensed ground and a marshal."
         action={

@@ -75,6 +75,7 @@ export const About = () => (
           <div>
             <SectionHeading
               eyebrow="Why we sell direct"
+              icon={<Factory size={13} />}
               title="The price on the box was never the price"
               description="Printed MRP on fireworks in India assumes three layers of margin: distributor, wholesaler, retail shop. We have none of them. What you pay is what the cracker costs to make, plus a living for the people who made it."
               className="pb-6"
@@ -129,6 +130,7 @@ export const About = () => (
           <div>
             <SectionHeading
               eyebrow="Safety"
+              icon={<ShieldCheck size={13} />}
               title="Eight rules we would like every customer to read"
               description="Almost every firework injury we hear about comes from breaking one of these. None of them cost anything to follow."
               className="pb-8"

@@ -6,7 +6,7 @@
     "tagline": "One evening, one box, everybody covered",
     "description": "Built after watching what families actually run out of first. Heavy on fountains and sparklers, one aerial cake for the finish, and just enough sound crackers to keep the traditionalists happy.",
     "art": "giftbox",
-    "accent": "#FF8A00",
+    "accent": "#F5567F",
     "price": 2499,
     "mrp": 9999,
     "discount": 75,
@@ -20,14 +20,36 @@
     "stock": 34,
     "featured": true,
     "includes": [
-      { "name": "Deluxe Flower Pot — Big", "qty": 10 },
-      { "name": "Royal Gold Sparkler 30cm", "qty": 10 },
-      { "name": "Ground Chakkar — Big", "qty": 10 },
-      { "name": "Colour Rocket Deluxe", "qty": 5 },
-      { "name": "Sky Show 12 Shots", "qty": 1 },
-      { "name": "100 Wala Garland", "qty": 4 },
-      { "name": "Pop Pop Snappers", "qty": 2 }
-    ]
+      {
+        "name": "Deluxe Flower Pot — Big",
+        "qty": 10
+      },
+      {
+        "name": "Royal Gold Sparkler 30cm",
+        "qty": 10
+      },
+      {
+        "name": "Ground Chakkar — Big",
+        "qty": 10
+      },
+      {
+        "name": "Colour Rocket Deluxe",
+        "qty": 5
+      },
+      {
+        "name": "Sky Show 12 Shots",
+        "qty": 1
+      },
+      {
+        "name": "100 Wala Garland",
+        "qty": 4
+      },
+      {
+        "name": "Pop Pop Snappers",
+        "qty": 2
+      }
+    ],
+    "tone": "berry"
   },
   {
     "id": "cmb-02",
@@ -36,7 +58,7 @@
     "tagline": "All of the light, none of the noise",
     "description": "Not a single report in the box. We put this together for families with newborns, elderly parents, or a dog that spends every Diwali under the bed — and it turned into one of our best sellers.",
     "art": "sparkler",
-    "accent": "#FFD56A",
+    "accent": "#22C9AE",
     "price": 1899,
     "mrp": 7600,
     "discount": 75,
@@ -50,14 +72,36 @@
     "stock": 41,
     "featured": true,
     "includes": [
-      { "name": "Electric White Sparkler 50cm", "qty": 10 },
-      { "name": "Rainbow Colour Sparkler 15cm", "qty": 10 },
-      { "name": "Classic Flower Pot — Small", "qty": 10 },
-      { "name": "Colour Smoke Pot Set", "qty": 1 },
-      { "name": "Magic Snake Tablets", "qty": 2 },
-      { "name": "Colour Smoke Sticks", "qty": 2 },
-      { "name": "Cold Pyro Indoor Stick", "qty": 1 }
-    ]
+      {
+        "name": "Electric White Sparkler 50cm",
+        "qty": 10
+      },
+      {
+        "name": "Rainbow Colour Sparkler 15cm",
+        "qty": 10
+      },
+      {
+        "name": "Classic Flower Pot — Small",
+        "qty": 10
+      },
+      {
+        "name": "Colour Smoke Pot Set",
+        "qty": 1
+      },
+      {
+        "name": "Magic Snake Tablets",
+        "qty": 2
+      },
+      {
+        "name": "Colour Smoke Sticks",
+        "qty": 2
+      },
+      {
+        "name": "Cold Pyro Indoor Stick",
+        "qty": 1
+      }
+    ],
+    "tone": "mint"
   },
   {
     "id": "cmb-03",
@@ -66,7 +110,7 @@
     "tagline": "Everything a child may light unsupervised — almost",
     "description": "Low flame, low noise, nothing that leaves the ground. The hamper we hand over when parents ask what the eight-year-old is allowed to hold.",
     "art": "kids",
-    "accent": "#D9539B",
+    "accent": "#C273F5",
     "price": 1099,
     "mrp": 4400,
     "discount": 75,
@@ -80,14 +124,36 @@
     "stock": 63,
     "featured": true,
     "includes": [
-      { "name": "Pop Pop Snappers", "qty": 4 },
-      { "name": "Magic Snake Tablets", "qty": 3 },
-      { "name": "Magic Whip Pencils", "qty": 3 },
-      { "name": "Ground Butterfly", "qty": 2 },
-      { "name": "Mini Chakkar for Kids", "qty": 5 },
-      { "name": "Rainbow Colour Sparkler 15cm", "qty": 10 },
-      { "name": "Colour Smoke Sticks", "qty": 1 }
-    ]
+      {
+        "name": "Pop Pop Snappers",
+        "qty": 4
+      },
+      {
+        "name": "Magic Snake Tablets",
+        "qty": 3
+      },
+      {
+        "name": "Magic Whip Pencils",
+        "qty": 3
+      },
+      {
+        "name": "Ground Butterfly",
+        "qty": 2
+      },
+      {
+        "name": "Mini Chakkar for Kids",
+        "qty": 5
+      },
+      {
+        "name": "Rainbow Colour Sparkler 15cm",
+        "qty": 10
+      },
+      {
+        "name": "Colour Smoke Sticks",
+        "qty": 1
+      }
+    ],
+    "tone": "royal"
   },
   {
     "id": "cmb-04",
@@ -96,7 +162,7 @@
     "tagline": "A twenty-minute programme, sequenced for you",
     "description": "Three aerial cakes, a fountain tower and a rocket set, arranged in the order we would light them. A printed running order comes in the box so nobody has to improvise in the dark.",
     "art": "aerial",
-    "accent": "#C84D0E",
+    "accent": "#FFB238",
     "price": 5999,
     "mrp": 23990,
     "discount": 75,
@@ -110,14 +176,36 @@
     "stock": 17,
     "featured": true,
     "includes": [
-      { "name": "Grand Finale 60 Shots", "qty": 1 },
-      { "name": "Sky Show 30 Shots", "qty": 2 },
-      { "name": "Giant Fountain Tower", "qty": 2 },
-      { "name": "Rocket Bomb Supreme", "qty": 10 },
-      { "name": "Crackling Koti Special", "qty": 10 },
-      { "name": "Peacock Fancy Shot", "qty": 5 },
-      { "name": "Maharaja Sparkler 90cm", "qty": 5 }
-    ]
+      {
+        "name": "Grand Finale 60 Shots",
+        "qty": 1
+      },
+      {
+        "name": "Sky Show 30 Shots",
+        "qty": 2
+      },
+      {
+        "name": "Giant Fountain Tower",
+        "qty": 2
+      },
+      {
+        "name": "Rocket Bomb Supreme",
+        "qty": 10
+      },
+      {
+        "name": "Crackling Koti Special",
+        "qty": 10
+      },
+      {
+        "name": "Peacock Fancy Shot",
+        "qty": 5
+      },
+      {
+        "name": "Maharaja Sparkler 90cm",
+        "qty": 5
+      }
+    ],
+    "tone": "amber"
   },
   {
     "id": "cmb-05",
@@ -126,7 +214,7 @@
     "tagline": "The whole festival, under a thousand rupees",
     "description": "The smallest box we make that still feels like a proper Diwali. A little of everything, nothing wasted, and no upsell hidden in the packaging.",
     "art": "flowerpot",
-    "accent": "#E2762F",
+    "accent": "#E67A00",
     "price": 899,
     "mrp": 3600,
     "discount": 75,
@@ -140,14 +228,36 @@
     "stock": 87,
     "featured": false,
     "includes": [
-      { "name": "Classic Flower Pot — Small", "qty": 5 },
-      { "name": "Ground Chakkar — Big", "qty": 5 },
-      { "name": "Royal Gold Sparkler 30cm", "qty": 10 },
-      { "name": "Lakshmi Rocket", "qty": 5 },
-      { "name": "Bijili Crackers", "qty": 1 },
-      { "name": "100 Wala Garland", "qty": 2 },
-      { "name": "Pop Pop Snappers", "qty": 1 }
-    ]
+      {
+        "name": "Classic Flower Pot — Small",
+        "qty": 5
+      },
+      {
+        "name": "Ground Chakkar — Big",
+        "qty": 5
+      },
+      {
+        "name": "Royal Gold Sparkler 30cm",
+        "qty": 10
+      },
+      {
+        "name": "Lakshmi Rocket",
+        "qty": 5
+      },
+      {
+        "name": "Bijili Crackers",
+        "qty": 1
+      },
+      {
+        "name": "100 Wala Garland",
+        "qty": 2
+      },
+      {
+        "name": "Pop Pop Snappers",
+        "qty": 1
+      }
+    ],
+    "tone": "ember"
   },
   {
     "id": "cmb-06",
@@ -156,7 +266,7 @@
     "tagline": "Twenty-five boxes, one invoice, one delivery",
     "description": "Twenty-five Mini Gift Boxes in a single carton with a GST invoice and optional printed sleeve carrying your company name. Ordered every October by people who left it slightly too late.",
     "art": "giftbox",
-    "accent": "#A6357A",
+    "accent": "#C273F5",
     "price": 12999,
     "mrp": 52000,
     "discount": 75,
@@ -170,9 +280,19 @@
     "stock": 12,
     "featured": false,
     "includes": [
-      { "name": "Mini Gift Box — 12 items", "qty": 25 },
-      { "name": "Printed company sleeve (optional)", "qty": 25 },
-      { "name": "GST invoice + delivery challan", "qty": 1 }
-    ]
+      {
+        "name": "Mini Gift Box — 12 items",
+        "qty": 25
+      },
+      {
+        "name": "Printed company sleeve (optional)",
+        "qty": 25
+      },
+      {
+        "name": "GST invoice + delivery challan",
+        "qty": 1
+      }
+    ],
+    "tone": "royal"
   }
 ]

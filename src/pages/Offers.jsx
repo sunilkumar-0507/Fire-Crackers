@@ -1,4 +1,4 @@
-import { ArrowRight, Check, Info } from '@/components/ui/icons';
+import { ArrowRight, Check, Info, Tag } from '@/components/ui/icons';
 import { offers, combos } from '@/data';
 import { formatPrice } from '@/utils/format';
 import PageHeader from '@/components/ui/PageHeader';
@@ -35,6 +35,7 @@ export const Offers = () => {
         <div className="container">
           <SectionHeading
             eyebrow="The fine print"
+            icon={<Info size={13} />}
             title="What each code actually does"
             description="No hidden conditions — this is the whole set of rules the basket applies."
             className="pb-8"
@@ -83,6 +84,7 @@ export const Offers = () => {
         <div className="container">
           <SectionHeading
             eyebrow="Best value with a code"
+            icon={<Tag size={13} />}
             title="Where the discounts land hardest"
             description="COMBO500 takes another ₹500 off any of these, on top of the bundle price."
             action={

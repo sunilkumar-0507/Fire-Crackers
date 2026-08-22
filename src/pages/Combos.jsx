@@ -85,6 +85,7 @@ export const Combos = () => {
           <SectionHeading
             align="center"
             eyebrow="How we build them"
+            icon={<Package size={13} />}
             title="Nothing in the box is filler"
             description="We pack these from the same stock that goes out as single items, at the same quality. The bundle price is lower because packing forty things once is cheaper than packing them forty times — that saving goes to you, not into a thicker box."
           />

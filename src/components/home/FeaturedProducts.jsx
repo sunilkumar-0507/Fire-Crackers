@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { ArrowRight } from '@/components/ui/icons';
+import { ArrowRight, Star } from '@/components/ui/icons';
 import { featuredProducts, categoriesWithCounts } from '@/data';
 import Section, { SectionHeading } from '@/components/ui/Section';
 import ProductGrid from '@/components/product/ProductGrid';
@@ -29,6 +29,7 @@ export const FeaturedProducts = () => {
       <div className="container">
         <SectionHeading
           eyebrow="Hand-picked"
+          icon={<Star size={13} />}
           title="What we'd put in our own basket"
           description="The ones we make the most of, sell the most of, and get the fewest complaints about. Filter by category or add straight from the card."
           action={

@@ -1,23 +1,39 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { ArrowRight, Check, Clock, Package, Users } from '@/components/ui/icons';
+import { Check, ChevronDown, Package } from '@/components/ui/icons';
 import { cn } from '@/utils/cn';
+import { accentOf } from '@/constants/accents';
 import { formatPrice } from '@/utils/format';
 import { comboToCartItem } from '@/utils/cart';
 import { useCartStore, selectInCart } from '@/store/cartStore';
-import CrackerArt from '@/components/ui/CrackerArt';
-import Button from '@/components/ui/Button';
-import Badge from '@/components/ui/Badge';
-import Rating from '@/components/ui/Rating';
+import ArtIcon from '@/components/ui/ArtIcon';
 
-/** Curated bundle card — save flag, contents list and a single clear CTA. */
+/**
+ * Curated bundle card.
+ *
+ * Reads top to bottom in the order somebody actually decides in: what it is,
+ * what is in it, what it costs, add it. The tone comes from the combo's own
+ * `tone` key, so the icon tile, the tagline, the discount pill and the CTA all
+ * agree — see `constants/accents.js`.
+ *
+ * The contents list is collapsed to a single wrapping line with a disclosure,
+ * rather than a permanently open checklist. Six cards side by side with eight
+ * ticked rows each is more list than card.
+ */
 export const ComboCard = ({ combo, className, showContents = true }) => {
   const addItem = useCartStore((s) => s.addItem);
   const inCart = useCartStore(selectInCart(combo.id));
+  const [open, setOpen] = useState(false);
+
+  const accent = accentOf(combo.tone);
+  const items = combo.includes ?? [];
+  const preview = items.slice(0, 3);
+  const rest = items.length - preview.length;
+  const pieces = items.reduce((sum, line) => sum + (line.qty ?? 0), 0);
 
   const add = (event) => {
     event.preventDefault();
-    event.stopPropagation();
     const { added } = addItem(comboToCartItem(combo), 1);
     if (added > 0) toast.success(`${combo.name} added`);
   };
@@ -25,122 +41,109 @@ export const ComboCard = ({ combo, className, showContents = true }) => {
   return (
     <article className={cn('h-full', className)}>
       <div
-        data-active={inCart > 0}
-        className="border-glow group relative flex h-full flex-col overflow-hidden rounded-4xl border border-line bg-card shadow-card transition-shadow duration-300 ease-luxe hover:shadow-lift"
+        className={cn(
+          'flex h-full flex-col rounded-4xl border border-line bg-card p-5 shadow-card transition-colors duration-200 sm:p-6',
+          accent.ring,
+        )}
       >
-        {/* save flag */}
-        <div className="absolute right-4 top-4 z-10 text-right sm:right-5 sm:top-5">
-          <span className="block rounded-2xl bg-dark px-3 py-1.5 text-center shadow-lift sm:px-3.5 sm:py-2">
-            <span className="block font-display text-base font-semibold leading-none text-gold">
-              {formatPrice(combo.saves)}
-            </span>
-            <span className="mt-1 block text-[9px] font-semibold uppercase tracking-[.14em] text-bg/75">
-              You save
-            </span>
+        <div className="flex items-start justify-between gap-3">
+          {/* Icon tile, lit from below by a shadow in the same hue. */}
+          <span
+            className={cn(
+              'grid h-14 w-14 shrink-0 place-items-center rounded-2xl',
+              accent.tile,
+              accent.glow,
+            )}
+          >
+            <ArtIcon art={combo.art} size={24} />
           </span>
+
+          {combo.badge ? (
+            <span
+              className={cn(
+                'shrink-0 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-[.12em]',
+                accent.pill,
+              )}
+            >
+              {combo.badge}
+            </span>
+          ) : null}
         </div>
 
-        {/* art header */}
-        <Link
-          to={`/combo/${combo.slug}`}
-          className="relative grid h-36 place-items-center overflow-hidden sm:h-44"
-          style={{ background: `linear-gradient(140deg, ${combo.accent}22, #FFFFFF 60%, ${combo.accent}18)` }}
-        >
-          <span
-            aria-hidden="true"
-            className="absolute inset-x-0 bottom-0 h-32 opacity-45 transition-opacity duration-700 group-hover:opacity-75"
-            style={{ background: `radial-gradient(60% 100% at 50% 100%, ${combo.accent}, transparent 70%)` }}
-          />
-          <CrackerArt
-            type={combo.art}
-            variant={2}
-            className="relative h-28 w-28 transition-transform duration-400 ease-luxe group-hover:scale-105 sm:h-36 sm:w-36"
-          />
-          <Badge tone="gold" className="absolute left-4 top-4 max-w-[55%] truncate sm:left-5 sm:top-5">
-            {combo.badge}
-          </Badge>
-        </Link>
+        <h3 className="mt-5 font-display text-xl font-semibold leading-tight text-dark">
+          <Link to={`/combo/${combo.slug}`} className="transition-colors hover:text-primary">
+            {combo.name}
+          </Link>
+        </h3>
 
-        <div className="flex flex-1 flex-col p-5 sm:p-6">
-          <div className="flex items-start justify-between gap-3">
-            <h3 className="font-display text-lg font-semibold leading-tight text-dark sm:text-xl">
-              <Link to={`/combo/${combo.slug}`} className="transition-colors hover:text-primary">
-                {combo.name}
-              </Link>
-            </h3>
-          </div>
+        <p className={cn('mt-1.5 text-sm font-medium', accent.text)}>{combo.tagline}</p>
 
-          <p className="mt-1.5 text-sm italic text-primary">{combo.tagline}</p>
-          <p className="mt-3 line-clamp-2 text-[13px] leading-relaxed text-muted">
-            {combo.description}
-          </p>
+        {showContents && items.length ? (
+          <div className="mt-4">
+            <p className="text-[13px] leading-relaxed text-muted">
+              {preview.map((line) => line.name).join(' · ')}
+              {rest > 0 ? <span className="font-medium"> + {rest} more items</span> : null}
+            </p>
 
-          <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-2xs text-muted">
-            <span className="flex items-center gap-1.5">
-              <Package size={13} className="text-primary" />
-              {combo.itemCount} items
-            </span>
-            <span className="flex items-center gap-1.5">
-              <Users size={13} className="text-primary" />
-              {combo.serves}
-            </span>
-            {combo.duration !== '—' ? (
-              <span className="flex items-center gap-1.5">
-                <Clock size={13} className="text-primary" />
-                {combo.duration}
-              </span>
+            {rest > 0 ? (
+              <>
+                <button
+                  type="button"
+                  onClick={() => setOpen((v) => !v)}
+                  aria-expanded={open}
+                  className="mt-2 flex items-center gap-1.5 text-[13px] font-semibold text-ink transition-colors hover:text-primary"
+                >
+                  See all {items.length} items
+                  <ChevronDown size={13} className={cn(open && 'rotate-180')} />
+                </button>
+
+                {open ? (
+                  <ul className={cn('mt-3 space-y-2 rounded-2xl p-4', accent.wash)}>
+                    {items.map((line) => (
+                      <li key={line.name} className="flex items-start gap-2.5 text-xs text-ink">
+                        <Check size={12} className="mt-0.5 shrink-0 text-emerald-600" />
+                        <span className="flex-1">{line.name}</span>
+                        <span className="shrink-0 font-semibold text-muted">×{line.qty}</span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : null}
+              </>
             ) : null}
           </div>
+        ) : null}
 
-          {showContents ? (
-            <ul className="mt-5 space-y-2 rounded-2xl bg-secondary-50/60 p-4">
-              {combo.includes.slice(0, 4).map((line) => (
-                <li key={line.name} className="flex items-start gap-2.5 text-xs text-ink">
-                  <Check size={13} className="mt-0.5 shrink-0 text-emerald-500" />
-                  <span className="flex-1">{line.name}</span>
-                  <span className="shrink-0 font-semibold text-muted">×{line.qty}</span>
-                </li>
-              ))}
-              {combo.includes.length > 4 ? (
-                <li className="pt-1 text-xs font-semibold text-primary">
-                  + {combo.includes.length - 4} more inside
-                </li>
-              ) : null}
-            </ul>
-          ) : null}
-
-          <div className="mt-5 flex items-center justify-between gap-3">
-            <Rating value={combo.rating} reviews={combo.reviews} size="xs" />
-            <span className="text-2xs text-muted">{combo.stock} left</span>
-          </div>
-
-          <div className="mt-auto flex items-end justify-between gap-3 pt-5">
-            <div>
-              <div className="flex items-baseline gap-2">
-                <span className="font-display text-2xl font-semibold text-dark">
-                  {formatPrice(combo.price)}
-                </span>
-                <span className="text-xs text-muted line-through">{formatPrice(combo.mrp)}</span>
-              </div>
-              <p className="mt-1 text-2xs font-semibold text-emerald-600">
-                {combo.discount}% off the bundle
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-5 flex gap-2.5">
-            <Button onClick={add} className="min-w-0 flex-1 px-4 sm:px-6">
-              {inCart > 0 ? `In basket (${inCart})` : 'Add to basket'}
-            </Button>
-            <Button
-              to={`/combo/${combo.slug}`}
-              variant="outline"
-              size="icon"
-              aria-label={`View ${combo.name}`}
+        <div className="mt-auto pt-6">
+          <div className="flex flex-wrap items-baseline gap-x-2.5 gap-y-1">
+            <span className="font-display text-3xl font-semibold text-dark">
+              {formatPrice(combo.price)}
+            </span>
+            <span className="text-sm text-muted line-through">{formatPrice(combo.mrp)}</span>
+            <span
+              className={cn(
+                'rounded-full px-2 py-0.5 text-[11px] font-bold',
+                accent.pill,
+              )}
             >
-              <ArrowRight size={17} />
-            </Button>
+              {combo.discount}% off
+            </span>
           </div>
+
+          <p className="mt-1.5 flex items-center gap-1.5 text-2xs text-muted">
+            <Package size={12} className="shrink-0" />
+            {pieces} pieces across {items.length} products
+          </p>
+
+          <button
+            type="button"
+            onClick={add}
+            className={cn(
+              'mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-full text-[15px] font-semibold transition-colors duration-200 active:scale-[.98]',
+              accent.button,
+            )}
+          >
+            {inCart > 0 ? `In basket (${inCart})` : 'Add package to cart'}
+          </button>
         </div>
       </div>
     </article>

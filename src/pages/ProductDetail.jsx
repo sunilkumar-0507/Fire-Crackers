@@ -1,17 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import {
-  AlertTriangle,
-  Check,
-  Heart,
-  HeartFilled,
-  Info,
-  ShieldAlert,
-  ShoppingBag,
-  Sparkles,
-  Truck,
-} from '@/components/ui/icons';
+import { AlertTriangle, Check, Heart, HeartFilled, Info, ShieldAlert, ShoppingBag, Sparkles, Truck } from '@/components/ui/icons';
 import { cn } from '@/utils/cn';
 import { findProduct, getRelated, findCategory, featuredOffers } from '@/data';
 import { SAFETY_RULES, SHIPPING } from '@/constants';
@@ -356,6 +346,7 @@ export const ProductDetail = () => {
           <div className="container">
             <SectionHeading
               eyebrow="Goes well with"
+              icon={<Sparkles size={13} />}
               title="People usually add these too"
               className="pb-8"
             />

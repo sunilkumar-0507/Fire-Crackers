@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { A11y, FreeMode, Navigation, Pagination } from 'swiper/modules';
-import { ChevronLeft, ChevronRight } from '@/components/ui/icons';
+import { ChevronLeft, ChevronRight, Flame } from '@/components/ui/icons';
 import { bestSellers } from '@/data';
 import Section, { SectionHeading } from '@/components/ui/Section';
 import ProductCard from '@/components/product/ProductCard';
@@ -25,6 +25,7 @@ export const BestSellers = () => {
       <div className="container">
         <SectionHeading
           eyebrow="Best sellers"
+          icon={<Flame size={13} />}
           title="The ones that sell out first"
           description="Ranked by what actually left the warehouse last season. If you are buying blind, buy from here."
           action={

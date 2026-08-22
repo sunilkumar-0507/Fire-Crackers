@@ -7,14 +7,18 @@ import {
   TfiArrowTopRight,
   TfiArrowUp,
   TfiBag,
+  TfiBolt,
   TfiCheck,
   TfiClose,
   TfiComment,
+  TfiCrown,
   TfiEmail,
   TfiEye,
   TfiFile,
   TfiFiles,
+  TfiFaceSmile,
   TfiFilter,
+  TfiGift,
   TfiHeart,
   TfiHome,
   TfiInfoAlt,
@@ -25,6 +29,8 @@ import {
   TfiPackage,
   TfiPlus,
   TfiQuoteLeft,
+  TfiReload,
+  TfiRocket,
   TfiSearch,
   TfiShield,
   TfiShine,
@@ -129,6 +135,14 @@ export const Send = icon(FaPaperPlane, 'Send');
 export const User = icon(TfiUser, 'User');
 export const UserCheck = icon(FaUserCheck, 'UserCheck');
 export const Users = icon(FaUsers, 'Users');
+
+/* Category and package glyphs — the icon tile on a card ------------------- */
+export const Bolt = icon(TfiBolt, 'Bolt');
+export const Crown = icon(TfiCrown, 'Crown');
+export const Gift = icon(TfiGift, 'Gift');
+export const Rocket = icon(TfiRocket, 'Rocket');
+export const Smiley = icon(TfiFaceSmile, 'Smiley');
+export const Spinner = icon(TfiReload, 'Spinner');
 
 /* Content ----------------------------------------------------------------- */
 export const Copy = icon(TfiFiles, 'Copy');
