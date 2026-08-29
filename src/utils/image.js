@@ -1,10 +1,13 @@
 /**
  * Image resolution.
  *
- * Products carry `images: ["rocket/2", ...]`. Today those resolve to generated
- * vector art; when a real API arrives it will send absolute URLs instead, and
- * `resolveImage` already routes those to an `<img>` without any other change.
+ * Products carry `images: ["GOPI Crackers/ROCKET/Baby Rocket.jfif", ...]` —
+ * keys into the real photography shipped from `src/assets`. Anything that is
+ * not a known photo falls back to the generated vector art, and an absolute
+ * URL (what a real API would send) is passed straight through to an `<img>`.
  */
+
+import { photoUrl } from './productPhotos';
 
 const ART_TYPES = new Set([
   'rocket',
@@ -24,6 +27,9 @@ const isUrl = (value) => typeof value === 'string' && /^(https?:|data:|\/)/.test
  */
 export const resolveImage = (value, fallbackType = 'rocket') => {
   if (isUrl(value)) return { kind: 'url', src: value };
+
+  const photo = photoUrl(value);
+  if (photo) return { kind: 'url', src: photo };
 
   const [type, variant] = String(value ?? '').split('/');
   return {

@@ -39,11 +39,16 @@ export const combos = combosJson;
 export const testimonials = testimonialsJson;
 export const faqs = faqJson;
 
-/** Category count derived from the catalogue so the two can never drift. */
-export const categoriesWithCounts = categories.map((c) => ({
-  ...c,
-  productCount: products.filter((p) => p.category === c.slug).length,
-}));
+/**
+ * Count and cover photo derived from the catalogue so the three can never
+ * drift. The cover is the featured product's lead photo — a category can
+ * therefore never front a product we have stopped stocking.
+ */
+export const categoriesWithCounts = categories.map((c) => {
+  const inCategory = products.filter((p) => p.category === c.slug);
+  const cover = inCategory.find((p) => p.featured) ?? inCategory[0];
+  return { ...c, productCount: inCategory.length, cover: cover?.images[0] };
+});
 
 const bySlug = new Map(products.map((p) => [p.slug, p]));
 const byId = new Map(products.map((p) => [p.id, p]));

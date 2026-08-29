@@ -5,8 +5,8 @@ import { categoriesWithCounts } from '@/data';
 import { accentOf } from '@/constants/accents';
 import { artForCategory } from '@/utils/image';
 import Section, { SectionHeading } from '@/components/ui/Section';
-import CrackerArt from '@/components/ui/CrackerArt';
 import ArtIcon from '@/components/ui/ArtIcon';
+import ProductImage from '@/components/ui/ProductImage';
 import Button from '@/components/ui/Button';
 
 const NOISE_LABEL = {
@@ -21,8 +21,9 @@ const NOISE_LABEL = {
  * One category tile.
  *
  * Carries the same accent tile as a package card, so a category and a bundle
- * announce themselves the same way. The illustration stays — it is the only
- * place a shopper sees what the category physically looks like.
+ * announce themselves the same way. The picture is the real photograph of the
+ * category's featured product — the only place on the home page a shopper
+ * sees what the category physically looks like.
  */
 const CategoryCard = ({ category, index }) => {
   const accent = accentOf(category.tone);
@@ -75,13 +76,13 @@ const CategoryCard = ({ category, index }) => {
         </p>
 
         {/* The feature tile spans two grid rows, so it is roughly twice as
-            tall as its own content. Giving its art block `flex-1` lets the
-            artwork absorb that height instead of leaving a 300px hole between
+            tall as its own content. Giving its photo block `flex-1` lets the
+            picture absorb that height instead of leaving a 300px hole between
             the tagline and the footer. */}
         <div
           className={cn(
-            'relative mt-auto grid place-items-center pt-5 sm:pt-6',
-            index === 0 ? 'h-36 xs:h-48 sm:h-auto sm:flex-1 sm:py-8' : 'h-20 sm:h-28',
+            'relative mt-auto',
+            index === 0 ? 'h-36 xs:h-48 sm:h-auto sm:max-h-72 sm:flex-1' : 'h-20 sm:h-28',
           )}
         >
           <span
@@ -91,13 +92,18 @@ const CategoryCard = ({ category, index }) => {
               background: `radial-gradient(55% 100% at 50% 100%, ${category.accent}, transparent 72%)`,
             }}
           />
-          <CrackerArt
-            type={art}
-            variant={(index % 4) + 1}
-            className={cn(
-              'relative w-auto',
-              index === 0 ? 'h-full max-h-72 sm:min-h-40' : 'h-full',
-            )}
+          {/* Decorative: the tile already names the category in text, so the
+              photo carries no information a screen reader would miss.
+
+              Positioned rather than centred in a grid: a percentage height on
+              a grid item in an auto-sized row resolves to `auto`, and the
+              photo would then take its own aspect ratio and spill past the
+              tile. Absolute insets give it a definite box to fit inside. */}
+          <ProductImage
+            source={category.cover}
+            alt=""
+            fallbackType={art}
+            className="absolute inset-0 h-full w-full object-contain pt-5 sm:pt-6"
           />
         </div>
 
