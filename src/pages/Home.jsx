@@ -1,7 +1,6 @@
 import Hero from '@/components/home/Hero';
 import CategoryStrip from '@/components/home/CategoryStrip';
 import TrustStrip from '@/components/home/TrustStrip';
-import CategoryGrid from '@/components/home/CategoryGrid';
 import FeaturedProducts from '@/components/home/FeaturedProducts';
 import OffersSection from '@/components/home/OffersSection';
 import BestSellers from '@/components/home/BestSellers';
@@ -25,10 +24,6 @@ export const Home = () => (
     <Hero />
     <CategoryStrip />
     <TrustStrip />
-
-    <DeferredSection estimatedHeight={1100}>
-      <CategoryGrid />
-    </DeferredSection>
 
     <DeferredSection estimatedHeight={1200}>
       <FeaturedProducts />
