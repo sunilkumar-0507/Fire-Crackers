@@ -5,10 +5,8 @@ import { ChevronDown, Phone, Search, X } from '@/components/ui/icons';
 import { cn } from '@/utils/cn';
 import { BRAND, NAV_LINKS, SOCIALS } from '@/constants';
 import { categoriesWithCounts } from '@/data';
-import { artForCategory } from '@/utils/image';
 import { useUIStore } from '@/store/uiStore';
 import { useLockBodyScroll } from '@/hooks/useLockBodyScroll';
-import CrackerArt from '@/components/ui/CrackerArt';
 import Logo from '@/components/ui/Logo';
 import Button from '@/components/ui/Button';
 
@@ -107,18 +105,10 @@ export const MobileMenu = () => {
                             key={category.id}
                             to={`/category/${category.slug}`}
                             onClick={close}
-                            className="flex items-center gap-2.5 rounded-xl border border-line bg-card p-2.5 transition-colors hover:border-secondary-300"
+                            className="block rounded-xl border border-line bg-card px-3 py-2.5 transition-colors hover:border-secondary-300"
                           >
-                            <span
-                              className="grid h-9 w-9 shrink-0 place-items-center rounded-lg"
-                              style={{ background: category.accentSoft }}
-                            >
-                              <CrackerArt type={artForCategory(category.slug)} className="h-7 w-7" />
-                            </span>
-                            <span className="min-w-0">
-                              <span className="block truncate text-xs font-semibold text-dark">{category.name}</span>
-                              <span className="block text-2xs text-muted">{category.productCount} items</span>
-                            </span>
+                            <span className="block truncate text-xs font-semibold text-dark">{category.name}</span>
+                            <span className="block text-2xs text-muted">{category.productCount} items</span>
                           </Link>
                         ))}
                       </div>

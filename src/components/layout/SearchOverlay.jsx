@@ -7,11 +7,9 @@ import { POPULAR_SEARCHES } from '@/constants';
 import { bestSellers } from '@/data';
 import { searchCategories, searchProducts } from '@/utils/search';
 import { formatPrice } from '@/utils/format';
-import { artForCategory } from '@/utils/image';
 import { useUIStore } from '@/store/uiStore';
 import { useLockBodyScroll } from '@/hooks/useLockBodyScroll';
 import ProductImage from '@/components/ui/ProductImage';
-import CrackerArt from '@/components/ui/CrackerArt';
 import Chip from '@/components/ui/Chip';
 import EmptyState from '@/components/ui/EmptyState';
 import Button from '@/components/ui/Button';
@@ -208,14 +206,8 @@ export const SearchOverlay = () => {
                       key={category.id}
                       to={`/category/${category.slug}`}
                       onClick={close}
-                      className="flex items-center gap-2.5 rounded-full border border-line bg-card py-1.5 pl-1.5 pr-4 text-sm font-medium text-ink transition-colors hover:border-secondary-300 hover:text-primary"
+                      className="rounded-full border border-line bg-card px-4 py-2 text-sm font-medium text-ink transition-colors hover:border-secondary-300 hover:text-primary"
                     >
-                      <span
-                        className="grid h-8 w-8 place-items-center rounded-full"
-                        style={{ background: category.accentSoft }}
-                      >
-                        <CrackerArt type={artForCategory(category.slug)} className="h-6 w-6" />
-                      </span>
                       {category.name}
                     </Link>
                   ))}

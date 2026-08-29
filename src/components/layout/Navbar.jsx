@@ -4,41 +4,36 @@ import { ChevronDown, Menu, Search, ShoppingBag } from '@/components/ui/icons';
 import { cn } from '@/utils/cn';
 import { NAV_LINKS } from '@/constants';
 import { categoriesWithCounts } from '@/data';
-import { artForCategory } from '@/utils/image';
 import { useScrolled } from '@/hooks/useScrolled';
 import { useCartStore, selectCount } from '@/store/cartStore';
 import { useUIStore } from '@/store/uiStore';
 import Logo from '@/components/ui/Logo';
-import CrackerArt from '@/components/ui/CrackerArt';
 import AnnouncementBar from './AnnouncementBar';
 
 /* -------------------------------------------------------------------------- */
 
+/**
+ * Categories as a plain two-column list.
+ *
+ * No thumbnail: at this size a photograph of a box reads as noise, and the
+ * name and tagline already say everything the row is for.
+ */
 const CategoryPanel = ({ onNavigate }) => (
-  <div className="grid w-[min(90vw,720px)] gap-1.5 p-3 sm:grid-cols-2">
+  <div className="grid w-[min(90vw,560px)] gap-0.5 p-3 sm:grid-cols-2">
     {categoriesWithCounts.map((category) => (
       <Link
         key={category.id}
         to={`/category/${category.slug}`}
         onClick={onNavigate}
-        className="group/item flex items-center gap-3.5 rounded-2xl p-3 transition-colors duration-300 hover:bg-secondary-50"
+        className="group/item block rounded-2xl px-3.5 py-2.5 transition-colors duration-300 hover:bg-secondary-50"
       >
-        <span
-          className="grid h-12 w-12 shrink-0 place-items-center rounded-xl"
-          style={{ background: `${category.accentSoft}` }}
-        >
-          <CrackerArt type={artForCategory(category.slug)} variant={1} className="h-9 w-9" />
-        </span>
-
-        <span className="min-w-0 flex-1">
-          <span className="flex items-baseline gap-2">
-            <span className="truncate text-sm font-semibold text-dark transition-colors group-hover/item:text-primary">
-              {category.name}
-            </span>
-            <span className="shrink-0 text-2xs text-muted">{category.productCount}</span>
+        <span className="flex items-baseline gap-2">
+          <span className="truncate text-sm font-semibold text-dark transition-colors group-hover/item:text-primary">
+            {category.name}
           </span>
-          <span className="mt-0.5 block truncate text-xs text-muted">{category.tagline}</span>
+          <span className="shrink-0 text-2xs text-muted">{category.productCount}</span>
         </span>
+        <span className="mt-0.5 block truncate text-xs text-muted">{category.tagline}</span>
       </Link>
     ))}
 
