@@ -294,6 +294,15 @@
   width: 8px;
   height: 8px;
   transition: all 0.3s var(--ease-luxe);
+  /* The dots row is a flex container, and a bullet with only a `width` is
+     still shrinkable — on a phone a carousel with enough slides squeezed them
+     down to a single pixel. `flex: none` holds each dot at its real size. */
+  flex: none;
+  /* Transparent padding turns an 8px dot into a 24px touch target without
+     making the dot itself any bigger. */
+  box-sizing: content-box;
+  padding: 8px;
+  background-clip: content-box;
 }
 .swiper-pagination-bullet-active {
   opacity: 1;

@@ -135,7 +135,7 @@ export const FilterPanel = ({ filters, onChange, onReset, resultCount, className
             onChange({ maxPrice: value >= priceBounds.max ? null : value });
           }}
           aria-label="Maximum price"
-          className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-secondary-100 accent-primary"
+          className="box-content h-1.5 w-full cursor-pointer appearance-none rounded-full bg-secondary-100 bg-clip-content py-[9px] accent-primary"
         />
         <div className="mt-3 flex items-center justify-between text-xs">
           <span className="text-muted">{formatPrice(priceBounds.min)}</span>
@@ -178,7 +178,7 @@ export const FilterPanel = ({ filters, onChange, onReset, resultCount, className
       </Group>
 
       <Group title="Availability">
-        <label className="flex cursor-pointer items-center gap-3 text-sm text-ink">
+        <label className="flex min-h-10 cursor-pointer items-center gap-3 py-1 text-sm text-ink">
           <input
             type="checkbox"
             checked={filters.inStockOnly}

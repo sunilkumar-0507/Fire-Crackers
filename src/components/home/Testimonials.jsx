@@ -76,7 +76,7 @@ export const Testimonials = () => (
         ))}
       </Swiper>
 
-      <div className="testimonial-dots mt-8 flex items-center justify-center gap-2 sm:mt-10" />
+      <div className="testimonial-dots mt-6 flex flex-wrap items-center justify-center sm:mt-8" />
     </div>
   </Section>
 );

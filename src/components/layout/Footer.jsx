@@ -58,7 +58,7 @@ export const Footer = () => (
               <LogoMark size={44} />
               <div className="leading-none">
                 <p className="font-display text-2xl font-semibold text-bg">{BRAND.name}</p>
-                <p className="mt-1.5 text-[9px] font-semibold uppercase tracking-[.3em] text-gold/70">
+                <p className="mt-1.5 text-[10px] font-semibold uppercase tracking-[.22em] text-gold/70">
                   {BRAND.tagline}
                 </p>
               </div>

@@ -16,7 +16,7 @@ const Unit = ({ value, label, tone }) => (
     </div>
     <span
       className={cn(
-        'mt-1.5 text-[9px] font-semibold uppercase tracking-[.16em]',
+        'mt-1.5 text-[10px] font-semibold uppercase tracking-[.14em]',
         tone === 'dark' ? 'text-bg/75' : 'text-muted',
       )}
     >

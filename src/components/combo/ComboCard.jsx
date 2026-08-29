@@ -91,7 +91,7 @@ export const ComboCard = ({ combo, className, showContents = true }) => {
                   type="button"
                   onClick={() => setOpen((v) => !v)}
                   aria-expanded={open}
-                  className="mt-2 flex items-center gap-1.5 text-[13px] font-semibold text-ink transition-colors hover:text-primary"
+                  className="-mb-1 mt-1 flex min-h-10 items-center gap-1.5 py-2 text-[13px] font-semibold text-ink transition-colors hover:text-primary"
                 >
                   See all {items.length} items
                   <ChevronDown size={13} className={cn(open && 'rotate-180')} />

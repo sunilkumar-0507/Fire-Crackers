@@ -113,7 +113,7 @@ export const OfferCard = ({ offer, featured = false, className }) => {
           <div>
             <p
               className={cn(
-                'mb-2 text-[9px] font-semibold uppercase tracking-[.2em]',
+                'mb-2 text-[10px] font-semibold uppercase tracking-[.18em]',
                 featured ? 'text-bg/55' : 'text-muted',
               )}
             >
