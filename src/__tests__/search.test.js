@@ -4,7 +4,7 @@ import { products, categoriesWithCounts, findProduct } from '@/data';
 
 describe('catalogue search', () => {
   it('ranks an exact name match first', () => {
-    expect(searchProducts('Lakshmi Rocket')[0].slug).toBe('lakshmi-rocket-classic');
+    expect(searchProducts('Classic Bomb')[0].slug).toBe('classic-bomb');
   });
 
   it('searches descriptions too, but ranks name matches above them', () => {
@@ -25,14 +25,14 @@ describe('catalogue search', () => {
   });
 
   it('requires every term to match, so more words narrow the result', () => {
-    const broad = searchProducts('rocket');
-    const narrow = searchProducts('colour rocket');
+    const broad = searchProducts('sparkler');
+    const narrow = searchProducts('colour sparkler');
     expect(narrow.length).toBeLessThan(broad.length);
     expect(narrow.length).toBeGreaterThan(0);
   });
 
   it('returns nothing for a term that is in no product', () => {
-    expect(searchProducts('helicopter')).toEqual([]);
+    expect(searchProducts('submarine')).toEqual([]);
   });
 
   it('ignores case, punctuation and extra whitespace', () => {
@@ -51,11 +51,11 @@ describe('catalogue filtering', () => {
   });
 
   it('filters by category', () => {
-    const rockets = filterProducts({ category: 'rockets' });
-    expect(rockets.length).toBe(
-      categoriesWithCounts.find((c) => c.slug === 'rockets').productCount,
+    const pots = filterProducts({ category: 'flower-pots' });
+    expect(pots.length).toBe(
+      categoriesWithCounts.find((c) => c.slug === 'flower-pots').productCount,
     );
-    expect(rockets.every((p) => p.category === 'rockets')).toBe(true);
+    expect(pots.every((p) => p.category === 'flower-pots')).toBe(true);
   });
 
   it('treats multiple tags as AND, not OR', () => {
@@ -68,7 +68,7 @@ describe('catalogue filtering', () => {
   it('applies the price ceiling inclusively', () => {
     const cheap = filterProducts({ maxPrice: 150 });
     expect(cheap.every((p) => p.price <= 150)).toBe(true);
-    expect(cheap.some((p) => p.price === 149)).toBe(true);
+    expect(cheap.some((p) => p.price === 140)).toBe(true);
   });
 
   it('sorts by price ascending and descending', () => {
@@ -85,7 +85,7 @@ describe('catalogue filtering', () => {
   });
 
   it('can return an empty set without throwing', () => {
-    expect(filterProducts({ category: 'rockets', tags: ['kids-safe'], maxPrice: 50 })).toEqual([]);
+    expect(filterProducts({ category: 'bombs', tags: ['kids-safe'], maxPrice: 50 })).toEqual([]);
   });
 });
 
@@ -111,11 +111,16 @@ describe('catalogue data integrity', () => {
     expect(off.map((p) => p.slug)).toEqual([]);
   });
 
-  it('gives every product images the resolver can render', () => {
-    expect(products.every((p) => p.images.length >= 3)).toBe(true);
+  // One photo per SKU is the floor, not three: the 2026 catalogue is shot from
+  // the real product photography, and most items only have a single frame. A
+  // gallery padded out to three would be showing pictures of other products.
+  // `images.test.js` carries the stronger guarantees — every key resolves to a
+  // real photo, and no gallery repeats one.
+  it('gives every product at least one image', () => {
+    expect(products.every((p) => p.images.length >= 1)).toBe(true);
   });
 
   it('finds products by either slug or id', () => {
-    expect(findProduct('p-001')).toBe(findProduct('royal-gold-sparkler-30cm'));
+    expect(findProduct('p-001')).toBe(findProduct('2-75-inch-kuruvi'));
   });
 });

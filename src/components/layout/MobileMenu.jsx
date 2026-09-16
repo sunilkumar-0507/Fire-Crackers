@@ -52,7 +52,7 @@ export const MobileMenu = () => {
             className="mb-6 flex w-full items-center gap-3 rounded-2xl border border-line bg-card px-4 py-3.5 text-left text-sm text-muted shadow-soft transition-colors hover:border-secondary-300"
           >
             <Search size={17} className="shrink-0 text-primary" />
-            <span className="truncate">Search Lakshmi, flower pots, rockets…</span>
+            <span className="truncate">Search Lakshmi, flower pots, sky shots…</span>
           </button>
 
           <ul className="flex flex-col gap-1">

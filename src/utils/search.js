@@ -1,4 +1,5 @@
 import { products, categories } from '@/data';
+import { availabilityOf, AVAILABILITY } from '@/utils/format';
 
 const normalize = (s) =>
   (s || '')
@@ -100,13 +101,20 @@ const comparators = {
  * Single entry point used by the catalogue page. Keeping filter + sort here
  * (rather than in the component) keeps the page a pure view of URL state.
  */
+export const AVAILABILITY_FILTERS = [
+  { value: 'all', label: 'Any' },
+  { value: AVAILABILITY.available, label: 'In stock' },
+  { value: AVAILABILITY.outOfStock, label: 'Out of stock' },
+  { value: AVAILABILITY.unavailable, label: 'Unavailable' },
+];
+
 export const filterProducts = ({
   query = '',
   category = 'all',
   tags = [],
   maxPrice = null,
   minRating = 0,
-  inStockOnly = false,
+  availability = 'all',
   sort = 'relevance',
 } = {}) => {
   let result = query ? searchProducts(query) : products.slice();
@@ -115,7 +123,13 @@ export const filterProducts = ({
   if (tags.length) result = result.filter((p) => tags.every((t) => p.tags.includes(t)));
   if (maxPrice != null) result = result.filter((p) => p.price <= maxPrice);
   if (minRating > 0) result = result.filter((p) => p.rating >= minRating);
-  if (inStockOnly) result = result.filter((p) => p.stock > 0);
+
+  // One switch rather than a checkbox: "in stock" has to exclude a deactivated
+  // line as well as a sold-out one, and the other two states are worth being
+  // able to ask for rather than only ever hide.
+  if (availability && availability !== 'all') {
+    result = result.filter((p) => availabilityOf(p).state === availability);
+  }
 
   // A search already returns results in relevance order — don't undo that.
   if (!(query && sort === 'relevance')) {

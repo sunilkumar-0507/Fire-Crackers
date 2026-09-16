@@ -3,7 +3,7 @@ import toast from 'react-hot-toast';
 import { Check, Clock, Mail, MapPin, MessageCircle, Phone, Send, Truck } from '@/components/ui/icons';
 import { cn } from '@/utils/cn';
 import { BRAND, SOCIALS } from '@/constants';
-import { api } from '@/data';
+import { api } from '@/lib/api';
 import PageHeader from '@/components/ui/PageHeader';
 import Section, { SectionHeading } from '@/components/ui/Section';
 import Button from '@/components/ui/Button';
@@ -69,9 +69,20 @@ export const Contact = () => {
     }
 
     setState('loading');
-    await api.subscribe(form.email || form.phone);
-    setState('done');
-    toast.success('Message sent — we usually reply the same day');
+    try {
+      await api.contact({
+        name: form.name,
+        phone: form.phone,
+        email: form.email || null,
+        subject: form.subject,
+        message: form.message,
+      });
+      setState('done');
+      toast.success('Message sent — we usually reply the same day');
+    } catch (error) {
+      setState('idle');
+      toast.error(error.message);
+    }
   };
 
   return (

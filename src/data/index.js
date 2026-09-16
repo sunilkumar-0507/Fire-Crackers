@@ -1,15 +1,18 @@
 /**
- * Mock data service.
+ * The catalogue.
  *
  * This is the ONLY module that knows where data comes from. Every component
- * reads through these functions, so swapping the JSON imports for `fetch()`
- * calls against a real REST API is a change confined to this file — the
- * signatures below already return promises for exactly that reason.
+ * reads through the bindings below at render time, synchronously — no awaiting,
+ * no loading states scattered through thirty files.
  *
- *   export const getProducts = async (params) => {
- *     const res = await fetch(`${API_URL}/products?${qs(params)}`);
- *     return res.json();
- *   };
+ * That stays true now the data is live. `hydrate()` swaps the whole catalogue in
+ * one go, and because these are ES module *live bindings*, every importer sees
+ * the new arrays on its next render. `bootstrap()` runs once in main.jsx before
+ * React mounts, so the first paint already has real data — the JSON imported
+ * below is the seed the app falls back to when the API is unreachable, which is
+ * what lets `npm run dev` work on its own with the API stopped.
+ *
+ * After an admin save, call `refresh()` to pull the catalogue again.
  */
 import categoriesJson from './categories.json';
 import productsJson from './products.json';
@@ -18,66 +21,56 @@ import bannersJson from './banners.json';
 import combosJson from './combos.json';
 import testimonialsJson from './testimonials.json';
 import faqJson from './faq.json';
-
-/** Set above 0 to simulate network latency while developing skeleton states. */
-export const MOCK_LATENCY = 0;
-
-const settle = (value) =>
-  MOCK_LATENCY > 0
-    ? new Promise((resolve) => setTimeout(() => resolve(value), MOCK_LATENCY))
-    : Promise.resolve(value);
+import { api } from '@/lib/api';
 
 /* -------------------------------------------------------------------------- */
-/* Synchronous selectors — used for instant, render-time reads                 */
+/* Live bindings                                                               */
 /* -------------------------------------------------------------------------- */
 
-export const categories = categoriesJson;
-export const products = productsJson;
-export const offers = offersJson;
-export const banners = bannersJson;
-export const combos = combosJson;
-export const testimonials = testimonialsJson;
-export const faqs = faqJson;
+export let categories = categoriesJson;
+export let products = productsJson;
+export let offers = offersJson;
+export let banners = bannersJson;
+export let combos = combosJson;
+export let testimonials = testimonialsJson;
+export let faqs = faqJson;
 
 /**
  * Count and cover photo derived from the catalogue so the three can never
  * drift. The cover is the featured product's lead photo — a category can
  * therefore never front a product we have stopped stocking.
  */
-export const categoriesWithCounts = categories.map((c) => {
-  const inCategory = products.filter((p) => p.category === c.slug);
-  const cover = inCategory.find((p) => p.featured) ?? inCategory[0];
-  return { ...c, productCount: inCategory.length, cover: cover?.images[0] };
-});
+export let categoriesWithCounts = [];
 
-const bySlug = new Map(products.map((p) => [p.slug, p]));
-const byId = new Map(products.map((p) => [p.id, p]));
-const categoryBySlug = new Map(categoriesWithCounts.map((c) => [c.slug, c]));
-const comboBySlug = new Map(combos.map((c) => [c.slug, c]));
+export let featuredProducts = [];
+export let bestSellers = [];
+export let newArrivals = [];
+export let featuredCombos = [];
+export let featuredOffers = [];
+
+/** Every distinct tag in the catalogue, with usage counts, most used first. */
+export let allTags = [];
+
+export let priceBounds = { min: 0, max: 0 };
+
+/**
+ * Bumped on every hydrate. The router keys off it, so a catalogue that changed
+ * under a mounted tree forces a clean remount rather than leaving half the page
+ * showing the previous prices.
+ */
+export let catalogVersion = 0;
+
+/** True once the API has answered. False means these are the bundled seeds. */
+export let live = false;
+
+let bySlug = new Map();
+let byId = new Map();
+let categoryBySlug = new Map();
+let comboBySlug = new Map();
 
 export const findProduct = (slugOrId) => bySlug.get(slugOrId) ?? byId.get(slugOrId) ?? null;
 export const findCategory = (slug) => categoryBySlug.get(slug) ?? null;
 export const findCombo = (slug) => comboBySlug.get(slug) ?? null;
-
-export const featuredProducts = products.filter((p) => p.featured);
-export const bestSellers = products.filter((p) => p.bestSeller);
-export const newArrivals = products.filter((p) => p.isNew);
-export const featuredCombos = combos.filter((c) => c.featured);
-export const featuredOffers = offers.filter((o) => o.featured);
-
-/** Every distinct tag in the catalogue, with usage counts, most used first. */
-export const allTags = (() => {
-  const counts = new Map();
-  for (const p of products) for (const t of p.tags) counts.set(t, (counts.get(t) ?? 0) + 1);
-  return [...counts.entries()]
-    .map(([tag, count]) => ({ tag, count }))
-    .sort((a, b) => b.count - a.count);
-})();
-
-export const priceBounds = products.reduce(
-  (acc, p) => ({ min: Math.min(acc.min, p.price), max: Math.max(acc.max, p.price) }),
-  { min: Infinity, max: 0 },
-);
 
 /** Same category first, then anything sharing a tag. Never returns the input. */
 export const getRelated = (product, limit = 4) => {
@@ -97,38 +90,84 @@ export const getRelated = (product, limit = 4) => {
 };
 
 /* -------------------------------------------------------------------------- */
-/* Async API surface — mirrors the shape a REST client would expose            */
+/* Hydration                                                                   */
 /* -------------------------------------------------------------------------- */
 
-export const api = {
-  getCategories: () => settle(categoriesWithCounts),
-  getProducts: () => settle(products),
-  getProduct: (slug) => settle(findProduct(slug)),
-  getOffers: () => settle(offers),
-  getBanners: () => settle(banners),
-  getCombos: () => settle(combos),
-  getCombo: (slug) => settle(findCombo(slug)),
-  getTestimonials: () => settle(testimonials),
-  getFaqs: () => settle(faqs),
+/** Recomputes every derived collection and lookup from the seven raw lists. */
+const recompute = () => {
+  categoriesWithCounts = categories.map((c) => {
+    const inCategory = products.filter((p) => p.category === c.slug);
+    const cover = inCategory.find((p) => p.featured) ?? inCategory[0];
+    return { ...c, productCount: inCategory.length, cover: cover?.images?.[0] };
+  });
 
-  /**
-   * Order placement is the one call that deliberately takes time — the
-   * checkout stepper has a real "placing your order" state to show.
-   */
-  placeOrder: (payload) =>
-    new Promise((resolve) =>
-      setTimeout(
-        () =>
-          resolve({
-            ok: true,
-            orderId: `AC${Date.now().toString().slice(-8)}`,
-            placedAt: new Date().toISOString(),
-            ...payload,
-          }),
-        1400,
-      ),
-    ),
+  bySlug = new Map(products.map((p) => [p.slug, p]));
+  byId = new Map(products.map((p) => [p.id, p]));
+  categoryBySlug = new Map(categoriesWithCounts.map((c) => [c.slug, c]));
+  comboBySlug = new Map(combos.map((c) => [c.slug, c]));
 
-  subscribe: (email) =>
-    new Promise((resolve) => setTimeout(() => resolve({ ok: true, email }), 900)),
+  featuredProducts = products.filter((p) => p.featured);
+  bestSellers = products.filter((p) => p.bestSeller);
+  newArrivals = products.filter((p) => p.isNew);
+  featuredCombos = combos.filter((c) => c.featured);
+  featuredOffers = offers.filter((o) => o.featured);
+
+  const counts = new Map();
+  for (const p of products) for (const t of p.tags) counts.set(t, (counts.get(t) ?? 0) + 1);
+  allTags = [...counts.entries()]
+    .map(([tag, count]) => ({ tag, count }))
+    .sort((a, b) => b.count - a.count);
+
+  priceBounds = products.reduce(
+    (acc, p) => ({ min: Math.min(acc.min, p.price), max: Math.max(acc.max, p.price) }),
+    { min: Infinity, max: 0 },
+  );
+  if (!Number.isFinite(priceBounds.min)) priceBounds = { min: 0, max: 0 };
+
+  catalogVersion += 1;
 };
+
+/**
+ * Replaces the catalogue with a bootstrap payload. Each list is only taken if
+ * the API actually sent one, so a partial response degrades to the seed for the
+ * missing part rather than blanking a section of the shop.
+ */
+export const hydrate = (payload) => {
+  if (!payload) return;
+
+  if (payload.products?.length) products = payload.products;
+  if (payload.categories?.length) categories = payload.categories;
+  if (payload.combos?.length) combos = payload.combos;
+  if (payload.offers?.length) offers = payload.offers;
+  if (payload.banners?.length) banners = payload.banners;
+  if (payload.testimonials?.length) testimonials = payload.testimonials;
+  if (payload.faqs?.length) faqs = payload.faqs;
+
+  recompute();
+};
+
+/**
+ * Called once before React mounts. A failure is not fatal: the bundled JSON is
+ * a complete catalogue, so the shop still works — it just will not show an
+ * admin edit until the API is back. The reason is returned so the app can say so.
+ */
+export const bootstrap = async () => {
+  try {
+    hydrate(await api.bootstrap());
+    live = true;
+    return { live: true };
+  } catch (error) {
+    recompute();
+    live = false;
+    return { live: false, reason: error.message };
+  }
+};
+
+/** Pulls the catalogue again — what an admin save calls when it has changed something. */
+export const refresh = async () => {
+  hydrate(await api.bootstrap());
+  live = true;
+};
+
+// Derive once at module load so the seed is usable before bootstrap resolves.
+recompute();

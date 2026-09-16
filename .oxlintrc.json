@@ -8,6 +8,12 @@
     "react/no-children-prop": "error",
     "react/only-export-components": ["warn", { "allowConstantExport": true }]
   },
+  "ignorePatterns": [
+    "dist/**",
+    "perf-out/**",
+    "_shots*.mjs",
+    "admin/**"
+  ],
   "overrides": [
     {
       "files": [

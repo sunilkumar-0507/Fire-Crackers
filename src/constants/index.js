@@ -24,14 +24,18 @@ export const NAV_LINKS = [
     label: 'Categories',
     to: '/products',
     children: [
-      { label: 'Sparklers', to: '/category/sparklers', hint: 'Silent, hand-held' },
+      { label: 'Sparklers', to: '/category/sparklers', hint: '7 cm to 75 cm' },
       { label: 'Flower Pots', to: '/category/flower-pots', hint: 'Golden fountains' },
+      { label: 'Aerial Shots', to: '/category/aerial-shots', hint: '7 to 504 shots' },
+      { label: 'Fancy Single Shots', to: '/category/single-shots', hint: 'One perfect break' },
       { label: 'Ground Chakkars', to: '/category/ground-chakkar', hint: 'Spinning wheels' },
-      { label: 'Rockets', to: '/category/rockets', hint: 'Sky shots' },
-      { label: 'Aerial Shots', to: '/category/aerial-shots', hint: 'Multi-shot cakes' },
-      { label: 'Sound Crackers', to: '/category/sound-crackers', hint: 'For the boom' },
+      { label: 'Garland Crackers', to: '/category/garland-crackers', hint: 'Wala and chorsa' },
+      { label: 'One Sound & Bijili', to: '/category/one-sound-crackers', hint: 'Single report' },
+      { label: 'Bombs & Nattu Vedi', to: '/category/bombs', hint: 'For the boom' },
       { label: 'Kids Zone', to: '/category/kids-zone', hint: 'Low noise, big fun' },
-      { label: 'Gift Boxes', to: '/category/gift-boxes', hint: 'Ready to gift' },
+      { label: 'Gift Boxes', to: '/category/gift-boxes', hint: '20 to 70 items' },
+      { label: 'Family Packs', to: '/category/family-packs', hint: 'A whole evening' },
+      { label: '2026 New Arrivals', to: '/category/new-arrivals-2026', hint: 'New this season' },
     ],
   },
   { label: 'Offers', to: '/offers' },
@@ -43,17 +47,19 @@ export const NAV_LINKS = [
 
 export const POPULAR_SEARCHES = [
   'Flower pots',
-  'Lakshmi rocket',
+  'Lakshmi',
   'Sparklers',
   'Ground chakkar',
   'Atom bomb',
   'Colour smoke',
   'Gift box',
+  '100 Wala',
 ];
 
 export const QUICK_FILTERS = [
   { label: 'Silent range', tag: 'silent' },
   { label: 'Kids safe', tag: 'kids-safe' },
+  { label: 'New for 2026', tag: 'new-2026' },
   { label: 'Best value', tag: 'value' },
   { label: 'Premium', tag: 'premium' },
   { label: 'Under ₹200', maxPrice: 200 },
@@ -93,10 +99,44 @@ export const PAYMENT_METHODS = [
 
 export const CHECKOUT_STEPS = [
   { id: 'details', label: 'Your details', hint: 'Name and phone' },
-  { id: 'address', label: 'Delivery', hint: 'Where it ships' },
+  { id: 'fulfilment', label: 'Delivery', hint: 'Deliver or collect' },
   { id: 'payment', label: 'Payment', hint: 'How you pay' },
   { id: 'review', label: 'Review', hint: 'Confirm and place' },
 ];
+
+/**
+ * Delivery or collection — requirement 8.
+ *
+ * The ids are the API's (`delivery`, `pickup`); the copy is what a customer
+ * reads. Mirrors `GET /api/meta/fulfilment`, which is the authority — this is
+ * the seed the page renders with before that call has landed.
+ */
+export const FULFILMENT_METHODS = [
+  {
+    id: 'delivery',
+    label: 'Deliver to me',
+    hint: 'Licensed surface transport across Tamil Nadu & Kerala',
+    icon: 'truck',
+  },
+  {
+    id: 'pickup',
+    label: 'Collect from the shop',
+    hint: 'No delivery charge — ready the next working day',
+    icon: 'store',
+  },
+];
+
+/** Where a collection order is picked up from, and what to bring. */
+export const PICKUP = {
+  name: 'Gopi Crackers factory counter',
+  address: '14/3 Sattur Main Road, Sivakasi, Virudhunagar District, Tamil Nadu 626123',
+  hours: 'Mon–Sat, 9:00 AM – 8:00 PM IST',
+  notes: [
+    'Bring your order reference and the mobile number you booked with.',
+    'Orders are held at the counter for seven days.',
+    'Collection is free — no delivery charge is added.',
+  ],
+};
 
 /** Coupon codes the mock checkout accepts. Mirrors `offers.json`. */
 export const COUPONS = {
@@ -121,6 +161,7 @@ export const FOOTER_LINKS = [
       { label: 'Combo packs', to: '/combos' },
       { label: 'Festival offers', to: '/offers' },
       { label: 'Gift boxes', to: '/category/gift-boxes' },
+      { label: 'Family packs', to: '/category/family-packs' },
       { label: 'Silent range', to: '/products?tag=silent' },
     ],
   },
@@ -129,19 +170,30 @@ export const FOOTER_LINKS = [
     links: [
       { label: 'Sparklers', to: '/category/sparklers' },
       { label: 'Flower pots', to: '/category/flower-pots' },
+      { label: 'Aerial shots', to: '/category/aerial-shots' },
       { label: 'Ground chakkars', to: '/category/ground-chakkar' },
-      { label: 'Rockets', to: '/category/rockets' },
+      { label: 'Garland crackers', to: '/category/garland-crackers' },
       { label: 'Kids zone', to: '/category/kids-zone' },
     ],
   },
   {
     title: 'Support',
     links: [
+      { label: 'Track your order', to: '/track' },
       { label: 'Bulk orders', to: '/bulk-orders' },
       { label: 'Safety guide', to: '/about#safety' },
-      { label: 'Delivery & returns', to: '/contact#delivery' },
       { label: 'FAQ', to: '/about#faq' },
       { label: 'Contact us', to: '/contact' },
+    ],
+  },
+  {
+    title: 'Information',
+    links: [
+      { label: 'Delivery & collection', to: '/policies/delivery' },
+      { label: 'Cancellation & refunds', to: '/policies/cancellation-refund' },
+      { label: 'Customer information', to: '/policies/customer-information' },
+      { label: 'Terms & conditions', to: '/policies/terms' },
+      { label: 'Privacy', to: '/policies/privacy' },
     ],
   },
 ];

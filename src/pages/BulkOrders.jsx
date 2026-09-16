@@ -3,7 +3,8 @@ import toast from 'react-hot-toast';
 import { Building2, Check, FileText, Phone, Send, Truck, UserCheck } from '@/components/ui/icons';
 import { cn } from '@/utils/cn';
 import { BRAND, DISTRICTS } from '@/constants';
-import { api } from '@/data';
+import { api } from '@/lib/api';
+import { analyticsSession } from '@/lib/analytics';
 import { formatPrice } from '@/utils/format';
 import PageHeader from '@/components/ui/PageHeader';
 import Section, { SectionHeading } from '@/components/ui/Section';
@@ -84,9 +85,26 @@ export const BulkOrders = () => {
     }
 
     setState('loading');
-    await api.placeOrder({ kind: 'bulk-enquiry', ...form });
-    setState('done');
-    toast.success('Enquiry received — we will call within a working day');
+    try {
+      await api.enquire({
+        name: form.contact,
+        organisation: form.organisation,
+        phone: form.phone,
+        email: form.email || null,
+        district: form.district,
+        budget: form.budget,
+        quantity: form.people,
+        message: [form.type, form.notes].filter(Boolean).join(' — '),
+        // As with the order: the API records the enquiry event itself, and the
+        // session id is what lets it belong to this visit.
+        session: analyticsSession(),
+      });
+      setState('done');
+      toast.success('Enquiry received — we will call within a working day');
+    } catch (error) {
+      setState('idle');
+      toast.error(error.message);
+    }
   };
 
   return (

@@ -25,3 +25,9 @@ perf-out
 *.njsproj
 *.sln
 *.sw?
+
+# Runtime records written by the API, not source. The order book is trade, the
+# analytics are a rolling window of counters — neither belongs in git.
+src/data/orders.json
+src/data/analytics.json
+src/data/*.tmp

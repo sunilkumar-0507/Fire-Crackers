@@ -31,6 +31,7 @@ export const ComboDetail = () => {
     return (
       <div className="container py-24">
         <EmptyState
+          as="h1"
           illustration="crate"
           title="That combo pack is not in this season's range"
           description="We rebuild the boxes every year. Here is what we are packing now."

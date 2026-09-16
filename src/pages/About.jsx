@@ -11,7 +11,7 @@ const TIMELINE = [
   {
     year: '1994',
     title: 'One shed on Sattur Road',
-    text: 'R. Gopinath takes a PESO licence and starts making flower pots and chakkars with four workers. The Lakshmi rocket recipe we still use is written this year.',
+    text: 'R. Gopinath takes a PESO licence and starts making flower pots and chakkars with four workers. The Lakshmi recipe we still use is written this year.',
   },
   {
     year: '2003',
@@ -47,7 +47,7 @@ export const About = () => (
     <PageHeader
       eyebrow={BRAND.tagline}
       title="Three generations, one factory floor"
-      description="We are a Sivakasi manufacturing family that got tired of watching a ₹620 sparkler box reach a customer at ₹620 after leaving our gate at ₹140. So we started selling it ourselves."
+      description="We are a Sivakasi manufacturing family that got tired of watching a sparkler box leave our gate at ₹70 and reach a customer at ₹280. So we started selling it ourselves."
       breadcrumbs={[{ label: 'About' }]}
       art="sparkler"
       artVariant={1}

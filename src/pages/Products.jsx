@@ -1,8 +1,10 @@
-import { useCallback, useDeferredValue, useMemo, useState } from 'react';
+import { useCallback, useDeferredValue, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { SlidersHorizontal, X } from '@/components/ui/icons';
 import { cn } from '@/utils/cn';
 import { filterProducts, SORT_OPTIONS } from '@/utils/search';
+import { analytics } from '@/lib/analytics';
+import { products, categoriesWithCounts } from '@/data';
 import { QUICK_FILTERS } from '@/constants';
 import { useLockBodyScroll } from '@/hooks/useLockBodyScroll';
 import PageHeader from '@/components/ui/PageHeader';
@@ -32,18 +34,28 @@ export const Products = () => {
       tags: params.getAll('tag'),
       maxPrice: params.get('max') ? Number(params.get('max')) : null,
       minRating: params.get('rating') ? Number(params.get('rating')) : 0,
-      inStockOnly: params.get('stock') === '1',
+      // `stock=1` is the URL this page used to write. Links with it are still
+      // out there in WhatsApp threads, so it keeps meaning "in stock only".
+      availability: params.get('availability') ?? (params.get('stock') === '1' ? 'available' : 'all'),
       sort: params.get('sort') ?? 'relevance',
     }),
     [params],
   );
 
-  // Deferring keeps the range slider and chips responsive while a 43-item
-  // grid re-renders behind them.
+  // Deferring keeps the range slider and chips responsive while the full
+  // catalogue grid re-renders behind them.
   const deferredFilters = useDeferredValue(filters);
   const stale = filters !== deferredFilters;
 
   const results = useMemo(() => filterProducts(deferredFilters), [deferredFilters]);
+
+  // Filed against the settled query rather than each keystroke, and carrying
+  // the hit count — a search that returned nothing is the most useful row in
+  // the whole report, because it is a customer naming something we do not sell.
+  useEffect(() => {
+    const query = deferredFilters.query.trim();
+    if (query.length >= 2) analytics.search(query, results.length);
+  }, [deferredFilters.query, results.length]);
 
   const update = useCallback(
     (patch) => {
@@ -51,7 +63,7 @@ export const Products = () => {
 
       Object.entries(patch).forEach(([key, value]) => {
         const paramKey =
-          { query: 'q', maxPrice: 'max', minRating: 'rating', inStockOnly: 'stock' }[key] ?? key;
+          { query: 'q', maxPrice: 'max', minRating: 'rating' }[key] ?? key;
 
         if (key === 'tags') {
           next.delete('tag');
@@ -67,9 +79,13 @@ export const Products = () => {
           (key === 'sort' && value === 'relevance')
         ) {
           next.delete(paramKey);
+          // Writing `availability` clears the legacy alias, or the two would
+          // disagree the moment somebody changed the filter on an old link.
+          if (key === 'availability') next.delete('stock');
           return;
         }
-        next.set(paramKey, key === 'inStockOnly' ? '1' : String(value));
+        if (key === 'availability') next.delete('stock');
+        next.set(paramKey, String(value));
       });
 
       setParams(next, { replace: true, preventScrollReset: true });
@@ -114,7 +130,7 @@ export const Products = () => {
         description={
           filters.query
             ? `${results.length} product${results.length === 1 ? '' : 's'} matched your search.`
-            : 'Forty-three products across eight categories, all made on our own floor in Sivakasi and priced without a distributor in the middle.'
+            : `${products.length} products across ${categoriesWithCounts.length} categories, all made on our own floor in Sivakasi and priced without a distributor in the middle.`
         }
         breadcrumbs={[{ label: 'Products' }]}
         art="aerial"
@@ -191,7 +207,7 @@ export const Products = () => {
               <EmptyState
                 illustration={filters.query ? 'search' : 'crate'}
                 title={filters.query ? `Nothing matched “${filters.query}”` : 'No products match those filters'}
-                description="Loosen a filter or two — the whole catalogue is only 43 items, so narrow searches run out quickly."
+                description={`Loosen a filter or two — the whole catalogue is ${products.length} items, so a narrow search runs out quickly.`}
                 action={
                   <Button onClick={reset} rightIcon={<X size={15} />}>
                     Clear filters

@@ -20,7 +20,17 @@ const BulkOrders = lazy(() => import('@/pages/BulkOrders'));
 const About = lazy(() => import('@/pages/About'));
 const Contact = lazy(() => import('@/pages/Contact'));
 const Checkout = lazy(() => import('@/pages/Checkout'));
+const TrackOrder = lazy(() => import('@/pages/TrackOrder'));
+const Policy = lazy(() => import('@/pages/Policy'));
 const NotFound = lazy(() => import('@/pages/NotFound'));
+
+/*
+ * The admin used to live here, at /admin, lazily loaded out of this same
+ * bundle. It is now its own Vite application in `admin/`, on its own port,
+ * talking to the same API — so there is nothing admin-shaped left in the
+ * storefront's build graph at all, rather than a chunk a shopper merely never
+ * happens to request.
+ */
 
 export const router = createBrowserRouter([
   {
@@ -38,6 +48,8 @@ export const router = createBrowserRouter([
       { path: 'about', element: <About /> },
       { path: 'contact', element: <Contact /> },
       { path: 'checkout', element: <Checkout /> },
+      { path: 'track', element: <TrackOrder /> },
+      { path: 'policies/:slug', element: <Policy /> },
       { path: '*', element: <NotFound /> },
     ],
   },

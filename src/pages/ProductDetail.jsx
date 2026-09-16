@@ -1,11 +1,13 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { AlertTriangle, Check, Heart, HeartFilled, Info, ShieldAlert, ShoppingBag, Sparkles, Truck } from '@/components/ui/icons';
+import { AlertTriangle, Check, Heart, HeartFilled, Info, MessageCircle, ShieldAlert, ShoppingBag, Sparkles, Truck } from '@/components/ui/icons';
 import { cn } from '@/utils/cn';
 import { findProduct, getRelated, findCategory, featuredOffers } from '@/data';
 import { SAFETY_RULES, SHIPPING } from '@/constants';
-import { formatPrice, stockLevel, addWorkingDays, formatDay } from '@/utils/format';
+import { formatPrice, availabilityOf, addWorkingDays, formatDay } from '@/utils/format';
+import { analytics } from '@/lib/analytics';
+import { whatsappHref, productEnquiryMessage } from '@/utils/whatsapp';
 import { toCartItem } from '@/utils/cart';
 import { artForCategory } from '@/utils/image';
 import { useCartStore, selectInCart, selectIsWishlisted } from '@/store/cartStore';
@@ -117,6 +119,13 @@ export const ProductDetail = () => {
 
   useEffect(() => setQty(1), [slug]);
 
+  // One view per product per visit to its page. `product` rather than `slug` in
+  // the dependency list so a hydrate that swaps the catalogue under a mounted
+  // page does not file a view against the item that is no longer on screen.
+  useEffect(() => {
+    if (product) analytics.productView(product);
+  }, [product]);
+
   const related = useMemo(() => getRelated(product, 4), [product]);
   const category = product ? findCategory(product.category) : null;
 
@@ -124,6 +133,7 @@ export const ProductDetail = () => {
     return (
       <div className="container py-24">
         <EmptyState
+          as="h1"
           illustration="dud"
           title="We could not find that cracker"
           description="It may have sold out and been retired for the season, or the link may be mistyped."
@@ -134,19 +144,24 @@ export const ProductDetail = () => {
     );
   }
 
-  const level = stockLevel(product.stock);
-  const soldOut = product.stock <= 0;
+  const level = availabilityOf(product);
+  const soldOut = !level.purchasable;
   const fallback = artForCategory(product.category);
   const saving = product.mrp - product.price;
 
   const add = () => {
     const { added, capped } = addItem(toCartItem(product), qty);
-    if (added > 0) toast.success(`${added} × ${product.name} added`);
-    else if (capped) toast(`Only ${product.stock} in stock`, { icon: '⚠️' });
+    if (added > 0) {
+      analytics.cartAdd(product, added);
+      toast.success(`${added} × ${product.name} added`);
+    } else if (capped) {
+      toast(`Only ${product.stock} in stock`, { icon: '⚠️' });
+    }
   };
 
   const buyNow = () => {
     addItem(toCartItem(product), qty);
+    analytics.cartAdd(product, qty);
     navigate('/checkout');
   };
 
@@ -232,7 +247,7 @@ export const ProductDetail = () => {
                   className="w-full flex-1 px-4 xs:w-auto xs:min-w-[170px] sm:px-8"
                   leftIcon={<ShoppingBag size={18} />}
                 >
-                  {soldOut ? 'Out of stock' : `Add — ${formatPrice(product.price * qty)}`}
+                  {soldOut ? level.label : `Add — ${formatPrice(product.price * qty)}`}
                 </Button>
               </div>
 
@@ -273,6 +288,20 @@ export const ProductDetail = () => {
                   {inCart} already in your basket
                 </p>
               ) : null}
+
+              {/* The way out for anything the page does not answer — and the
+                  only route left when an item is withdrawn, which is exactly
+                  when someone most wants to ask about it. */}
+              <a
+                href={whatsappHref(productEnquiryMessage(product))}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => analytics.whatsappClick(`product/${product.slug}`)}
+                className="mt-4 flex items-center justify-center gap-2 rounded-2xl border border-line py-3 text-xs font-semibold text-ink transition-colors hover:border-secondary-300 hover:text-primary"
+              >
+                <MessageCircle size={15} className="text-[#25D366]" />
+                {soldOut ? 'Ask when this is back' : 'Ask about this on WhatsApp'}
+              </a>
             </div>
 
             {/* highlights */}

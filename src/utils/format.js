@@ -26,13 +26,59 @@ export const discountPercent = (mrp, price) => {
 export const pluralize = (count, singular, plural = `${singular}s`) =>
   `${count} ${count === 1 ? singular : plural}`;
 
-/** "128 in stock" → a coarse band the UI can colour-code. */
-export const stockLevel = (stock) => {
-  if (stock <= 0) return { key: 'out', label: 'Out of stock' };
-  if (stock <= 20) return { key: 'low', label: `Only ${stock} left` };
-  if (stock <= 60) return { key: 'medium', label: 'Limited stock' };
-  return { key: 'high', label: 'In stock' };
+/**
+ * The three states the brief asks for, plus the two shades of "yes" worth
+ * showing a shopper.
+ *
+ * `state` is the API's vocabulary and the thing to branch on. `key` is finer
+ * grained — it separates "only 3 left" from "in stock", which are both
+ * available but do not read the same on a card.
+ *
+ * Derived, never stored: a product is unavailable because the shop deactivated
+ * it and out of stock because the count reached zero, so a badge can never
+ * disagree with the number beside it. Combos have no `active` flag and fall
+ * through to the stock rules, which is correct — a bundle is withdrawn by
+ * withdrawing what is in it.
+ */
+export const AVAILABILITY = {
+  available: 'available',
+  outOfStock: 'out-of-stock',
+  unavailable: 'unavailable',
 };
+
+export const availabilityOf = (item) => {
+  if (!item) return { key: 'out', state: AVAILABILITY.outOfStock, label: 'Unavailable', purchasable: false };
+
+  const stock = item.stock ?? 0;
+
+  // `active` is absent on anything written before the flag existed, and absent
+  // has to mean "on sale" — the alternative is a shop with nothing for sale.
+  if (item.active === false) {
+    return {
+      key: 'unavailable',
+      state: AVAILABILITY.unavailable,
+      label: 'Temporarily unavailable',
+      purchasable: false,
+    };
+  }
+
+  if (stock <= 0) {
+    return { key: 'out', state: AVAILABILITY.outOfStock, label: 'Out of stock', purchasable: false };
+  }
+
+  if (stock <= 20) {
+    return { key: 'low', state: AVAILABILITY.available, label: `Only ${stock} left`, purchasable: true };
+  }
+
+  if (stock <= 60) {
+    return { key: 'medium', state: AVAILABILITY.available, label: 'Limited stock', purchasable: true };
+  }
+
+  return { key: 'high', state: AVAILABILITY.available, label: 'In stock', purchasable: true };
+};
+
+/** True when a customer can actually put this in a basket. */
+export const isPurchasable = (item) => availabilityOf(item).purchasable;
 
 /** Splits a countdown in ms into padded day/hour/minute/second parts. */
 export const splitDuration = (ms) => {

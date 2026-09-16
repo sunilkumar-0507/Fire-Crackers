@@ -4,9 +4,9 @@ import { toCartItem, comboToCartItem } from '@/utils/cart';
 import { findProduct, findCombo } from '@/data';
 import { SHIPPING } from '@/constants';
 
-const sparkler = toCartItem(findProduct('royal-gold-sparkler-30cm')); // ₹149, stock 128
-const tower = toCartItem(findProduct('giant-fountain-tower')); //        ₹749, stock 19
-const combo = comboToCartItem(findCombo('family-festival-box')); //      ₹2499
+const sparkler = toCartItem(findProduct('30-cm-electric-sparkler')); // ₹70, stock 181
+const tower = toCartItem(findProduct('dazzling-pot-deluxe')); //         ₹630, stock 20
+const combo = comboToCartItem(findCombo('family-festival-box')); //      ₹2,419
 
 const reset = () => useCartStore.setState({ items: [], wishlist: [], coupon: null });
 
@@ -42,12 +42,12 @@ describe('cart store', () => {
 
   it('charges delivery below the free threshold and not above it', () => {
     const { addItem } = useCartStore.getState();
-    addItem(sparkler, 1); // ₹149
+    addItem(sparkler, 1); // ₹70
 
     let totals = selectTotals(useCartStore.getState());
-    expect(totals.subtotal).toBe(149);
+    expect(totals.subtotal).toBe(70);
     expect(totals.shipping).toBe(SHIPPING.localFee);
-    expect(totals.total).toBe(149 + SHIPPING.localFee);
+    expect(totals.total).toBe(70 + SHIPPING.localFee);
 
     addItem(combo, 1); // pushes past ₹2,000
     totals = selectTotals(useCartStore.getState());
@@ -57,12 +57,12 @@ describe('cart store', () => {
 
   it('rejects a coupon below its minimum order and accepts it above', () => {
     const { addItem, applyCoupon } = useCartStore.getState();
-    addItem(sparkler, 1); // ₹149, below EARLYBIRD's ₹1,500 floor
+    addItem(sparkler, 1); // ₹70, below EARLYBIRD's ₹1,500 floor
 
     expect(applyCoupon('EARLYBIRD').ok).toBe(false);
     expect(useCartStore.getState().coupon).toBeNull();
 
-    addItem(combo, 1); // ₹2,648 total
+    addItem(combo, 1); // ₹2,489 total
     expect(applyCoupon('EARLYBIRD').ok).toBe(true);
 
     const totals = selectTotals(useCartStore.getState());

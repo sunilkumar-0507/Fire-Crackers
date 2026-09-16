@@ -23,6 +23,8 @@ import BulkOrders from '@/pages/BulkOrders';
 import About from '@/pages/About';
 import Contact from '@/pages/Contact';
 import Checkout from '@/pages/Checkout';
+import TrackOrder from '@/pages/TrackOrder';
+import Policy from '@/pages/Policy';
 import NotFound from '@/pages/NotFound';
 
 const routes = [
@@ -41,6 +43,8 @@ const routes = [
       { path: 'about', element: <About /> },
       { path: 'contact', element: <Contact /> },
       { path: 'checkout', element: <Checkout /> },
+      { path: 'track', element: <TrackOrder /> },
+      { path: 'policies/:slug', element: <Policy /> },
       { path: '*', element: <NotFound /> },
     ],
   },
@@ -49,8 +53,8 @@ const routes = [
 const PATHS = [
   '/',
   '/products',
-  '/products?q=rocket&tag=silent&sort=price-asc',
-  '/product/royal-gold-sparkler-30cm',
+  '/products?q=sparkler&tag=silent&sort=price-asc',
+  '/product/flower-pot-big',
   '/product/does-not-exist',
   '/category/sparklers',
   '/category/nope',
@@ -61,6 +65,18 @@ const PATHS = [
   '/about',
   '/contact',
   '/checkout',
+  '/track',
+  '/track?ref=AC12345678',
+  '/policies/delivery',
+  '/policies/cancellation-refund',
+  '/policies/customer-information',
+  '/policies/terms',
+  '/policies/privacy',
+  // A policy slug that does not exist has to render the fallback, not blank.
+  '/policies/not-a-policy',
+  // The availability filter, and the legacy `stock=1` alias it replaced.
+  '/products?availability=unavailable',
+  '/products?stock=1',
   '/definitely/not/a/page',
 ];
 

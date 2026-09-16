@@ -8,6 +8,7 @@ import SearchOverlay from '@/components/layout/SearchOverlay';
 import MobileBottomBar from '@/components/layout/MobileBottomBar';
 import ScrollManager from '@/components/layout/ScrollManager';
 import ScrollToTopButton from '@/components/layout/ScrollToTopButton';
+import WhatsAppButton from '@/components/layout/WhatsAppButton';
 import CartDrawer from '@/components/cart/CartDrawer';
 import QuickView from '@/components/product/QuickView';
 import { PageSkeleton } from '@/components/ui/Skeleton';
@@ -54,6 +55,7 @@ export const RootLayout = () => (
     <QuickView />
     <MobileBottomBar />
     <ScrollToTopButton />
+    <WhatsAppButton />
   </div>
 );
 

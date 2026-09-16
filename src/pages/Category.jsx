@@ -1,9 +1,10 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ArrowRight } from '@/components/ui/icons';
 import { cn } from '@/utils/cn';
 import { categoriesWithCounts, findCategory, products } from '@/data';
 import { filterProducts, SORT_OPTIONS } from '@/utils/search';
+import { analytics } from '@/lib/analytics';
 import { artForCategory } from '@/utils/image';
 import { accentOf } from '@/constants/accents';
 import PageHeader from '@/components/ui/PageHeader';
@@ -36,10 +37,15 @@ export const Category = () => {
     [slug],
   );
 
+  useEffect(() => {
+    if (category) analytics.categoryView(category);
+  }, [category]);
+
   if (!category) {
     return (
       <div className="container py-24">
         <EmptyState
+          as="h1"
           illustration="crate"
           title="No such category"
           description="That category link does not match anything we stock. Here is the full catalogue instead."

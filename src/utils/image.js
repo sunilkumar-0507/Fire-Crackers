@@ -48,11 +48,15 @@ export const CATEGORY_ART = {
   sparklers: 'sparkler',
   'flower-pots': 'flowerpot',
   'ground-chakkar': 'chakkar',
-  rockets: 'rocket',
+  'single-shots': 'rocket',
   'aerial-shots': 'aerial',
-  'sound-crackers': 'bomb',
+  'one-sound-crackers': 'bomb',
+  'garland-crackers': 'bomb',
+  bombs: 'bomb',
   'kids-zone': 'kids',
   'gift-boxes': 'giftbox',
+  'family-packs': 'giftbox',
+  'new-arrivals-2026': 'flowerpot',
 };
 
 export const artForCategory = (slug) => CATEGORY_ART[slug] ?? 'rocket';

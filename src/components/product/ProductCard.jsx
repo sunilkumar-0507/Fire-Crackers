@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { Check, Eye, Heart, HeartFilled, ShoppingCart } from '@/components/ui/icons';
 import { cn } from '@/utils/cn';
-import { formatPrice, stockLevel } from '@/utils/format';
+import { formatPrice, availabilityOf } from '@/utils/format';
+import { analytics } from '@/lib/analytics';
 import { toCartItem } from '@/utils/cart';
 import { artForCategory } from '@/utils/image';
 import { useCartStore, selectInCart, selectIsWishlisted } from '@/store/cartStore';
@@ -36,8 +37,8 @@ export const ProductCard = memo(function ProductCard({ product, className, compa
   const wishlisted = useCartStore(selectIsWishlisted(product.id));
   const setQuickView = useUIStore((s) => s.setQuickView);
 
-  const level = stockLevel(product.stock);
-  const soldOut = product.stock <= 0;
+  const level = availabilityOf(product);
+  const soldOut = !level.purchasable;
   const saves = Math.max(0, product.mrp - product.price);
 
   const handleAdd = useCallback(
@@ -48,6 +49,7 @@ export const ProductCard = memo(function ProductCard({ product, className, compa
 
       const { added, capped } = addItem(toCartItem(product), 1);
       if (added > 0) {
+        analytics.cartAdd(product, added);
         toast.success(`${product.name} added`, { id: `add-${product.id}` });
       } else if (capped) {
         toast(`Only ${product.stock} in stock`, { icon: '⚠️', id: `cap-${product.id}` });
@@ -182,7 +184,7 @@ export const ProductCard = memo(function ProductCard({ product, className, compa
               type="button"
               onClick={handleAdd}
               disabled={soldOut}
-              aria-label={soldOut ? 'Out of stock' : `Add ${product.name} to cart`}
+              aria-label={soldOut ? level.label : `Add ${product.name} to cart`}
               className={cn(
                 'mt-3 flex h-11 w-full items-center justify-center gap-2 rounded-full px-4 text-sm font-semibold',
                 'transition-colors duration-200 active:scale-[.98]',
@@ -200,7 +202,7 @@ export const ProductCard = memo(function ProductCard({ product, className, compa
               ) : (
                 <>
                   <ShoppingCart size={16} />
-                  {soldOut ? 'Out of stock' : 'Add to cart'}
+                  {soldOut ? level.label : 'Add to cart'}
                 </>
               )}
             </button>

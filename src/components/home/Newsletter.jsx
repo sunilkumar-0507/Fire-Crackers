@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { Check, Mail, Send } from '@/components/ui/icons';
-import { api } from '@/data';
+import { api } from '@/lib/api';
 import CrackerArt from '@/components/ui/CrackerArt';
 import Button from '@/components/ui/Button';
 
@@ -20,9 +20,14 @@ export const Newsletter = () => {
     }
     setError('');
     setState('loading');
-    await api.subscribe(email.trim());
-    setState('done');
-    toast.success('You are on the list — we will write before the rush');
+    try {
+      await api.subscribe(email.trim());
+      setState('done');
+      toast.success('You are on the list — we will write before the rush');
+    } catch (err) {
+      setState('idle');
+      setError(err.message);
+    }
   };
 
   return (

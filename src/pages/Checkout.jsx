@@ -1,20 +1,32 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import {
   ArrowLeft,
   ArrowRight,
+  Building2,
   Check,
+  Clock,
   Lock,
   MapPin,
+  MessageCircle,
   Package,
   Phone,
   Truck,
   User,
 } from '@/components/ui/icons';
 import { cn } from '@/utils/cn';
-import { CHECKOUT_STEPS, DISTRICTS, PAYMENT_METHODS, BRAND } from '@/constants';
-import { api } from '@/data';
+import {
+  CHECKOUT_STEPS,
+  DISTRICTS,
+  FULFILMENT_METHODS,
+  PAYMENT_METHODS,
+  PICKUP,
+  BRAND,
+} from '@/constants';
+import { api } from '@/lib/api';
+import { analytics, analyticsSession } from '@/lib/analytics';
+import { whatsappHref, orderMessage } from '@/utils/whatsapp';
 import { formatPrice, addWorkingDays, formatDay } from '@/utils/format';
 import { cartItemHref } from '@/utils/cart';
 import { useCartStore, useCartTotals } from '@/store/cartStore';
@@ -47,8 +59,10 @@ const emptyForm = {
   name: '',
   phone: '',
   email: '',
+  fulfilment: 'delivery',
   address: '',
   landmark: '',
+  city: '',
   district: '',
   pincode: '',
   payment: 'upi',
@@ -64,10 +78,15 @@ const validators = {
     if (f.email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(f.email)) e.email = 'That email looks wrong';
     return e;
   },
+  // A collection order has nowhere to deliver to, so there is nothing here to
+  // check beyond the choice itself. The API applies the same rule.
   1: (f) => {
     const e = {};
+    if (f.fulfilment === 'pickup') return e;
+
     if (!f.address.trim() || f.address.trim().length < 10)
       e.address = 'Door number, street and area — couriers need all three';
+    if (!f.city.trim()) e.city = 'Which city or town?';
     if (!f.district) e.district = 'Pick a district';
     if (!/^\d{6}$/.test(f.pincode)) e.pincode = 'A 6-digit pincode';
     return e;
@@ -78,80 +97,128 @@ const validators = {
 
 /* ------------------------------ confirmation ------------------------------ */
 
-const Confirmation = ({ order, totals }) => (
-  <div className="container py-16">
-    <div className="mx-auto max-w-2xl text-center">
-      {/* burst */}
-      <div className="relative mx-auto grid h-40 w-40 place-items-center">
-        <span
-          className="absolute inset-0 rounded-full"
-          style={{ background: 'radial-gradient(circle, rgba(255,213,106,.8), transparent 70%)' }}
-        />
-        <span
-          className="relative grid h-24 w-24 place-items-center rounded-full bg-emerald-500 text-white shadow-lift"
-        >
-          <Check size={46} />
-        </span>
+const Confirmation = ({ order, totals }) => {
+  const pickup = order.fulfilment === 'pickup';
 
-      </div>
+  return (
+    <div className="container py-16">
+      <div className="mx-auto max-w-2xl text-center">
+        {/* burst */}
+        <div className="relative mx-auto grid h-40 w-40 place-items-center">
+          <span
+            className="absolute inset-0 rounded-full"
+            style={{ background: 'radial-gradient(circle, rgba(255,213,106,.8), transparent 70%)' }}
+          />
+          <span className="relative grid h-24 w-24 place-items-center rounded-full bg-emerald-500 text-white shadow-lift">
+            <Check size={46} />
+          </span>
+        </div>
 
-      <p className="mt-8 text-2xs font-semibold uppercase tracking-[.24em] text-emerald-600">
-        Order confirmed
-      </p>
+        <p className="mt-8 text-2xs font-semibold uppercase tracking-[.24em] text-emerald-600">
+          Order received
+        </p>
 
-      <h1 className="mt-4 font-display text-display-sm font-semibold text-dark">
-        That’s booked, {order.name.split(' ')[0]}
-      </h1>
+        <h1 className="mt-4 font-display text-display-sm font-semibold text-dark">
+          That’s booked, {order.name.split(' ')[0]}
+        </h1>
 
-      <p className="mx-auto mt-5 max-w-lg text-[15px] leading-relaxed text-muted">
-        Order <strong className="font-semibold text-dark">{order.orderId}</strong> is with the
-        packing team. We will send a despatch message to {order.phone} when it leaves the warehouse.
-      </p>
+        {/* The reference number is the single most useful thing on this screen:
+            it is what every later conversation with the shop hangs off. So it
+            gets its own block rather than being a bold word inside a sentence. */}
+        <div className="mx-auto mt-8 max-w-sm rounded-4xl border border-line bg-card px-6 py-5 shadow-card">
+          <p className="text-2xs uppercase tracking-[.16em] text-muted">Your reference</p>
+          <p className="mt-2 font-display text-3xl font-semibold tracking-wide text-dark">
+            {order.orderId}
+          </p>
+          <p className="mt-2 text-2xs leading-relaxed text-muted">
+            Keep this. It is how we find your order.
+          </p>
+        </div>
 
-      <dl
-        className="mx-auto mt-10 grid max-w-lg gap-px overflow-hidden rounded-4xl border border-line bg-line text-left sm:grid-cols-2"
-      >
-        {[
-          { icon: Package, label: 'Order number', value: order.orderId },
-          { icon: Truck, label: 'Expected delivery', value: `${formatDay(addWorkingDays(2))} – ${formatDay(addWorkingDays(4))}` },
-          { icon: MapPin, label: 'Shipping to', value: `${order.district} ${order.pincode}` },
-          { icon: Lock, label: 'Paid by', value: PAYMENT_METHODS.find((p) => p.id === order.payment)?.label },
-        ].map(({ icon: Icon, label, value }) => (
-          <div key={label} className="flex items-start gap-3 bg-card px-5 py-5">
-            <Icon size={16} className="mt-0.5 shrink-0 text-primary" />
-            <span>
-              <dt className="text-2xs uppercase tracking-[.14em] text-muted">{label}</dt>
-              <dd className="mt-1 text-sm font-semibold text-dark">{value}</dd>
-            </span>
-          </div>
-        ))}
-      </dl>
+        <p className="mx-auto mt-6 max-w-lg text-[15px] leading-relaxed text-muted">
+          {pickup
+            ? `We will message ${order.phone} when it is packed and waiting at the counter.`
+            : `We will send a despatch message to ${order.phone} when it leaves the warehouse.`}
+        </p>
 
-      <p
-        className="mx-auto mt-6 max-w-lg rounded-3xl bg-amber-50 p-5 text-[13px] leading-relaxed text-amber-800"
-      >
-        Store the carton somewhere cool, dry and off the floor until the night — away from the
-        kitchen and any electrical point. The safety card is printed inside the lid.
-      </p>
+        <dl className="mx-auto mt-10 grid max-w-lg gap-px overflow-hidden rounded-4xl border border-line bg-line text-left sm:grid-cols-2">
+          {[
+            { icon: Package, label: 'Order number', value: order.orderId },
+            {
+              icon: pickup ? Clock : Truck,
+              label: pickup ? 'Ready to collect' : 'Expected delivery',
+              value: pickup
+                ? formatDay(new Date(order.deliveryFrom))
+                : `${formatDay(new Date(order.deliveryFrom))} – ${formatDay(new Date(order.deliveryTo))}`,
+            },
+            {
+              icon: pickup ? Building2 : MapPin,
+              label: pickup ? 'Collect from' : 'Shipping to',
+              value: pickup ? 'Sivakasi counter' : `${order.district} ${order.pincode}`,
+            },
+            {
+              icon: Lock,
+              label: 'Paid by',
+              value: PAYMENT_METHODS.find((p) => p.id === order.payment)?.label,
+            },
+          ].map(({ icon: Icon, label, value }) => (
+            <div key={label} className="flex items-start gap-3 bg-card px-5 py-5">
+              <Icon size={16} className="mt-0.5 shrink-0 text-primary" />
+              <span>
+                <dt className="text-2xs uppercase tracking-[.14em] text-muted">{label}</dt>
+                <dd className="mt-1 text-sm font-semibold text-dark">{value}</dd>
+              </span>
+            </div>
+          ))}
+        </dl>
 
-      <p className="mt-6 font-display text-xl font-semibold text-dark">
-        Total paid {formatPrice(totals.total)}
-        <span className="ml-2 text-sm font-normal text-emerald-600">
-          you saved {formatPrice(totals.totalSavings)}
-        </span>
-      </p>
+        <p className="mx-auto mt-6 max-w-lg rounded-3xl bg-amber-50 p-5 text-[13px] leading-relaxed text-amber-800">
+          {pickup
+            ? `Collect from ${PICKUP.address}. ${PICKUP.hours}. Bring this reference and the number you booked with.`
+            : 'Store the carton somewhere cool, dry and off the floor until the night — away from the kitchen and any electrical point. The safety card is printed inside the lid.'}
+        </p>
 
-      <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
-        <Button to="/products" size="lg" rightIcon={<ArrowRight size={17} />}>
-          Keep shopping
-        </Button>
-        <Button href={BRAND.phoneHref} size="lg" variant="outline" leftIcon={<Phone size={16} />}>
-          Call about this order
-        </Button>
+        <p className="mt-6 font-display text-xl font-semibold text-dark">
+          Total {formatPrice(totals.total)}
+          <span className="ml-2 text-sm font-normal text-emerald-600">
+            you saved {formatPrice(totals.totalSavings)}
+          </span>
+        </p>
+
+        {/* The WhatsApp send is the primary action: it gives the customer a
+            copy of the confirmation in the app they already live in, and gives
+            the shop its first notice of the order on the same thread. */}
+        <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
+          <Button
+            href={whatsappHref(orderMessage(order))}
+            size="lg"
+            leftIcon={<MessageCircle size={17} />}
+            onClick={() => analytics.whatsappClick('confirmation')}
+          >
+            Send confirmation on WhatsApp
+          </Button>
+          <Button
+            to={`/track?ref=${order.orderId}`}
+            size="lg"
+            variant="outline"
+            rightIcon={<ArrowRight size={17} />}
+          >
+            Track this order
+          </Button>
+        </div>
+
+        <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
+          <Button to="/products" variant="ghost">
+            Keep shopping
+          </Button>
+          <Button href={BRAND.phoneHref} variant="ghost" leftIcon={<Phone size={15} />}>
+            Call about this order
+          </Button>
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 /* --------------------------------- page ---------------------------------- */
 
@@ -160,7 +227,7 @@ export const Checkout = () => {
   const items = useCartStore((s) => s.items);
   const coupon = useCartStore((s) => s.coupon);
   const clearCart = useCartStore((s) => s.clearCart);
-  const totals = useCartTotals();
+  const cartTotals = useCartTotals();
 
   const [step, setStep] = useState(0);
   const [furthest, setFurthest] = useState(0);
@@ -192,14 +259,77 @@ export const Checkout = () => {
     setFurthest((f) => Math.max(f, target));
   };
 
+  const pickup = form.fulfilment === 'pickup';
+
+  /**
+   * Collection is free, and the cart store has no idea which the customer
+   * picked — it prices a basket, not a fulfilment. Rather than thread state
+   * through the store for something only this page cares about, the delivery
+   * line is dropped here. The API re-prices the whole basket on submit anyway,
+   * so this figure is a preview of its answer, never the source of it.
+   */
+  const totals = useMemo(
+    () =>
+      pickup
+        ? {
+            ...cartTotals,
+            shipping: 0,
+            total: cartTotals.total - cartTotals.shipping,
+            freeShippingGap: 0,
+          }
+        : cartTotals,
+    [cartTotals, pickup],
+  );
+
+  // One event per visit to the checkout, not one per step.
+  useEffect(() => {
+    analytics.checkoutStart(cartTotals);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const place = async () => {
     setPlacing(true);
     setPlacedTotals(totals);
-    const result = await api.placeOrder({ ...form, items, coupon: coupon?.code ?? null });
-    setOrder(result);
-    clearCart();
-    setPlacing(false);
-    toast.success('Order placed');
+
+
+    try {
+      const result = await api.placeOrder({
+        name: form.name,
+        phone: form.phone,
+        // An untouched optional field is an empty string in the DOM, and the
+        // API validates `email` as an address whenever one is present. Send
+        // null so "left blank" reads as absent rather than as a bad address.
+        email: form.email.trim() || null,
+        fulfilment: form.fulfilment,
+        // A collection order has no delivery address. Sending the half-typed
+        // remains of one would be worse than sending nothing: the API would
+        // validate it, and the customer would be held up by a pincode for an
+        // address nothing is going to.
+        address: pickup ? null : form.address,
+        city: pickup ? null : form.city,
+        district: pickup ? null : form.district,
+        pincode: pickup ? null : form.pincode,
+        payment: form.payment,
+        // The API prices the basket itself from ids and quantities, so the
+        // confirmation total is its own rather than one the browser sent.
+        items: items.map((line) => ({ id: line.id, qty: line.qty })),
+        notes: !pickup && form.landmark ? `Landmark: ${form.landmark}` : null,
+        coupon: coupon?.code ?? null,
+        // The API records the order_placed event itself, so it cannot be lost
+        // to a closed tab or a blocked request. Sending the session id is what
+        // lets it attribute the order to this visit in the funnel.
+        session: analyticsSession(),
+      });
+
+      setOrder(result);
+      clearCart();
+      toast.success('Order placed');
+    } catch (error) {
+      setPlacedTotals(null);
+      toast.error(error.message);
+    } finally {
+      setPlacing(false);
+    }
   };
 
   const deliveryWindow = useMemo(
@@ -207,12 +337,17 @@ export const Checkout = () => {
     [],
   );
 
-  if (order) return <Confirmation order={order} totals={placedTotals ?? totals} />;
+  // The API's own totals are authoritative — it re-priced the basket and may
+  // legitimately disagree with the preview (a line capped to stock, a coupon
+  // that stopped qualifying). Fall back to the frozen local copy only if the
+  // response somehow arrived without them.
+  if (order) return <Confirmation order={order} totals={order.totals ?? placedTotals ?? totals} />;
 
   if (!items.length) {
     return (
       <div className="container py-24">
         <EmptyState
+          as="h1"
           illustration="cart"
           title="There is nothing to check out"
           description="Your basket is empty. Pick a few crackers — or start from a combo box and be done in one click."
@@ -297,70 +432,150 @@ export const Checkout = () => {
                 </div>
               ) : null}
 
-              {/* ---------------- step 1: address ---------------- */}
+              {/* ------------- step 1: delivery or collection ------------- */}
               {step === 1 ? (
                 <div className="grid gap-5">
                   <header className="flex items-center gap-3">
                     <span className="grid h-10 w-10 place-items-center rounded-2xl bg-secondary-50 text-primary">
-                      <MapPin size={18} />
+                      <Truck size={18} />
                     </span>
                     <div>
-                      <h2 className="font-display text-xl font-semibold text-dark">Delivery address</h2>
-                      <p className="text-2xs text-muted">Arrives {deliveryWindow}</p>
+                      <h2 className="font-display text-xl font-semibold text-dark">
+                        How would you like it?
+                      </h2>
+                      <p className="text-2xs text-muted">
+                        {pickup ? 'Collect from Sivakasi' : `Arrives ${deliveryWindow}`}
+                      </p>
                     </div>
                   </header>
 
-                  <Field label="Address" hint="Door no, street, area" error={errors.address}>
-                    <textarea
-                      value={form.address}
-                      onChange={set('address')}
-                      rows={3}
-                      placeholder="12/4 Ganapathy Nagar, 2nd Street, Adambakkam"
-                      autoComplete="street-address"
-                      className={cn(
-                        'w-full resize-none rounded-2xl border border-line bg-card p-4 text-sm text-ink outline-none transition-colors placeholder:text-muted focus:border-secondary-400',
-                        errors.address && 'border-rose-300',
-                      )}
-                    />
-                  </Field>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    {FULFILMENT_METHODS.map((method) => {
+                      const selected = form.fulfilment === method.id;
+                      const Icon = method.id === 'pickup' ? Building2 : Truck;
 
-                  <Field label="Landmark" hint="Optional">
-                    <input
-                      value={form.landmark}
-                      onChange={set('landmark')}
-                      placeholder="Opposite the temple"
-                      className={inputClass}
-                    />
-                  </Field>
-
-                  <div className="grid gap-5 sm:grid-cols-2">
-                    <Field label="District" error={errors.district}>
-                      <select
-                        value={form.district}
-                        onChange={set('district')}
-                        className={cn(inputClass, 'cursor-pointer', errors.district && 'border-rose-300')}
-                      >
-                        <option value="">Select a district</option>
-                        {DISTRICTS.map((district) => (
-                          <option key={district} value={district}>
-                            {district}
-                          </option>
-                        ))}
-                      </select>
-                    </Field>
-
-                    <Field label="Pincode" error={errors.pincode}>
-                      <input
-                        value={form.pincode}
-                        onChange={set('pincode')}
-                        placeholder="600088"
-                        inputMode="numeric"
-                        maxLength={6}
-                        autoComplete="postal-code"
-                        className={cn(inputClass, errors.pincode && 'border-rose-300')}
-                      />
-                    </Field>
+                      return (
+                        <label
+                          key={method.id}
+                          className={cn(
+                            'flex cursor-pointer items-start gap-3.5 rounded-3xl border p-4 transition-all duration-300 sm:p-5',
+                            selected
+                              ? 'border-primary bg-secondary-50/70 shadow-soft'
+                              : 'border-line bg-card hover:border-secondary-300',
+                          )}
+                        >
+                          <input
+                            type="radio"
+                            name="fulfilment"
+                            value={method.id}
+                            checked={selected}
+                            onChange={set('fulfilment')}
+                            className="mt-0.5 h-4 w-4 shrink-0 accent-primary"
+                          />
+                          <span className="min-w-0 flex-1">
+                            <span className="flex items-center gap-2 text-sm font-semibold text-dark">
+                              <Icon size={15} className="shrink-0 text-primary" />
+                              {method.label}
+                            </span>
+                            <span className="mt-1 block text-2xs leading-relaxed text-muted">
+                              {method.hint}
+                            </span>
+                          </span>
+                        </label>
+                      );
+                    })}
                   </div>
+
+                  {pickup ? (
+                    <div className="rounded-3xl border border-line bg-secondary-50/50 p-5">
+                      <p className="flex items-center gap-2 text-sm font-semibold text-dark">
+                        <Building2 size={15} className="shrink-0 text-primary" />
+                        {PICKUP.name}
+                      </p>
+                      <p className="mt-2 text-xs leading-relaxed text-muted">{PICKUP.address}</p>
+                      <p className="mt-1 text-2xs text-muted">{PICKUP.hours}</p>
+
+                      <ul className="mt-4 grid gap-2">
+                        {PICKUP.notes.map((note) => (
+                          <li key={note} className="flex items-start gap-2 text-2xs leading-relaxed text-muted">
+                            <Check size={13} className="mt-0.5 shrink-0 text-primary" />
+                            {note}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ) : null}
+
+                  {/* A collection order stops here. Rendering a disabled
+                      address form beside "collect from the shop" would only
+                      invite someone to fill it in. */}
+                  {!pickup ? (
+                    <>
+                      <Field label="Address" hint="Door no, street, area" error={errors.address}>
+                        <textarea
+                          value={form.address}
+                          onChange={set('address')}
+                          rows={3}
+                          placeholder="12/4 Ganapathy Nagar, 2nd Street, Adambakkam"
+                          autoComplete="street-address"
+                          className={cn(
+                            'w-full resize-none rounded-2xl border border-line bg-card p-4 text-sm text-ink outline-none transition-colors placeholder:text-muted focus:border-secondary-400',
+                            errors.address && 'border-rose-300',
+                          )}
+                        />
+                      </Field>
+
+                      <div className="grid gap-5 sm:grid-cols-2">
+                        <Field label="City or town" error={errors.city}>
+                          <input
+                            value={form.city}
+                            onChange={set('city')}
+                            placeholder="Sivakasi"
+                            autoComplete="address-level2"
+                            className={cn(inputClass, errors.city && 'border-rose-300')}
+                          />
+                        </Field>
+
+                        <Field label="Landmark" hint="Optional">
+                          <input
+                            value={form.landmark}
+                            onChange={set('landmark')}
+                            placeholder="Opposite the temple"
+                            className={inputClass}
+                          />
+                        </Field>
+                      </div>
+
+                      <div className="grid gap-5 sm:grid-cols-2">
+                        <Field label="District" error={errors.district}>
+                          <select
+                            value={form.district}
+                            onChange={set('district')}
+                            className={cn(inputClass, 'cursor-pointer', errors.district && 'border-rose-300')}
+                          >
+                            <option value="">Select a district</option>
+                            {DISTRICTS.map((district) => (
+                              <option key={district} value={district}>
+                                {district}
+                              </option>
+                            ))}
+                          </select>
+                        </Field>
+
+                        <Field label="Pincode" error={errors.pincode}>
+                          <input
+                            value={form.pincode}
+                            onChange={set('pincode')}
+                            placeholder="600088"
+                            inputMode="numeric"
+                            maxLength={6}
+                            autoComplete="postal-code"
+                            className={cn(inputClass, errors.pincode && 'border-rose-300')}
+                          />
+                        </Field>
+                      </div>
+                    </>
+                  ) : null}
                 </div>
               ) : null}
 
@@ -439,10 +654,22 @@ export const Checkout = () => {
                     {[
                       ['Name', form.name],
                       ['Phone', form.phone],
-                      ['Address', `${form.address}${form.landmark ? `, ${form.landmark}` : ''}`],
-                      ['District', `${form.district} — ${form.pincode}`],
+                      [
+                        'Fulfilment',
+                        FULFILMENT_METHODS.find((m) => m.id === form.fulfilment)?.label,
+                      ],
+                      ...(pickup
+                        ? [
+                            ['Collect from', PICKUP.address],
+                            ['Counter hours', PICKUP.hours],
+                          ]
+                        : [
+                            ['Address', `${form.address}${form.landmark ? `, ${form.landmark}` : ''}`],
+                            ['City', form.city],
+                            ['District', `${form.district} — ${form.pincode}`],
+                            ['Delivery', deliveryWindow],
+                          ]),
                       ['Payment', PAYMENT_METHODS.find((p) => p.id === form.payment)?.label],
-                      ['Delivery', deliveryWindow],
                     ].map(([label, value]) => (
                       <div key={label} className="bg-card px-4 py-3.5 sm:px-5 sm:py-4">
                         <dt className="text-2xs uppercase tracking-[.14em] text-muted">{label}</dt>
@@ -456,7 +683,7 @@ export const Checkout = () => {
                       Edit details
                     </Button>
                     <Button variant="ghost" size="sm" onClick={() => setStep(1)}>
-                      Edit address
+                      {pickup ? 'Change to delivery' : 'Edit address'}
                     </Button>
                     <Button variant="ghost" size="sm" onClick={() => setStep(2)}>
                       Change payment
@@ -546,7 +773,7 @@ export const Checkout = () => {
                   </div>
                 ) : null}
                 <div className="flex justify-between text-muted">
-                  <dt>Delivery</dt>
+                  <dt>{pickup ? 'Collection' : 'Delivery'}</dt>
                   <dd className="tabular-nums">
                     {totals.shipping === 0 ? (
                       <span className="font-semibold text-emerald-600">Free</span>
@@ -576,8 +803,17 @@ export const Checkout = () => {
             </div>
 
             <p className="mt-5 flex items-start gap-2.5 px-2 text-2xs leading-relaxed text-muted">
-              <Truck size={14} className="mt-0.5 shrink-0 text-primary" />
-              Fireworks travel by licensed surface transport only. Arrives {deliveryWindow}.
+              {pickup ? (
+                <>
+                  <Building2 size={14} className="mt-0.5 shrink-0 text-primary" />
+                  Collect from {PICKUP.address}. {PICKUP.hours}.
+                </>
+              ) : (
+                <>
+                  <Truck size={14} className="mt-0.5 shrink-0 text-primary" />
+                  Fireworks travel by licensed surface transport only. Arrives {deliveryWindow}.
+                </>
+              )}
             </p>
           </aside>
         </div>

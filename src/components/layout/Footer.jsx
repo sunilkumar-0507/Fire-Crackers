@@ -51,9 +51,11 @@ export const Footer = () => (
       {/* The floating basket pill sits over the bottom ~76px on small screens,
           so the last row needs clearance to stay reachable. */}
       <div className="container pb-28 pt-8 lg:pb-12">
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.4fr_repeat(3,1fr)] lg:gap-12">
+        {/* Four link columns plus the brand is more than fits at `lg`, so the
+            links go two-up there and only spread out at `xl`. */}
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3 lg:gap-12 xl:grid-cols-[1.3fr_repeat(4,minmax(0,1fr))] xl:gap-10">
           {/* brand column */}
-          <div className="max-w-sm sm:col-span-2 lg:col-span-1">
+          <div className="max-w-sm sm:col-span-2 lg:col-span-3 xl:col-span-1">
             <div className="flex items-center gap-3">
               <LogoMark size={44} />
               <div className="leading-none">

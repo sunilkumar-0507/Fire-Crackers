@@ -2,12 +2,15 @@ import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { ArrowRight, Tag, Trash2, Truck, X } from '@/components/ui/icons';
+import { ArrowRight, MessageCircle, Tag, Trash2, Truck, X } from '@/components/ui/icons';
 import { cn } from '@/utils/cn';
 import { SHIPPING } from '@/constants';
 import { formatPrice } from '@/utils/format';
 import { cartItemHref } from '@/utils/cart';
+import { products } from '@/data';
 import { useCartStore, useCartTotals } from '@/store/cartStore';
+import { analytics } from '@/lib/analytics';
+import { whatsappHref, cartEnquiryMessage } from '@/utils/whatsapp';
 import { useUIStore } from '@/store/uiStore';
 import { useLockBodyScroll } from '@/hooks/useLockBodyScroll';
 import ProductImage from '@/components/ui/ProductImage';
@@ -197,7 +200,7 @@ export const CartDrawer = () => {
             <EmptyState
               illustration="cart"
               title="Your basket is empty"
-              description="Forty-three kinds of light, colour and noise are waiting. Start with a combo pack if you want it decided for you."
+              description={`${products.length} kinds of light, colour and noise are waiting. Start with a combo pack if you want it decided for you.`}
               action={
                 <Button to="/products" onClick={close} rightIcon={<ArrowRight size={16} />}>
                   Browse crackers
@@ -299,6 +302,21 @@ export const CartDrawer = () => {
               >
                 Checkout
               </Button>
+
+              {/* The same basket, sent as a message. For the customers who
+                  would rather have this conversation with a person — which
+                  here is most of them — this is the shorter path, not a
+                  fallback for when checkout fails. */}
+              <a
+                href={whatsappHref(cartEnquiryMessage(items, totals))}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => analytics.whatsappClick('cart')}
+                className="flex items-center justify-center gap-2 rounded-full border border-line py-3 text-sm font-semibold text-ink transition-colors hover:border-secondary-300 hover:text-primary"
+              >
+                <MessageCircle size={16} className="text-[#25D366]" />
+                Order on WhatsApp instead
+              </a>
 
               <p className="text-center text-2xs text-muted">
                 Licensed surface transport · delivered in 48–72 hours

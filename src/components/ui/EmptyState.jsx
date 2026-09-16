@@ -95,6 +95,12 @@ const Illustrations = {
 /**
  * Illustrated empty state. Every list, grid and drawer in the app funnels
  * through this so a zero-result screen never looks like a broken one.
+ *
+ * `as` exists because this is used two different ways. Inside a page that
+ * already has a heading — a filtered grid with no matches — h3 is the right
+ * rung. But on the routes where a miss *is* the whole page (an unknown product,
+ * an empty checkout) it is the only heading there is, and a page whose top
+ * heading is an h3 gives a screen reader nothing to land on.
  */
 export const EmptyState = ({
   illustration = 'crate',
@@ -104,6 +110,7 @@ export const EmptyState = ({
   secondaryAction,
   className,
   compact = false,
+  as: Heading = 'h3',
 }) => (
   <div
     className={cn(
@@ -116,7 +123,9 @@ export const EmptyState = ({
       {Illustrations[illustration] ?? Illustrations.crate}
     </div>
 
-    <h3 className={cn('font-display text-dark', compact ? 'text-lg' : 'text-2xl')}>{title}</h3>
+    <Heading className={cn('font-display text-dark', compact ? 'text-lg' : 'text-2xl')}>
+      {title}
+    </Heading>
     {description ? (
       <p className={cn('max-w-sm text-muted', compact ? 'text-sm' : 'text-[15px] leading-relaxed')}>
         {description}

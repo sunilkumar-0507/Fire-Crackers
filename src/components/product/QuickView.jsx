@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { ArrowRight, Check, ShieldCheck } from '@/components/ui/icons';
-import { formatPrice, stockLevel } from '@/utils/format';
+import { formatPrice, availabilityOf } from '@/utils/format';
 import { toCartItem } from '@/utils/cart';
 import { artForCategory } from '@/utils/image';
 import { useCartStore } from '@/store/cartStore';
@@ -33,7 +33,7 @@ export const QuickView = () => {
 
   if (!product) return <Modal open={false} onClose={close} />;
 
-  const level = stockLevel(product.stock);
+  const level = availabilityOf(product);
   const soldOut = product.stock <= 0;
   const fallback = artForCategory(product.category);
 

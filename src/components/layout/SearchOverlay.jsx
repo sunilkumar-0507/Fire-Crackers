@@ -161,7 +161,7 @@ export const SearchOverlay = () => {
                 }}
                 onKeyDown={onKeyDown}
                 type="search"
-                placeholder="Search Lakshmi, flower pots, rockets…"
+                placeholder="Search Lakshmi, flower pots, sky shots…"
                 aria-label="Search crackers"
                 className="h-12 min-w-0 flex-1 bg-transparent text-base text-ink outline-none placeholder:text-muted sm:h-14 sm:text-lg"
               />

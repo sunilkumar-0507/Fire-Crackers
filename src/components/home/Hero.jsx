@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowRight, Flame, Phone, Search, Star } from '@/components/ui/icons';
 import { BRAND, POPULAR_SEARCHES } from '@/constants';
 import { ACCENT_KEYS, accentOf } from '@/constants/accents';
-import { products, categoriesWithCounts } from '@/data';
+import { products, categoriesWithCounts, priceBounds } from '@/data';
 import { searchProducts } from '@/utils/search';
 import { formatPrice } from '@/utils/format';
 import CrackerArt from '@/components/ui/CrackerArt';
@@ -25,6 +25,10 @@ const FLOATERS = [
   { type: 'sparkler', variant: 1, className: 'right-[26%] top-[34%] h-20 w-20 lg:h-24 lg:w-24' },
   { type: 'flowerpot', variant: 1, className: 'bottom-[6%] right-[14%] h-20 w-20 lg:h-24 lg:w-24' },
 ];
+
+const averageRating = (
+  products.reduce((sum, p) => sum + p.rating, 0) / products.length
+).toFixed(1);
 
 /* Scattered by hand: x%, y%, px size, tone index. */
 const CONFETTI = [
@@ -127,7 +131,7 @@ export const Hero = () => {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 type="search"
-                placeholder="Search Lakshmi, flower pots, rockets…"
+                placeholder="Search Lakshmi, flower pots, sky shots…"
                 aria-label="Search crackers"
                 className="h-12 min-w-0 flex-1 bg-transparent text-ink outline-none placeholder:text-muted sm:h-14 sm:text-base"
               />
@@ -177,8 +181,8 @@ export const Hero = () => {
             {[
               { label: 'Crackers', value: `${products.length}` },
               { label: 'Categories', value: `${categoriesWithCounts.length}` },
-              { label: 'Starts at', value: formatPrice(60) },
-              { label: 'Rated', value: '4.8', icon: true },
+              { label: 'Starts at', value: formatPrice(priceBounds.min) },
+              { label: 'Rated', value: averageRating, icon: true },
             ].map((stat) => (
               <div key={stat.label} className="bg-card px-3 py-4 sm:px-4 sm:py-5">
                 <dd className="flex items-center justify-center gap-1 font-display text-xl font-semibold text-dark sm:text-2xl">

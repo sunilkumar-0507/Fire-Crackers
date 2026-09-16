@@ -1,6 +1,7 @@
 import { Star } from '@/components/ui/icons';
 import { cn } from '@/utils/cn';
-import { categoriesWithCounts, allTags, priceBounds } from '@/data';
+import { categoriesWithCounts, allTags, priceBounds, products } from '@/data';
+import { AVAILABILITY_FILTERS } from '@/utils/search';
 import { formatPrice } from '@/utils/format';
 import Chip from '@/components/ui/Chip';
 
@@ -56,7 +57,7 @@ export const FilterPanel = ({ filters, onChange, onReset, resultCount, className
     filters.tags.length +
     (filters.maxPrice != null ? 1 : 0) +
     (filters.minRating > 0 ? 1 : 0) +
-    (filters.inStockOnly ? 1 : 0);
+    (filters.availability !== 'all' ? 1 : 0);
 
   return (
     <div className={cn('flex flex-col gap-6', className)}>
@@ -178,19 +179,23 @@ export const FilterPanel = ({ filters, onChange, onReset, resultCount, className
       </Group>
 
       <Group title="Availability">
-        <label className="flex min-h-10 cursor-pointer items-center gap-3 py-1 text-sm text-ink">
-          <input
-            type="checkbox"
-            checked={filters.inStockOnly}
-            onChange={(e) => onChange({ inStockOnly: e.target.checked })}
-            className="h-4 w-4 rounded border-secondary-300 accent-primary"
-          />
-          In stock only
-        </label>
+        <div className="flex flex-wrap gap-2">
+          {AVAILABILITY_FILTERS.map((option) => (
+            <Chip
+              key={option.value}
+              active={filters.availability === option.value}
+              onClick={() => onChange({ availability: option.value })}
+              className="!px-3 !py-1.5 !text-xs"
+            >
+              {option.label}
+            </Chip>
+          ))}
+        </div>
       </Group>
 
       <p className="rounded-2xl bg-secondary-50/70 px-4 py-3 text-center text-xs text-muted">
-        Showing <strong className="font-semibold text-primary">{resultCount}</strong> of 43 products
+        Showing <strong className="font-semibold text-primary">{resultCount}</strong> of{' '}
+        {products.length} products
       </p>
     </div>
   );

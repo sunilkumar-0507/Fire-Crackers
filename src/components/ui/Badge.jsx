@@ -30,24 +30,35 @@ export const Badge = ({ tone = 'soft', className, children, icon, ...rest }) => 
   </span>
 );
 
-/** Colour-coded stock pill driven by `stockLevel()`. */
-export const StockBadge = ({ level, className }) => {
-  const tone =
-    level.key === 'out' ? 'danger' : level.key === 'low' ? 'warn' : level.key === 'medium' ? 'soft' : 'success';
-  return (
-    <Badge tone={tone} className={className}>
-      <span
-        className={cn(
-          'h-1.5 w-1.5 rounded-full',
-          level.key === 'out' && 'bg-berry-500',
-          level.key === 'low' && 'bg-primary-500',
-          level.key === 'medium' && 'bg-secondary-600',
-          level.key === 'high' && 'bg-mint-500',
-        )}
-      />
-      {level.label}
-    </Badge>
-  );
+/**
+ * Colour-coded availability pill driven by `availabilityOf()`.
+ *
+ * "Out of stock" and "temporarily unavailable" are two different things to a
+ * customer — one may come back this week, the other is the shop's decision —
+ * so they get different words and different colours rather than sharing a
+ * single grey "not available".
+ */
+const STOCK_TONES = {
+  out: 'danger',
+  unavailable: 'outline',
+  low: 'warn',
+  medium: 'soft',
+  high: 'success',
 };
+
+const STOCK_DOTS = {
+  out: 'bg-berry-500',
+  unavailable: 'bg-muted',
+  low: 'bg-primary-500',
+  medium: 'bg-secondary-600',
+  high: 'bg-mint-500',
+};
+
+export const StockBadge = ({ level, className }) => (
+  <Badge tone={STOCK_TONES[level.key] ?? 'soft'} className={className}>
+    <span className={cn('h-1.5 w-1.5 rounded-full', STOCK_DOTS[level.key] ?? 'bg-muted')} />
+    {level.label}
+  </Badge>
+);
 
 export default Badge;
