@@ -33,7 +33,6 @@ export const Products = () => {
       category: params.get('category') ?? 'all',
       tags: params.getAll('tag'),
       maxPrice: params.get('max') ? Number(params.get('max')) : null,
-      minRating: params.get('rating') ? Number(params.get('rating')) : 0,
       // `stock=1` is the URL this page used to write. Links with it are still
       // out there in WhatsApp threads, so it keeps meaning "in stock only".
       availability: params.get('availability') ?? (params.get('stock') === '1' ? 'available' : 'all'),
@@ -63,7 +62,7 @@ export const Products = () => {
 
       Object.entries(patch).forEach(([key, value]) => {
         const paramKey =
-          { query: 'q', maxPrice: 'max', minRating: 'rating' }[key] ?? key;
+          { query: 'q', maxPrice: 'max' }[key] ?? key;
 
         if (key === 'tags') {
           next.delete('tag');
@@ -134,7 +133,6 @@ export const Products = () => {
         }
         breadcrumbs={[{ label: 'Products' }]}
         art="aerial"
-        artVariant={1}
       >
         <div className="flex flex-wrap gap-2">
           {QUICK_FILTERS.map((quick) => (
@@ -172,7 +170,7 @@ export const Products = () => {
                   <select
                     value={filters.sort}
                     onChange={(e) => update({ sort: e.target.value })}
-                    className="max-w-[46vw] min-h-10 cursor-pointer truncate rounded-full border border-line bg-card px-3 py-2.5 text-sm font-medium text-ink outline-none transition-colors hover:border-secondary-300 focus:border-secondary-400 sm:max-w-none sm:px-4"
+                    className="max-w-[46vw] min-h-11 cursor-pointer truncate rounded-full border border-line bg-card px-3 py-2.5 text-sm font-medium text-ink outline-none transition-colors hover:border-secondary-300 focus:border-secondary-400 sm:max-w-none sm:px-4"
                   >
                     {SORT_OPTIONS.map((option) => (
                       <option key={option.value} value={option.value}>

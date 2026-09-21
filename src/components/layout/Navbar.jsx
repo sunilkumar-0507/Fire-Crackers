@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { ChevronDown, Menu, Search, ShoppingBag } from '@/components/ui/icons';
 import { cn } from '@/utils/cn';
-import { NAV_LINKS } from '@/constants';
+import { buildNavLinks } from '@/utils/nav';
 import { categoriesWithCounts } from '@/data';
 import { useScrolled } from '@/hooks/useScrolled';
 import { useCartStore, selectCount } from '@/store/cartStore';
@@ -167,7 +167,7 @@ export const Navbar = () => {
               centred between an unequal logo and action cluster. */}
           <nav aria-label="Primary" className="hidden flex-1 justify-center lg:flex">
             <ul className="flex items-center gap-0.5">
-              {NAV_LINKS.map((link) => (
+              {buildNavLinks().map((link) => (
                 <NavItem
                   key={link.label}
                   link={link}

@@ -29,8 +29,8 @@ describe('product photography', () => {
     expect(repeats).toEqual([]);
   });
 
-  it('still falls back to vector art for an art key', () => {
-    expect(resolveImage('sparkler/3')).toEqual({ kind: 'art', type: 'sparkler', variant: 3 });
+  it('still falls back to an art glyph for an art key', () => {
+    expect(resolveImage('sparkler/3')).toEqual({ kind: 'art', type: 'sparkler' });
   });
 
   it('passes an absolute URL straight through, for when the API sends one', () => {

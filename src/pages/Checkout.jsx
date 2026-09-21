@@ -7,6 +7,7 @@ import {
   Building2,
   Check,
   Clock,
+  Info,
   Lock,
   MapPin,
   MessageCircle,
@@ -21,10 +22,13 @@ import {
   DISTRICTS,
   FULFILMENT_METHODS,
   PAYMENT_METHODS,
+  PAYMENTS,
   PICKUP,
+  STORAGE_KEYS,
   BRAND,
 } from '@/constants';
 import { api } from '@/lib/api';
+import { openCashfreeCheckout } from '@/lib/cashfree';
 import { analytics, analyticsSession } from '@/lib/analytics';
 import { whatsappHref, orderMessage } from '@/utils/whatsapp';
 import { formatPrice, addWorkingDays, formatDay } from '@/utils/format';
@@ -35,7 +39,7 @@ import CheckoutStepper from '@/components/cart/CheckoutStepper';
 import ProductImage from '@/components/ui/ProductImage';
 import Button from '@/components/ui/Button';
 import EmptyState from '@/components/ui/EmptyState';
-import CrackerArt from '@/components/ui/CrackerArt';
+import ArtIcon from '@/components/ui/ArtIcon';
 
 const inputClass =
   'h-12 w-full rounded-2xl border border-line bg-card px-4 text-sm text-ink outline-none transition-colors placeholder:text-muted focus:border-secondary-400';
@@ -231,12 +235,21 @@ export const Checkout = () => {
 
   const [step, setStep] = useState(0);
   const [furthest, setFurthest] = useState(0);
-  const [form, setForm] = useState(emptyForm);
+  // Default to a method the shop can actually take. With no gateway configured
+  // the online options are filtered out below, and a form still holding `upi`
+  // would place an order nobody ever charged.
+  const [form, setForm] = useState(() => ({
+    ...emptyForm,
+    payment: PAYMENTS.enabled ? emptyForm.payment : 'cod',
+  }));
   const [errors, setErrors] = useState({});
   const [placing, setPlacing] = useState(false);
   const [order, setOrder] = useState(null);
   // Frozen at the moment of placing, so the receipt survives clearing the cart.
   const [placedTotals, setPlacedTotals] = useState(null);
+  // The API's price for this basket. Null until the first quote lands, and
+  // again whenever one fails — both mean "show the local sum instead".
+  const [quote, setQuote] = useState(null);
 
   const set = useCallback(
     (key) => (event) => {
@@ -268,7 +281,7 @@ export const Checkout = () => {
    * line is dropped here. The API re-prices the whole basket on submit anyway,
    * so this figure is a preview of its answer, never the source of it.
    */
-  const totals = useMemo(
+  const localTotals = useMemo(
     () =>
       pickup
         ? {
@@ -280,6 +293,68 @@ export const Checkout = () => {
         : cartTotals,
     [cartTotals, pickup],
   );
+
+  /**
+   * Re-price the basket through the API whenever it, the coupon or the
+   * fulfilment changes.
+   *
+   * The same service prices `POST /api/orders`, so this is a preview of the
+   * real answer rather than a second implementation of it — a line quietly
+   * capped to stock, or a coupon that stopped qualifying, now shows on the
+   * summary before the customer commits instead of surprising them on the
+   * receipt. A failure is not fatal: the local sum is a good enough preview,
+   * and the API is still the authority at the moment of placing.
+   */
+  useEffect(() => {
+    if (!items.length) {
+      setQuote(null);
+      return undefined;
+    }
+
+    const controller = new AbortController();
+
+    api
+      .quote(
+        {
+          items: items.map((line) => ({ id: line.id, qty: line.qty })),
+          coupon: coupon?.code ?? null,
+          fulfilment: form.fulfilment,
+        },
+        controller.signal,
+      )
+      .then(setQuote)
+      .catch((error) => {
+        if (error?.name !== 'AbortError') setQuote(null);
+      });
+
+    return () => controller.abort();
+  }, [items, coupon?.code, form.fulfilment]);
+
+  /** The API's figures when we have them, the local sum until then. */
+  const totals = quote?.totals ?? localTotals;
+
+  /** What the API changed about the basket, if anything, in its own words. */
+  const notices = quote?.notices ?? [];
+
+  /**
+   * The methods this shop can actually take money through.
+   *
+   * With no payment gateway configured, every online method would be a promise
+   * the shop cannot keep — the order would be placed and nothing charged, and
+   * the customer would believe they had paid. Cash on delivery is the honest
+   * remainder, and it is what the shop has always run on.
+   */
+  const payableMethods = useMemo(
+    () => (PAYMENTS.enabled ? PAYMENT_METHODS : PAYMENT_METHODS.filter((m) => m.id === 'cod')),
+    [],
+  );
+
+  /**
+   * The lines to show on the summary. The API's when we have them — they carry
+   * the quantity it will actually charge for — so a capped row cannot read
+   * "Qty 200 · ₹2,000" above a ₹740 subtotal.
+   */
+  const lines = quote?.items ?? items;
 
   // One event per visit to the checkout, not one per step.
   useEffect(() => {
@@ -320,6 +395,27 @@ export const Checkout = () => {
         // lets it attribute the order to this visit in the funnel.
         session: analyticsSession(),
       });
+
+      // Cash on delivery is settled at the door, and a shop with no merchant
+      // account has no other option — either way the receipt is the next thing
+      // the customer sees, exactly as before.
+      const payOnline = PAYMENTS.enabled && form.payment !== 'cod';
+
+      if (payOnline) {
+        // The order is real and saved before any of this. If the payment page
+        // fails to open, or the customer closes it, the shop still has a
+        // booking to chase rather than a lost sale.
+        try {
+          sessionStorage.setItem(STORAGE_KEYS.paymentPhone, form.phone.trim());
+        } catch {
+          /* Private mode — the return page will ask for the number instead. */
+        }
+
+        const session = await api.paymentSession(result.orderId, form.phone.trim());
+        clearCart();
+        await openCashfreeCheckout(session.paymentSessionId, session.mode);
+        return;
+      }
 
       setOrder(result);
       clearCart();
@@ -367,7 +463,11 @@ export const Checkout = () => {
       <PageHeader
         eyebrow="Checkout"
         title="Nearly there"
-        description="Four short steps. Nothing is charged in this demo — no payment details are collected or sent anywhere."
+        description={
+          PAYMENTS.enabled
+            ? 'Four short steps. Payment is taken on the provider’s own secure page — no card details ever reach this site.'
+            : 'Four short steps. This shop settles on delivery or at the counter, so no payment details are collected here.'
+        }
         breadcrumbs={[{ label: 'Checkout' }]}
       />
 
@@ -400,7 +500,7 @@ export const Checkout = () => {
                     <input
                       value={form.name}
                       onChange={set('name')}
-                      placeholder="Meenakshi Raghavan"
+                      placeholder="Your full name"
                       autoComplete="name"
                       className={cn(inputClass, errors.name && 'border-rose-300')}
                     />
@@ -593,7 +693,7 @@ export const Checkout = () => {
                   </header>
 
                   <div className="grid gap-3">
-                    {PAYMENT_METHODS.map((method) => {
+                    {payableMethods.map((method) => {
                       const disabled = method.id === 'cod' && totals.total > 5000;
                       const selected = form.payment === method.id;
 
@@ -738,7 +838,7 @@ export const Checkout = () => {
               </div>
 
               <ul className="hide-scrollbar max-h-[320px] divide-y divide-line overflow-y-auto">
-                {items.map((item) => (
+                {lines.map((item) => (
                   <li key={item.id} className="flex items-center gap-3.5 px-5 py-4 sm:px-6">
                     <Link
                       to={cartItemHref(item)}
@@ -751,7 +851,7 @@ export const Checkout = () => {
                       <p className="mt-0.5 text-2xs text-muted">Qty {item.qty}</p>
                     </div>
                     <span className="shrink-0 text-sm font-semibold text-dark">
-                      {formatPrice(item.price * item.qty)}
+                      {formatPrice(item.lineTotal ?? item.price * item.qty)}
                     </span>
                   </li>
                 ))}
@@ -790,8 +890,23 @@ export const Checkout = () => {
                 </div>
               </dl>
 
+              {/* What the API changed about the basket when it re-priced it —
+                  a line cut back to what is on the shelf, a coupon that no
+                  longer qualifies. Shown here so it is read before the order is
+                  placed rather than discovered on the receipt. */}
+              {notices.length ? (
+                <ul className="space-y-1.5 border-t border-line bg-amber-50/70 px-5 py-4 sm:px-6">
+                  {notices.map((notice) => (
+                    <li key={notice} className="flex items-start gap-2 text-2xs leading-relaxed text-amber-900">
+                      <Info size={13} className="mt-0.5 shrink-0" />
+                      {notice}
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+
               <div className="flex items-center gap-3 border-t border-line bg-secondary-50/50 px-5 py-4 sm:px-6">
-                <CrackerArt type="giftbox" variant={1} className="h-10 w-10 shrink-0" />
+                <ArtIcon art="giftbox" className="h-10 w-10 shrink-0 text-primary-700" />
                 <p className="text-2xs leading-relaxed text-muted">
                   You are saving{' '}
                   <strong className="font-semibold text-emerald-600">

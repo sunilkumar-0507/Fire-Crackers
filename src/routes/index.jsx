@@ -21,6 +21,7 @@ const About = lazy(() => import('@/pages/About'));
 const Contact = lazy(() => import('@/pages/Contact'));
 const Checkout = lazy(() => import('@/pages/Checkout'));
 const TrackOrder = lazy(() => import('@/pages/TrackOrder'));
+const PaymentReturn = lazy(() => import('@/pages/PaymentReturn'));
 const Policy = lazy(() => import('@/pages/Policy'));
 const NotFound = lazy(() => import('@/pages/NotFound'));
 
@@ -48,6 +49,9 @@ export const router = createBrowserRouter([
       { path: 'about', element: <About /> },
       { path: 'contact', element: <Contact /> },
       { path: 'checkout', element: <Checkout /> },
+      // Where the payment provider returns the customer. A route rather than a
+      // query flag on /checkout, so a reload cannot re-submit anything.
+      { path: 'checkout/payment-return', element: <PaymentReturn /> },
       { path: 'track', element: <TrackOrder /> },
       { path: 'policies/:slug', element: <Policy /> },
       { path: '*', element: <NotFound /> },

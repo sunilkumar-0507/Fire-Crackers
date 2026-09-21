@@ -20,9 +20,24 @@ export const MobileBottomBar = () => {
   if (hidden) return null;
 
   return (
-    <div
-      className="fixed inset-x-0 bottom-0 z-40 p-4 pb-[max(1rem,env(safe-area-inset-bottom))] lg:hidden"
-    >
+    <>
+      {/*
+        Reserves the height the fixed bar occupies.
+
+        A fixed element is out of flow, so it cannot push anything: without
+        this, the last ~100px of every page sits underneath the bar, and
+        because the document is already scrolled to its end there is no way to
+        get at it. It buried the FAQ's last question on the home page and a
+        whole product card on the catalogue.
+
+        Rendered here rather than as permanent padding in the layout, so the
+        space only exists while the bar does — an empty cart gets no dead strip
+        under its footer. Sized a little above the measured 101px, with the
+        safe-area inset added for the home-indicator gesture area.
+      */}
+      <div aria-hidden="true" className="h-[calc(6.5rem+env(safe-area-inset-bottom))] lg:hidden" />
+
+      <div className="fixed inset-x-0 bottom-0 z-40 p-4 pb-[max(1rem,env(safe-area-inset-bottom))] lg:hidden">
       <button
         type="button"
         onClick={openCart}
@@ -48,8 +63,9 @@ export const MobileBottomBar = () => {
           View
           <ArrowRight size={15} />
         </span>
-      </button>
-    </div>
+        </button>
+      </div>
+    </>
   );
 };
 

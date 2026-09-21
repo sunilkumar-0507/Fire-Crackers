@@ -9,10 +9,9 @@ import { useCartStore, selectInCart } from '@/store/cartStore';
 import PageHeader from '@/components/ui/PageHeader';
 import Section, { SectionHeading } from '@/components/ui/Section';
 import ComboCard from '@/components/combo/ComboCard';
-import CrackerArt from '@/components/ui/CrackerArt';
+import ArtIcon from '@/components/ui/ArtIcon';
 import Button from '@/components/ui/Button';
 import Badge from '@/components/ui/Badge';
-import Rating from '@/components/ui/Rating';
 import QtyStepper from '@/components/ui/QtyStepper';
 import EmptyState from '@/components/ui/EmptyState';
 
@@ -77,7 +76,7 @@ export const ComboDetail = () => {
                 style={{ background: `radial-gradient(55% 100% at 50% 100%, ${combo.accent}, transparent 72%)` }}
               />
               <div className="relative h-3/4 w-3/4">
-                <CrackerArt type={combo.art} variant={2} className="h-full w-full" />
+                <ArtIcon art={combo.art} className="h-full w-full text-dark/80" />
               </div>
               <Badge tone="gold" className="absolute left-4 top-4 sm:left-6 sm:top-6">
                 {combo.badge}
@@ -178,8 +177,7 @@ export const ComboDetail = () => {
                 </p>
               </div>
 
-              <div className="mt-5 flex items-center justify-between border-t border-line pt-5">
-                <Rating value={combo.rating} reviews={combo.reviews} size="sm" />
+              <div className="mt-5 flex items-center justify-end border-t border-line pt-5">
                 <span className="text-2xs text-muted">{combo.stock} boxes left</span>
               </div>
             </div>

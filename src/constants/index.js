@@ -1,4 +1,4 @@
-export const BRAND = {
+export let BRAND = {
   name: 'Gopi Crackers',
   short: 'Gopi',
   tagline: 'Sivakasi · Since 1994',
@@ -23,20 +23,10 @@ export const NAV_LINKS = [
   {
     label: 'Categories',
     to: '/products',
-    children: [
-      { label: 'Sparklers', to: '/category/sparklers', hint: '7 cm to 75 cm' },
-      { label: 'Flower Pots', to: '/category/flower-pots', hint: 'Golden fountains' },
-      { label: 'Aerial Shots', to: '/category/aerial-shots', hint: '7 to 504 shots' },
-      { label: 'Fancy Single Shots', to: '/category/single-shots', hint: 'One perfect break' },
-      { label: 'Ground Chakkars', to: '/category/ground-chakkar', hint: 'Spinning wheels' },
-      { label: 'Garland Crackers', to: '/category/garland-crackers', hint: 'Wala and chorsa' },
-      { label: 'One Sound & Bijili', to: '/category/one-sound-crackers', hint: 'Single report' },
-      { label: 'Bombs & Nattu Vedi', to: '/category/bombs', hint: 'For the boom' },
-      { label: 'Kids Zone', to: '/category/kids-zone', hint: 'Low noise, big fun' },
-      { label: 'Gift Boxes', to: '/category/gift-boxes', hint: '20 to 70 items' },
-      { label: 'Family Packs', to: '/category/family-packs', hint: 'A whole evening' },
-      { label: '2026 New Arrivals', to: '/category/new-arrivals-2026', hint: 'New this season' },
-    ],
+    // Filled from the live catalogue by `buildNavLinks` in utils/nav.js. The
+    // twelve entries that used to be written out here went stale the moment
+    // anyone renamed, added or removed a category in the admin.
+    dynamic: 'categories',
   },
   { label: 'Offers', to: '/offers' },
   { label: 'Combo Packs', to: '/combos' },
@@ -45,7 +35,7 @@ export const NAV_LINKS = [
   { label: 'Contact', to: '/contact' },
 ];
 
-export const POPULAR_SEARCHES = [
+export let POPULAR_SEARCHES = [
   'Flower pots',
   'Lakshmi',
   'Sparklers',
@@ -65,14 +55,14 @@ export const QUICK_FILTERS = [
   { label: 'Under ₹200', maxPrice: 200 },
 ];
 
-export const TRUST_POINTS = [
+export let TRUST_POINTS = [
   { title: 'Direct from Sivakasi', text: 'Our own unit, no distributor margin in the price.' },
   { title: 'PESO compliant', text: 'Every batch tested under the 125 dB legal ceiling.' },
   { title: 'Ships in 48 hours', text: 'Licensed surface transport across Tamil Nadu & Kerala.' },
   { title: '32 years running', text: 'Same family, same factory floor, since 1994.' },
 ];
 
-export const SAFETY_RULES = [
+export let SAFETY_RULES = [
   'Light in open ground, one item at a time, never indoors.',
   'Keep a bucket of sand and a bucket of water within arm’s reach.',
   'Use an agarbatti to light — never a matchstick held close.',
@@ -83,14 +73,14 @@ export const SAFETY_RULES = [
   'Never light anything held in your hand except a sparkler.',
 ];
 
-export const DISTRICTS = [
+export let DISTRICTS = [
   'Chennai', 'Coimbatore', 'Madurai', 'Tiruchirappalli', 'Salem', 'Tirunelveli',
   'Tiruppur', 'Erode', 'Vellore', 'Thoothukudi', 'Dindigul', 'Thanjavur',
   'Virudhunagar', 'Kanchipuram', 'Cuddalore', 'Nagercoil', 'Karur', 'Namakkal',
   'Sivakasi', 'Hosur', 'Other (outside Tamil Nadu)',
 ];
 
-export const PAYMENT_METHODS = [
+export let PAYMENT_METHODS = [
   { id: 'upi', label: 'UPI', hint: 'GPay, PhonePe, Paytm, BHIM' },
   { id: 'card', label: 'Card', hint: 'Credit or debit, all major banks' },
   { id: 'netbanking', label: 'Net banking', hint: '58 banks supported' },
@@ -111,7 +101,7 @@ export const CHECKOUT_STEPS = [
  * reads. Mirrors `GET /api/meta/fulfilment`, which is the authority — this is
  * the seed the page renders with before that call has landed.
  */
-export const FULFILMENT_METHODS = [
+export let FULFILMENT_METHODS = [
   {
     id: 'delivery',
     label: 'Deliver to me',
@@ -127,7 +117,7 @@ export const FULFILMENT_METHODS = [
 ];
 
 /** Where a collection order is picked up from, and what to bring. */
-export const PICKUP = {
+export let PICKUP = {
   name: 'Gopi Crackers factory counter',
   address: '14/3 Sattur Main Road, Sivakasi, Virudhunagar District, Tamil Nadu 626123',
   hours: 'Mon–Sat, 9:00 AM – 8:00 PM IST',
@@ -139,7 +129,7 @@ export const PICKUP = {
 };
 
 /** Coupon codes the mock checkout accepts. Mirrors `offers.json`. */
-export const COUPONS = {
+export let COUPONS = {
   DIWALI75: { type: 'percentage', value: 0, minOrder: 0, note: 'Already applied to every price' },
   EARLYBIRD: { type: 'percentage', value: 10, minOrder: 1500, note: '10% off before the rush' },
   COMBO500: { type: 'flat', value: 500, minOrder: 1899, note: '₹500 off combo packs' },
@@ -147,7 +137,7 @@ export const COUPONS = {
   BULK20: { type: 'percentage', value: 20, minOrder: 25000, note: '20% off bulk orders' },
 };
 
-export const SHIPPING = {
+export let SHIPPING = {
   freeAbove: 2000,
   localFee: 149,
   outstationFee: 249,
@@ -208,4 +198,94 @@ export const SOCIALS = [
 export const STORAGE_KEYS = {
   cart: 'gopi.cart.v1',
   wishlist: 'gopi.wishlist.v1',
+  /** The phone the payment was opened with, so the return page can look it up. */
+  paymentPhone: 'gopi.payment.phone',
+};
+
+/**
+ * Whether this shop can take money online.
+ *
+ * Off until the API says otherwise, which is the safe direction: a checkout
+ * that offered a card and could not charge it would be worse than one that only
+ * offers cash on delivery. Replaced by `hydratePayments` during boot.
+ */
+export let PAYMENTS = { enabled: false, provider: 'none', mode: 'off' };
+
+/* -------------------------------------------------------------------------- */
+/* Hydration                                                                   */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * The API is the authority on everything above that it also serves.
+ *
+ * `GET /api/meta/config` returns the shop's brand, shipping thresholds, coupon
+ * codes, payment methods, districts, safety rules, popular searches, trust
+ * points and pickup counter in one call. The values declared above are the seed
+ * the app renders with before that call lands — and the catalogue it falls back
+ * to when the API is unreachable, which is what lets `npm run dev` work on its
+ * own with the API stopped.
+ *
+ * These are ES module *live bindings*, exactly like the catalogue in
+ * `src/data/index.js`, so swapping them here updates every importer on its next
+ * render without a single component needing a loading state.
+ *
+ * Each field is only taken if the API actually sent it, so a partial response
+ * degrades to the seed for the missing part rather than blanking a form.
+ */
+
+/** `tel:` and `mailto:` are derived here — the API sends the plain values. */
+const hrefs = (brand) => ({
+  ...brand,
+  phoneHref: `tel:${(brand.phone ?? '').replace(/[^\d+]/g, '')}`,
+  emailHref: `mailto:${brand.email ?? ''}`,
+});
+
+/** The delivery/pickup hints the API writes, keeping the icons declared here. */
+const ICON_BY_FULFILMENT = { delivery: 'truck', pickup: 'store' };
+
+export const hydrateConfig = (config) => {
+  if (!config) return false;
+
+  if (config.brand) BRAND = hrefs(config.brand);
+  if (config.shipping) SHIPPING = config.shipping;
+  if (config.coupons) COUPONS = config.coupons;
+  if (config.paymentMethods?.length) PAYMENT_METHODS = config.paymentMethods;
+  if (config.districts?.length) DISTRICTS = config.districts;
+  if (config.safetyRules?.length) SAFETY_RULES = config.safetyRules;
+  if (config.popularSearches?.length) POPULAR_SEARCHES = config.popularSearches;
+  if (config.trustPoints?.length) TRUST_POINTS = config.trustPoints;
+  if (config.pickup) PICKUP = { ...PICKUP, ...config.pickup };
+
+  return true;
+};
+
+/**
+ * Applies `GET /api/meta/fulfilment`, which words the delivery and pickup
+ * options with the live shipping thresholds in them ("Free above ₹2,000").
+ * Kept apart from the config above because it is its own endpoint, and because
+ * an unavailable method has to disappear from the checkout rather than be
+ * offered and then refused.
+ */
+/** Applies `GET /api/payments/config`. */
+export const hydratePayments = (config) => {
+  if (!config) return false;
+  PAYMENTS = config;
+  return true;
+};
+
+export const hydrateFulfilment = (payload) => {
+  if (!payload?.methods?.length) return false;
+
+  FULFILMENT_METHODS = payload.methods
+    .filter((m) => m.available !== false)
+    .map((m) => ({
+      id: m.id,
+      label: m.label,
+      hint: m.hint,
+      icon: ICON_BY_FULFILMENT[m.id] ?? 'truck',
+    }));
+
+  if (payload.pickup) PICKUP = { ...PICKUP, ...payload.pickup };
+
+  return true;
 };

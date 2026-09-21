@@ -18,7 +18,6 @@ export const Offers = () => {
         description="The 75% catalogue discount is already in the price you see. Everything below stacks on top of it — copy a code and paste it in your basket."
         breadcrumbs={[{ label: 'Offers' }]}
         art="flowerpot"
-        artVariant={1}
       />
 
       <div className="container pb-8">

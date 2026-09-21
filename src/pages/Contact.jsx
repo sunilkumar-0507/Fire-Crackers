@@ -4,11 +4,17 @@ import { Check, Clock, Mail, MapPin, MessageCircle, Phone, Send, Truck } from '@
 import { cn } from '@/utils/cn';
 import { BRAND, SOCIALS } from '@/constants';
 import { api } from '@/lib/api';
+import { whatsappHref } from '@/utils/whatsapp';
 import PageHeader from '@/components/ui/PageHeader';
 import Section, { SectionHeading } from '@/components/ui/Section';
 import Button from '@/components/ui/Button';
 
-const CHANNELS = [
+/**
+ * Built per render rather than once at module load: `BRAND` is a live binding
+ * the API replaces during boot, so a list frozen here would print the seeded
+ * phone number for the life of the tab.
+ */
+const channels = () => [
   {
     icon: Phone,
     title: 'Call the shop',
@@ -20,7 +26,7 @@ const CHANNELS = [
     icon: MessageCircle,
     title: 'WhatsApp',
     value: BRAND.whatsapp,
-    href: 'https://wa.me/919842011994',
+    href: whatsappHref(),
     hint: 'Send a photo of a list and we will price it back to you.',
   },
   {
@@ -93,14 +99,13 @@ export const Contact = () => {
         description="During October the phone is the fastest route — the person answering it has usually packed the box you are asking about."
         breadcrumbs={[{ label: 'Contact' }]}
         art="kids"
-        artVariant={1}
         accent="#D9539B"
       />
 
       {/* channels */}
       <div className="container">
         <div className="grid gap-5 md:grid-cols-3">
-          {CHANNELS.map(({ icon: Icon, title, value, href, hint }) => (
+          {channels().map(({ icon: Icon, title, value, href, hint }) => (
             <a
               key={title}
               href={href}
@@ -162,7 +167,7 @@ export const Contact = () => {
                       <input
                         value={form.name}
                         onChange={set('name')}
-                        placeholder="Meenakshi Raghavan"
+                        placeholder="Your full name"
                         autoComplete="name"
                         className={cn(inputClass, errors.name && 'border-rose-300')}
                       />

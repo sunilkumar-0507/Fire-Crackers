@@ -10,7 +10,6 @@ import { useUIStore } from '@/store/uiStore';
 import Modal from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 import Badge, { StockBadge } from '@/components/ui/Badge';
-import Rating from '@/components/ui/Rating';
 import QtyStepper from '@/components/ui/QtyStepper';
 import ProductImage from '@/components/ui/ProductImage';
 
@@ -94,7 +93,6 @@ export const QuickView = () => {
               {product.name}
             </h2>
             <div className="mt-3 flex flex-wrap items-center gap-3">
-              <Rating value={product.rating} reviews={product.reviews} />
               <StockBadge level={level} />
             </div>
           </div>

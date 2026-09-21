@@ -18,7 +18,6 @@ import Section, { SectionHeading } from '@/components/ui/Section';
 import Tabs from '@/components/ui/Tabs';
 import Button from '@/components/ui/Button';
 import Badge, { StockBadge } from '@/components/ui/Badge';
-import Rating from '@/components/ui/Rating';
 import QtyStepper from '@/components/ui/QtyStepper';
 import EmptyState from '@/components/ui/EmptyState';
 
@@ -204,7 +203,6 @@ export const ProductDetail = () => {
                 {product.name}
               </h1>
               <div className="mt-4 flex flex-wrap items-center gap-4">
-                <Rating value={product.rating} reviews={product.reviews} size="md" />
                 <StockBadge level={level} />
               </div>
             </div>

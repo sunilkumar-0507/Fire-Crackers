@@ -2,7 +2,7 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { Check, Mail, Send } from '@/components/ui/icons';
 import { api } from '@/lib/api';
-import CrackerArt from '@/components/ui/CrackerArt';
+import ArtIcon from '@/components/ui/ArtIcon';
 import Button from '@/components/ui/Button';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -39,8 +39,8 @@ export const Newsletter = () => {
         >
           {/* decorative art */}
           <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-[.18]">
-            <CrackerArt type="sparkler" variant={4} className="absolute -left-8 top-2 h-32 w-32 sm:h-48 sm:w-48" />
-            <CrackerArt type="rocket" variant={3} className="absolute -bottom-6 -right-6 h-36 w-36 sm:h-52 sm:w-52" />
+            <ArtIcon art="sparkler" className="absolute -left-8 top-2 h-32 w-32 text-white sm:h-48 sm:w-48" />
+            <ArtIcon art="rocket" className="absolute -bottom-6 -right-6 h-36 w-36 text-white sm:h-52 sm:w-52" />
           </div>
           <div
             aria-hidden="true"

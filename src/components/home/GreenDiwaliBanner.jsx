@@ -1,82 +1,153 @@
 import { ArrowRight, Leaf, VolumeX } from '@/components/ui/icons';
-import { banners, products } from '@/data';
-import CrackerArt from '@/components/ui/CrackerArt';
+import { banners, products, combos } from '@/data';
+import { COUPONS } from '@/constants';
+import ArtIcon from '@/components/ui/ArtIcon';
 import Button from '@/components/ui/Button';
 
-const banner = banners.find((b) => b.placement === 'mid');
-
 const SILENT_TAGS = ['silent', 'kids-safe'];
-const silentCount = products.filter((p) => p.tags.some((t) => SILENT_TAGS.includes(t))).length;
+const SILENT_COMBO = 'silent-celebration-pack';
 
-export const GreenDiwaliBanner = () => (
-  <section className="py-6 sm:py-12">
-    <div className="container">
-      <div
-        className="relative grid overflow-hidden rounded-[2.5rem] border border-line bg-card shadow-card lg:grid-cols-2"
-      >
-        {/* copy */}
-        <div className="relative z-10 p-6 sm:p-12 lg:p-14">
-          <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-2xs font-semibold uppercase tracking-[.18em] text-emerald-700 ring-1 ring-inset ring-emerald-200">
-            <Leaf size={13} />
-            {banner.eyebrow}
-          </span>
+/**
+ * The silent-range panel.
+ *
+ * Everything on it now comes from the catalogue at render time. It used to read
+ * its banner and its product count at *module load*, which worked only because
+ * a full catalogue was bundled with the app — with the data arriving from the
+ * API instead, module load is the one moment the catalogue is guaranteed to be
+ * empty, and `banners.find(...)` returned undefined and crashed the home page
+ * on `banner.eyebrow`.
+ *
+ * It renders nothing at all rather than rendering hollow: no banner row in the
+ * database means the shopkeeper does not want this section, and no silent
+ * products means a "Green Diwali" pitch headed by "0 quiet products", which is
+ * worse than no pitch.
+ */
+export const GreenDiwaliBanner = () => {
+  const banner = banners.find((b) => b.placement === 'mid');
+  if (!banner) return null;
 
-          <h2 className="mt-6 font-display text-display-sm font-semibold text-dark">
-            {banner.title}
-          </h2>
+  const silentCount = products.filter((p) =>
+    (p.tags ?? []).some((t) => SILENT_TAGS.includes(t)),
+  ).length;
+  if (!silentCount) return null;
 
-          <p className="mt-5 max-w-md text-[15px] leading-relaxed text-muted">{banner.subtitle}</p>
+  // The discount is the coupon's own, read from the shop's configuration, so
+  // changing SILENT15 in one place changes what this panel promises.
+  const silentCoupon = COUPONS.SILENT15;
 
-          <dl className="mt-7 flex flex-wrap gap-x-8 gap-y-5 sm:mt-8 sm:gap-x-10">
-            <div>
-              <dd className="font-display text-2xl font-semibold text-dark sm:text-3xl">{silentCount}</dd>
-              <dt className="mt-1 text-2xs uppercase tracking-[.14em] text-muted">Quiet products</dt>
+  // Prefer whatever second action the banner itself carries; fall back to the
+  // silent combo, but only while that combo actually exists — a deleted one
+  // would otherwise send people to a 404 from the busiest panel on the page.
+  const secondary =
+    banner.ctaSecondary ??
+    (combos.some((c) => c.slug === SILENT_COMBO)
+      ? { label: 'Silent combo pack', to: `/combo/${SILENT_COMBO}` }
+      : null);
+
+  return (
+    <section className="py-6 sm:py-12">
+      <div className="container">
+        <div className="relative grid overflow-hidden rounded-3xl border border-line bg-card shadow-card sm:rounded-[2.5rem] lg:grid-cols-2">
+          {/* copy */}
+          <div className="relative z-10 p-5 sm:p-12 lg:p-14">
+            {banner.eyebrow ? (
+              <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1.5 text-2xs font-semibold uppercase tracking-[.18em] text-emerald-700 ring-1 ring-inset ring-emerald-200 sm:px-4 sm:py-2">
+                <Leaf size={13} className="shrink-0" />
+                {banner.eyebrow}
+              </span>
+            ) : null}
+
+            <h2 className="mt-5 font-display text-display-sm font-semibold text-dark sm:mt-6">
+              {banner.title}
+            </h2>
+
+            {banner.subtitle ? (
+              <p className="mt-4 max-w-md text-sm leading-relaxed text-muted sm:mt-5 sm:text-[15px]">
+                {banner.subtitle}
+              </p>
+            ) : null}
+
+            <dl className="mt-6 flex flex-wrap gap-x-8 gap-y-5 sm:mt-8 sm:gap-x-10">
+              <div>
+                <dd className="font-display text-2xl font-semibold text-dark sm:text-3xl">
+                  {silentCount}
+                </dd>
+                <dt className="mt-1 text-2xs uppercase tracking-[.14em] text-muted">
+                  Quiet products
+                </dt>
+              </div>
+              <div>
+                <dd className="font-display text-2xl font-semibold text-dark sm:text-3xl">0 dB</dd>
+                <dt className="mt-1 text-2xs uppercase tracking-[.14em] text-muted">
+                  Reports in the range
+                </dt>
+              </div>
+              {silentCoupon ? (
+                <div>
+                  <dd className="font-display text-2xl font-semibold text-dark sm:text-3xl">
+                    {silentCoupon.value}%
+                  </dd>
+                  <dt className="mt-1 text-2xs uppercase tracking-[.14em] text-muted">
+                    Extra off with SILENT15
+                  </dt>
+                </div>
+              ) : null}
+            </dl>
+
+            <div className="mt-7 flex flex-col gap-3 xs:flex-row xs:flex-wrap sm:mt-9">
+              {banner.ctaPrimary ? (
+                <Button to={banner.ctaPrimary.to} rightIcon={<ArrowRight size={17} />}>
+                  {banner.ctaPrimary.label}
+                </Button>
+              ) : null}
+
+              {secondary ? (
+                <Button to={secondary.to} variant="outline" leftIcon={<VolumeX size={16} />}>
+                  {secondary.label}
+                </Button>
+              ) : null}
             </div>
-            <div>
-              <dd className="font-display text-2xl font-semibold text-dark sm:text-3xl">0 dB</dd>
-              <dt className="mt-1 text-2xs uppercase tracking-[.14em] text-muted">Reports in the range</dt>
-            </div>
-            <div>
-              <dd className="font-display text-2xl font-semibold text-dark sm:text-3xl">15%</dd>
-              <dt className="mt-1 text-2xs uppercase tracking-[.14em] text-muted">Extra off with SILENT15</dt>
-            </div>
-          </dl>
+          </div>
 
-          <div className="mt-8 flex flex-col gap-3 xs:flex-row xs:flex-wrap sm:mt-9">
-            <Button to={banner.ctaPrimary.to} rightIcon={<ArrowRight size={17} />}>
-              {banner.ctaPrimary.label}
-            </Button>
-            <Button to="/combo/silent-celebration-pack" variant="outline" leftIcon={<VolumeX size={16} />}>
-              Silent combo pack
-            </Button>
+          {/* art panel */}
+          <div
+            className="relative min-h-[180px] overflow-hidden sm:min-h-[280px] lg:min-h-full"
+            style={{
+              background: `linear-gradient(140deg, ${banner.accent ?? '#E5B23C'}22, ${
+                banner.accentTo ?? '#FFD56A'
+              }33)`,
+            }}
+          >
+            <div
+              aria-hidden="true"
+              className="absolute inset-0"
+              style={{
+                background:
+                  'radial-gradient(70% 70% at 60% 40%, rgba(255,213,106,.45), transparent 70%)',
+              }}
+            />
+            {[
+              { art: 'sparkler', className: 'left-[8%] top-[12%] h-24 w-24 sm:h-40 sm:w-40', d: 4 },
+              {
+                art: 'flowerpot',
+                className: 'right-[10%] top-[26%] h-20 w-20 sm:h-36 sm:w-36',
+                d: 6.5,
+              },
+              {
+                art: 'kids',
+                className: 'bottom-[8%] left-[22%] h-20 w-20 sm:h-36 sm:w-36',
+                d: 5.5,
+              },
+            ].map((art) => (
+              <div key={art.art} className={`absolute ${art.className}`}>
+                <ArtIcon art={art.art} className="h-full w-full" />
+              </div>
+            ))}
           </div>
         </div>
-
-        {/* art panel */}
-        <div
-          className="relative min-h-[220px] overflow-hidden sm:min-h-[280px] lg:min-h-full"
-          style={{ background: `linear-gradient(140deg, ${banner.accent}22, ${banner.accentTo}33)` }}
-        >
-          <div
-            aria-hidden="true"
-            className="absolute inset-0"
-            style={{
-              background: 'radial-gradient(70% 70% at 60% 40%, rgba(255,213,106,.45), transparent 70%)',
-            }}
-          />
-          {[
-            { type: 'sparkler', variant: 4, className: 'left-[8%] top-[12%] h-32 w-32 sm:h-40 sm:w-40', d: 4 },
-            { type: 'flowerpot', variant: 4, className: 'right-[10%] top-[26%] h-28 w-28 sm:h-36 sm:w-36', d: 6.5 },
-            { type: 'kids', variant: 2, className: 'left-[22%] bottom-[8%] h-28 w-28 sm:h-36 sm:w-36', d: 5.5 },
-          ].map((art, i) => (
-            <div key={i} className={`absolute ${art.className}`}>
-              <CrackerArt type={art.type} variant={art.variant} className="h-full w-full" />
-            </div>
-          ))}
-        </div>
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 export default GreenDiwaliBanner;

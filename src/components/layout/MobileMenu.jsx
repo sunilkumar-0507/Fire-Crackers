@@ -3,7 +3,8 @@ import { createPortal } from 'react-dom';
 import { Link, NavLink } from 'react-router-dom';
 import { ChevronDown, Phone, Search, X } from '@/components/ui/icons';
 import { cn } from '@/utils/cn';
-import { BRAND, NAV_LINKS, SOCIALS } from '@/constants';
+import { BRAND, SOCIALS } from '@/constants';
+import { buildNavLinks } from '@/utils/nav';
 import { categoriesWithCounts } from '@/data';
 import { useUIStore } from '@/store/uiStore';
 import { useLockBodyScroll } from '@/hooks/useLockBodyScroll';
@@ -56,7 +57,7 @@ export const MobileMenu = () => {
           </button>
 
           <ul className="flex flex-col gap-1">
-            {NAV_LINKS.map((link) => {
+            {buildNavLinks().map((link) => {
               const isExpanded = expanded === link.label;
 
               if (!link.children) {

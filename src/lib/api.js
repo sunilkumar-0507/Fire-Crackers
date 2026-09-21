@@ -105,7 +105,62 @@ export const api = {
   /** The whole catalogue in one call — see BootstrapController. */
   bootstrap: (signal) => request('/bootstrap', { signal }),
 
+  /**
+   * The shop's configuration: brand, shipping, coupons, payment methods,
+   * districts, safety rules, popular searches, trust points and the pickup
+   * counter. Everything `src/constants/index.js` seeds and the API owns.
+   */
+  config: (signal) => request('/meta/config', { signal }),
+
+  /**
+   * Prices a basket without placing it.
+   *
+   * Send ids and quantities only — every rupee comes back re-read from the
+   * catalogue, which is what makes this worth a round trip rather than a local
+   * sum: it is the same code that will price the order on submit, so the
+   * checkout can show the figure the customer will actually be charged.
+   * `notices` explains any difference (a line capped to stock, a coupon that
+   * stopped qualifying).
+   */
+  quote: ({ items, coupon = null, fulfilment = 'delivery' }, signal) =>
+    request('/cart/quote', {
+      method: 'POST',
+      body: { items, coupon, fulfilment },
+      signal,
+    }),
+
   placeOrder: (payload) => request('/orders', { method: 'POST', body: payload }),
+
+  /* ------------------------------------------------------------------------ */
+  /* Payment                                                                   */
+  /* ------------------------------------------------------------------------ */
+
+  /**
+   * Whether this shop can take money online at all.
+   *
+   * A deployment with no merchant credentials answers `enabled: false`, and the
+   * checkout simply does not offer the option — which is why the shop works
+   * unchanged with nothing configured.
+   */
+  paymentConfig: (signal) => request('/payments/config', { signal }),
+
+  /**
+   * Opens a payment against an order that has already been placed.
+   *
+   * The order exists first, deliberately: a customer who abandons the payment
+   * page still has a booking the shop can ring them about, rather than the
+   * whole thing disappearing with the tab. The phone number is the access
+   * check, exactly as on the tracking page.
+   */
+  paymentSession: (orderId, phone) =>
+    request('/payments/cashfree/session', { method: 'POST', body: { orderId, phone } }),
+
+  /** Asks the gateway where a payment actually got to, for the return page. */
+  paymentStatus: (orderId, phone, signal) =>
+    request(
+      `/payments/status/${encodeURIComponent(orderId.trim())}?phone=${encodeURIComponent(phone.trim())}`,
+      { signal },
+    ),
 
   /**
    * Looks up an order for the tracking page.

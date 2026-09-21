@@ -31,7 +31,7 @@ export const CategoryStrip = memo(function CategoryStrip() {
               {i > 0 ? <Sparkle /> : null}
               <Link
                 to={`/category/${category.slug}`}
-                className={`whitespace-nowrap font-display text-lg font-semibold italic transition-opacity hover:opacity-80 sm:text-xl ${accent.onDark}`}
+                className={`inline-flex min-h-11 items-center whitespace-nowrap font-display text-lg font-semibold italic transition-opacity hover:opacity-80 sm:text-xl ${accent.onDark}`}
               >
                 {category.name}
               </Link>

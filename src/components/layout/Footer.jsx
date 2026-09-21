@@ -60,7 +60,7 @@ export const Footer = () => (
               <LogoMark size={44} />
               <div className="leading-none">
                 <p className="font-display text-2xl font-semibold text-bg">{BRAND.name}</p>
-                <p className="mt-1.5 text-[10px] font-semibold uppercase tracking-[.22em] text-gold/70">
+                <p className="mt-1.5 text-2xs font-semibold uppercase tracking-[.22em] text-gold/70">
                   {BRAND.tagline}
                 </p>
               </div>
@@ -72,11 +72,11 @@ export const Footer = () => (
             </p>
 
             <div className="mt-7 space-y-3 text-sm">
-              <a href={BRAND.phoneHref} className="flex items-center gap-3 text-bg/85 transition-colors hover:text-gold">
+              <a href={BRAND.phoneHref} className="flex min-h-11 items-center gap-3 text-bg/85 transition-colors hover:text-gold lg:min-h-0">
                 <Phone size={15} className="shrink-0 text-gold/70" />
                 {BRAND.phone}
               </a>
-              <a href={BRAND.emailHref} className="flex items-center gap-3 text-bg/85 transition-colors hover:text-gold">
+              <a href={BRAND.emailHref} className="flex min-h-11 items-center gap-3 text-bg/85 transition-colors hover:text-gold lg:min-h-0">
                 <Mail size={15} className="shrink-0 text-gold/70" />
                 <span className="min-w-0 break-all">{BRAND.email}</span>
               </a>
@@ -98,7 +98,7 @@ export const Footer = () => (
                   <li key={link.label}>
                     <Link
                       to={link.to}
-                      className="group inline-flex items-center gap-2 text-sm text-bg/75 transition-colors duration-300 hover:text-bg"
+                      className="group inline-flex min-h-11 items-center gap-2 text-sm text-bg/75 lg:min-h-0 transition-colors duration-300 hover:text-bg"
                     >
                       <span className="h-px w-0 bg-gold transition-all duration-400 ease-luxe group-hover:w-3" />
                       {link.label}
@@ -137,7 +137,7 @@ export const Footer = () => (
                 href={social.href}
                 target="_blank"
                 rel="noreferrer"
-                className="rounded-full border border-white/10 px-4 py-2 text-2xs font-medium text-bg/75 transition-all duration-300 hover:-translate-y-0.5 hover:border-gold/50 hover:text-gold"
+                className="inline-flex min-h-11 items-center rounded-full border border-white/10 px-4 py-2 text-2xs font-medium text-bg/75 transition-all duration-300 hover:-translate-y-0.5 hover:border-gold/50 hover:text-gold"
               >
                 {social.label}
               </a>

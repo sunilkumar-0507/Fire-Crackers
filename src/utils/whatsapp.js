@@ -22,7 +22,12 @@ import { formatPrice } from '@/utils/format';
 /** `+91 98420 11994` → `919842011994`. WhatsApp wants digits and nothing else. */
 const digitsOf = (value) => (value ?? '').replace(/\D/g, '');
 
-export const WHATSAPP_NUMBER = digitsOf(BRAND.whatsapp);
+/**
+ * Read at call time, never captured at module load: `BRAND` is a live binding
+ * that `GET /api/meta/config` replaces during boot, and a number frozen here
+ * would keep pointing at the seed after the API had said otherwise.
+ */
+export const whatsappNumber = () => digitsOf(BRAND.whatsapp);
 
 /**
  * A `wa.me` link with the message pre-filled.
@@ -32,7 +37,7 @@ export const WHATSAPP_NUMBER = digitsOf(BRAND.whatsapp);
  * of plus signs instead of spaces.
  */
 export const whatsappHref = (message) => {
-  const base = `https://wa.me/${WHATSAPP_NUMBER}`;
+  const base = `https://wa.me/${whatsappNumber()}`;
   return message ? `${base}?text=${encodeURIComponent(message)}` : base;
 };
 

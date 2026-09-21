@@ -7,6 +7,7 @@
  * and then blanks the screen at runtime.
  */
 import { describe, it, expect, beforeAll, afterEach, vi } from 'vitest';
+import { installDomStubs } from './setup/dom';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { act } from 'react';
@@ -80,38 +81,7 @@ const PATHS = [
   '/definitely/not/a/page',
 ];
 
-beforeAll(() => {
-  // Tells React that `act()` is legitimate here rather than a stray call.
-  global.IS_REACT_ACT_ENVIRONMENT = true;
-
-  // jsdom ships none of these; the app guards on them but still calls them.
-  window.matchMedia = (query) => ({
-    matches: false,
-    media: query,
-    addEventListener() {},
-    removeEventListener() {},
-  });
-  window.scrollTo = () => {};
-  Object.defineProperty(window, 'devicePixelRatio', { value: 1, writable: true });
-  HTMLCanvasElement.prototype.getContext = () => ({
-    globalAlpha: 1,
-    fillStyle: '',
-    setTransform() {}, clearRect() {}, beginPath() {}, arc() {}, fill() {},
-    fillRect() {}, drawImage() {}, save() {}, restore() {},
-    createRadialGradient: () => ({ addColorStop() {} }),
-  });
-  global.IntersectionObserver = class {
-    observe() {}
-    unobserve() {}
-    disconnect() {}
-    takeRecords() { return []; }
-  };
-  global.ResizeObserver = class {
-    observe() {}
-    unobserve() {}
-    disconnect() {}
-  };
-});
+beforeAll(installDomStubs);
 
 afterEach(() => {
   vi.restoreAllMocks();
