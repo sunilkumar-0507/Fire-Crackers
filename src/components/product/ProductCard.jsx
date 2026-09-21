@@ -11,7 +11,6 @@ import { useCartStore, selectInCart, selectIsWishlisted } from '@/store/cartStor
 import { useUIStore } from '@/store/uiStore';
 import ProductImage from '@/components/ui/ProductImage';
 import Badge, { StockBadge } from '@/components/ui/Badge';
-import Rating from '@/components/ui/Rating';
 
 /**
  * The catalogue's workhorse card.
@@ -103,7 +102,7 @@ export const ProductCard = memo(function ProductCard({ product, className, compa
             aria-label={wishlisted ? 'Remove from wishlist' : 'Save to wishlist'}
             aria-pressed={wishlisted}
             className={cn(
-              'absolute right-2 top-2 z-10 grid h-10 w-10 place-items-center rounded-full transition-colors duration-200 sm:right-2.5 sm:top-2.5',
+              'absolute right-2 top-2 z-10 grid h-11 w-11 place-items-center rounded-full transition-colors duration-200 sm:right-2.5 sm:top-2.5',
               'active:scale-95',
               wishlisted
                 ? 'bg-berry-500 text-white shadow-soft'
@@ -133,7 +132,7 @@ export const ProductCard = memo(function ProductCard({ product, className, compa
           <button
             type="button"
             onClick={handleQuickView}
-            className="absolute bottom-2.5 right-2.5 z-10 hidden items-center gap-1.5 rounded-full bg-card/95 px-3 py-2 text-xs font-semibold text-ink shadow-soft transition-colors hover:text-primary [@media(pointer:fine)]:inline-flex"
+            className="absolute bottom-2.5 right-2.5 z-10 hidden min-h-11 items-center gap-1.5 rounded-full bg-card/95 px-3 py-2 text-xs font-semibold text-ink shadow-soft transition-colors hover:text-primary [@media(pointer:fine)]:inline-flex"
           >
             <Eye size={14} />
             Quick view
@@ -142,15 +141,15 @@ export const ProductCard = memo(function ProductCard({ product, className, compa
 
         {/* body */}
         <div className="flex flex-1 flex-col gap-2 p-3.5 sm:gap-2.5 sm:p-4">
-          <div className="flex items-center justify-between gap-2">
-            <span className="truncate text-2xs font-semibold uppercase tracking-[.1em] text-primary-700">
-              {product.brand}
-            </span>
-            <Rating value={product.rating} size="xs" showValue={false} className="hidden xs:flex" />
-          </div>
+          <span className="truncate text-2xs font-semibold uppercase tracking-[.1em] text-primary-700">
+            {product.brand}
+          </span>
 
           <h3 className="line-clamp-2 font-display text-[15px] font-semibold leading-snug text-dark sm:text-[17px]">
-            <Link to={`/product/${product.slug}`} className="transition-colors hover:text-primary">
+            <Link
+              to={`/product/${product.slug}`}
+              className="inline-flex min-h-6 items-center transition-colors hover:text-primary"
+            >
               {product.name}
             </Link>
           </h3>

@@ -15,7 +15,16 @@ export default defineConfig({
   // The storefront and the admin talk to the API on a relative `/api` path, so
   // there is no origin to configure and no CORS pre-flight in development. Set
   // VITE_API_URL to point a build at an API on another host.
-  server: { proxy: apiProxy },
+  server: {
+    proxy: apiProxy,
+    watch: {
+      // Visual Studio keeps a live, exclusively-locked index under `.vs/`.
+      // Chokidar tries to watch it, hits EBUSY and takes the dev server down
+      // with an unhandled error, so `npm run dev` fails on any machine where
+      // the solution has been opened in VS. Nothing under these is source.
+      ignored: ['**/.vs/**', '**/dist/**', '**/perf-out/**', '**/api/**/bin/**', '**/api/**/obj/**'],
+    },
+  },
   // `npm run preview` serves the real build, and the real build still asks for
   // a same-origin /api. Without this the previewed shop falls back to its
   // bundled JSON and shows the offline banner — which is not what you are

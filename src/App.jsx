@@ -13,19 +13,26 @@ import router from '@/routes';
  * arrive from a WhatsApp link with a price in mind, a gate that long is the
  * most expensive thing on the page, so the catalogue now paints immediately.
  */
-export const App = ({ offline = false, offlineReason }) => {
+export const App = ({ degraded = false, degradedReason }) => {
   const [dismissed, setDismissed] = useState(false);
 
   return (
     <>
-      {offline && !dismissed ? (
+      {/*
+        Not an offline banner any more. The catalogue is never stale — without
+        it the shop does not mount at all, so if this renders, the prices below
+        are live and only the surrounding settings (delivery copy, payment
+        methods, districts) fell back to their defaults. Worth saying, not
+        worth alarming anyone about.
+      */}
+      {degraded && !dismissed ? (
         <div
           role="status"
-          className="flex items-center justify-center gap-3 bg-amber-100 px-4 py-2 text-center text-xs font-medium text-amber-900"
+          className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 bg-amber-100 px-4 py-2 text-center text-2xs font-medium text-amber-900 sm:text-xs"
         >
           <span>
-            Showing the catalogue this build shipped with — the API is not answering
-            {offlineReason ? ` (${offlineReason})` : ''}. Admin changes will not appear until it is back.
+            Prices are up to date, but some shop settings could not be loaded
+            {degradedReason ? ` (${degradedReason})` : ''}.
           </span>
           <button
             type="button"

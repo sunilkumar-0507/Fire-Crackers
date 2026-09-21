@@ -6,7 +6,6 @@ import OffersSection from '@/components/home/OffersSection';
 import BestSellers from '@/components/home/BestSellers';
 import GreenDiwaliBanner from '@/components/home/GreenDiwaliBanner';
 import ComboPacks from '@/components/home/ComboPacks';
-import Testimonials from '@/components/home/Testimonials';
 import FaqSection from '@/components/home/FaqSection';
 import Newsletter from '@/components/home/Newsletter';
 import DeferredSection from '@/components/ui/DeferredSection';
@@ -43,10 +42,6 @@ export const Home = () => (
 
     <DeferredSection estimatedHeight={1000}>
       <ComboPacks />
-    </DeferredSection>
-
-    <DeferredSection estimatedHeight={700}>
-      <Testimonials />
     </DeferredSection>
 
     <DeferredSection estimatedHeight={900}>

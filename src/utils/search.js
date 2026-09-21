@@ -1,4 +1,4 @@
-import { products, categories } from '@/data';
+import { products, categories, catalogVersion } from '@/data';
 import { availabilityOf, AVAILABILITY } from '@/utils/format';
 
 const normalize = (s) =>
@@ -10,18 +10,35 @@ const normalize = (s) =>
     .trim();
 
 /**
- * Pre-computed haystack per product. Built once at module load so keystroke
- * filtering never re-serialises the catalogue.
+ * Pre-computed haystack per product, so keystroke filtering never
+ * re-serialises the catalogue.
+ *
+ * Built on first use and rebuilt whenever the catalogue changes, rather than
+ * once at module load. Module load is now the one moment the catalogue is
+ * guaranteed to be *empty* — it arrives from the API just afterwards — so an
+ * index built there would stay empty for the life of the page and every search
+ * would return nothing, silently. Keying on `catalogVersion` keeps the "build
+ * it once" property while surviving both the initial hydrate and an admin
+ * refresh.
  */
-const index = products.map((p) => ({
-  product: p,
-  name: normalize(p.name),
-  haystack: normalize(
-    [p.name, p.category, p.brand, p.description, p.tags.join(' '), p.unit].join(' '),
-  ),
-}));
+let index = [];
+let categoryNames = new Map();
+let indexedVersion = -1;
 
-const categoryNames = new Map(categories.map((c) => [c.slug, normalize(c.name)]));
+const ensureIndex = () => {
+  if (indexedVersion === catalogVersion) return;
+
+  index = products.map((p) => ({
+    product: p,
+    name: normalize(p.name),
+    haystack: normalize(
+      [p.name, p.category, p.brand, p.description, (p.tags ?? []).join(' '), p.unit].join(' '),
+    ),
+  }));
+
+  categoryNames = new Map(categories.map((c) => [c.slug, normalize(c.name)]));
+  indexedVersion = catalogVersion;
+};
 
 /**
  * Scored search across the local catalogue. Higher score = better match:
@@ -31,6 +48,8 @@ const categoryNames = new Map(categories.map((c) => [c.slug, normalize(c.name)])
 export const searchProducts = (query, limit = Infinity) => {
   const q = normalize(query);
   if (!q) return [];
+
+  ensureIndex();
 
   const terms = q.split(' ');
 
@@ -56,7 +75,6 @@ export const searchProducts = (query, limit = Infinity) => {
     // Nudge the catalogue's strongest items up when scores tie.
     if (entry.product.bestSeller) score += 6;
     if (entry.product.featured) score += 4;
-    score += entry.product.rating;
 
     scored.push({ product: entry.product, score });
   }
@@ -81,20 +99,18 @@ export const SORT_OPTIONS = [
   { value: 'price-asc', label: 'Price: low to high' },
   { value: 'price-desc', label: 'Price: high to low' },
   { value: 'discount', label: 'Biggest discount' },
-  { value: 'rating', label: 'Top rated' },
   { value: 'newest', label: 'New arrivals' },
 ];
 
 const comparators = {
   'price-asc': (a, b) => a.price - b.price,
   'price-desc': (a, b) => b.price - a.price,
-  discount: (a, b) => b.discount - a.discount || b.rating - a.rating,
-  rating: (a, b) => b.rating - a.rating || b.reviews - a.reviews,
-  newest: (a, b) => Number(b.isNew) - Number(a.isNew) || b.rating - a.rating,
+  discount: (a, b) => b.discount - a.discount || a.price - b.price,
+  newest: (a, b) => Number(b.isNew) - Number(a.isNew) || b.discount - a.discount,
   relevance: (a, b) =>
     Number(b.bestSeller) - Number(a.bestSeller) ||
     Number(b.featured) - Number(a.featured) ||
-    b.rating - a.rating,
+    b.discount - a.discount,
 };
 
 /**
@@ -113,7 +129,6 @@ export const filterProducts = ({
   category = 'all',
   tags = [],
   maxPrice = null,
-  minRating = 0,
   availability = 'all',
   sort = 'relevance',
 } = {}) => {
@@ -122,7 +137,6 @@ export const filterProducts = ({
   if (category && category !== 'all') result = result.filter((p) => p.category === category);
   if (tags.length) result = result.filter((p) => tags.every((t) => p.tags.includes(t)));
   if (maxPrice != null) result = result.filter((p) => p.price <= maxPrice);
-  if (minRating > 0) result = result.filter((p) => p.rating >= minRating);
 
   // One switch rather than a checkbox: "in stock" has to exclude a deactivated
   // line as well as a sold-out one, and the other two states are worth being

@@ -57,7 +57,7 @@ export const Logo = ({ className, compact = false, onClick }) => (
     to="/"
     onClick={onClick}
     aria-label={`${BRAND.name} — home`}
-    className={cn('group inline-flex min-w-0 select-none items-center gap-2 sm:gap-3', className)}
+    className={cn('group inline-flex min-h-11 min-w-0 select-none items-center gap-2 sm:gap-3', className)}
   >
     {/* The mark carries the brand on its own below 420px, where the wordmark
         plus three header controls will not fit on one line. */}
@@ -74,7 +74,7 @@ export const Logo = ({ className, compact = false, onClick }) => (
       <span className="truncate font-display text-[15px] font-semibold tracking-tight text-dark xs:text-[19px] sm:text-[21px]">
         {BRAND.short} <span className="text-primary-700">Crackers</span>
       </span>
-      <span className="mt-1 hidden text-[10px] font-semibold uppercase tracking-[.16em] text-muted xs:block">
+      <span className="mt-1 hidden text-2xs font-semibold uppercase tracking-[.16em] text-muted xs:block">
         {BRAND.tagline}
       </span>
     </span>

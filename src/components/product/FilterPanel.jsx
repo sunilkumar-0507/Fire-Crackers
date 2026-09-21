@@ -1,4 +1,3 @@
-import { Star } from '@/components/ui/icons';
 import { cn } from '@/utils/cn';
 import { categoriesWithCounts, allTags, priceBounds, products } from '@/data';
 import { AVAILABILITY_FILTERS } from '@/utils/search';
@@ -56,7 +55,6 @@ export const FilterPanel = ({ filters, onChange, onReset, resultCount, className
     (filters.category !== 'all' ? 1 : 0) +
     filters.tags.length +
     (filters.maxPrice != null ? 1 : 0) +
-    (filters.minRating > 0 ? 1 : 0) +
     (filters.availability !== 'all' ? 1 : 0);
 
   return (
@@ -157,22 +155,6 @@ export const FilterPanel = ({ filters, onChange, onReset, resultCount, className
               className="!px-3 !py-1.5 !text-xs"
             >
               {TAG_LABELS[tag] ?? tag}
-            </Chip>
-          ))}
-        </div>
-      </Group>
-
-      <Group title="Rating">
-        <div className="flex flex-wrap gap-2">
-          {[0, 4, 4.5, 4.8].map((value) => (
-            <Chip
-              key={value}
-              active={filters.minRating === value}
-              onClick={() => onChange({ minRating: value })}
-              className="!px-3 !py-1.5 !text-xs"
-              icon={value > 0 ? <Star size={11} className="fill-current" /> : null}
-            >
-              {value === 0 ? 'Any' : `${value}+`}
             </Chip>
           ))}
         </div>

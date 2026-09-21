@@ -61,7 +61,7 @@ export const ComboCard = ({ combo, className, showContents = true }) => {
           {combo.badge ? (
             <span
               className={cn(
-                'shrink-0 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-[.12em]',
+                'shrink-0 rounded-full px-3 py-1 text-2xs font-bold uppercase tracking-[.12em]',
                 accent.pill,
               )}
             >
@@ -91,7 +91,7 @@ export const ComboCard = ({ combo, className, showContents = true }) => {
                   type="button"
                   onClick={() => setOpen((v) => !v)}
                   aria-expanded={open}
-                  className="-mb-1 mt-1 flex min-h-10 items-center gap-1.5 py-2 text-[13px] font-semibold text-ink transition-colors hover:text-primary"
+                  className="-mb-1 mt-1 flex min-h-11 items-center gap-1.5 py-2 text-[13px] font-semibold text-ink transition-colors hover:text-primary"
                 >
                   See all {items.length} items
                   <ChevronDown size={13} className={cn(open && 'rotate-180')} />
@@ -121,7 +121,7 @@ export const ComboCard = ({ combo, className, showContents = true }) => {
             <span className="text-sm text-muted line-through">{formatPrice(combo.mrp)}</span>
             <span
               className={cn(
-                'rounded-full px-2 py-0.5 text-[11px] font-bold',
+                'rounded-full px-2 py-0.5 text-2xs font-bold',
                 accent.pill,
               )}
             >

@@ -15,8 +15,6 @@
     "serves": "6–8 people",
     "duration": "About 90 minutes",
     "badge": "Most popular",
-    "rating": 4.8,
-    "reviews": 419,
     "stock": 34,
     "featured": true,
     "includes": [
@@ -79,8 +77,6 @@
     "serves": "4–6 people",
     "duration": "About 60 minutes",
     "badge": "Pet friendly",
-    "rating": 4.9,
-    "reviews": 356,
     "stock": 41,
     "featured": true,
     "includes": [
@@ -133,8 +129,6 @@
     "serves": "3–5 children",
     "duration": "About 45 minutes",
     "badge": "Parent approved",
-    "rating": 4.8,
-    "reviews": 287,
     "stock": 63,
     "featured": true,
     "includes": [
@@ -192,8 +186,6 @@
     "serves": "10–15 people",
     "duration": "About 20 minutes of continuous show",
     "badge": "Choreographed",
-    "rating": 4.9,
-    "reviews": 132,
     "stock": 17,
     "featured": true,
     "includes": [
@@ -251,8 +243,6 @@
     "serves": "2–4 people",
     "duration": "About 30 minutes",
     "badge": "Best value",
-    "rating": 4.6,
-    "reviews": 508,
     "stock": 87,
     "featured": false,
     "includes": [
@@ -305,8 +295,6 @@
     "serves": "25 recipients",
     "duration": "—",
     "badge": "Bulk",
-    "rating": 4.7,
-    "reviews": 74,
     "stock": 12,
     "featured": false,
     "includes": [

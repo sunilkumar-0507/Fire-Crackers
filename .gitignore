@@ -19,6 +19,8 @@ perf-out
 .vscode/*
 !.vscode/extensions.json
 .idea
+# Visual Studio's per-solution cache and file index.
+.vs/
 .DS_Store
 *.suo
 *.ntvs*
@@ -30,4 +32,5 @@ perf-out
 # analytics are a rolling window of counters — neither belongs in git.
 src/data/orders.json
 src/data/analytics.json
+src/data/stock-intake.json
 src/data/*.tmp

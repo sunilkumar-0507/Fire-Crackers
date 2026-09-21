@@ -47,7 +47,7 @@ export const CheckoutStepper = ({ current, furthest, onJump, className }) => (
               >
                 {step.label}
               </span>
-              <span className="mt-0.5 block text-[10px] text-muted">{step.hint}</span>
+              <span className="mt-0.5 block text-2xs text-muted">{step.hint}</span>
             </span>
           </li>
 

@@ -3,7 +3,7 @@ import { ArrowLeft, Home, Search } from '@/components/ui/icons';
 import { categoriesWithCounts } from '@/data';
 import { artForCategory } from '@/utils/image';
 import { useUIStore } from '@/store/uiStore';
-import CrackerArt from '@/components/ui/CrackerArt';
+import ArtIcon from '@/components/ui/ArtIcon';
 import Button from '@/components/ui/Button';
 
 export const NotFound = () => {
@@ -14,7 +14,7 @@ export const NotFound = () => {
     <div className="relative flex min-h-[calc(100svh-var(--header-h))] items-center overflow-hidden py-12 sm:py-16">
       {/* the rocket that went off course */}
       <div aria-hidden="true" className="pointer-events-none absolute left-0 top-0 h-28 w-28">
-        <CrackerArt type="rocket" variant={1} className="h-full w-full" />
+        <ArtIcon art="rocket" className="h-full w-full text-primary" />
         <span
           className="absolute right-full top-1/2 h-1 w-40 -translate-y-1/2 rounded-full"
           style={{ background: 'linear-gradient(90deg, transparent, rgba(255,138,0,.55), rgba(255,213,106,.9))' }}
@@ -30,7 +30,7 @@ export const NotFound = () => {
               style={{ background: 'radial-gradient(closest-side, rgba(255,180,70,.6), transparent 72%)' }}
             />
             <div className="relative h-full w-full">
-              <CrackerArt type="bomb" variant={2} className="h-full w-full" />
+              <ArtIcon art="bomb" className="h-full w-full text-primary-700" />
             </div>
           </div>
 
@@ -77,7 +77,7 @@ export const NotFound = () => {
                     className="grid h-12 w-12 place-items-center rounded-2xl"
                     style={{ background: category.accentSoft }}
                   >
-                    <CrackerArt type={artForCategory(category.slug)} className="h-9 w-9" />
+                    <ArtIcon art={artForCategory(category.slug)} className="h-9 w-9 text-dark" />
                   </span>
                   <span className="text-xs font-semibold text-dark transition-colors group-hover:text-primary">
                     {category.name}

@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useDeferredValue, useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ArrowRight } from '@/components/ui/icons';
+import { ArrowRight, Search, X } from '@/components/ui/icons';
 import { cn } from '@/utils/cn';
 import { categoriesWithCounts, findCategory, products } from '@/data';
 import { filterProducts, SORT_OPTIONS } from '@/utils/search';
@@ -10,7 +10,7 @@ import { accentOf } from '@/constants/accents';
 import PageHeader from '@/components/ui/PageHeader';
 import ProductGrid from '@/components/product/ProductGrid';
 import Section from '@/components/ui/Section';
-import CrackerArt from '@/components/ui/CrackerArt';
+import ArtIcon from '@/components/ui/ArtIcon';
 import EmptyState from '@/components/ui/EmptyState';
 import Button from '@/components/ui/Button';
 
@@ -26,10 +26,15 @@ export const Category = () => {
   const { slug } = useParams();
   const category = findCategory(slug);
   const [sort, setSort] = useState('relevance');
+  const [query, setQuery] = useState('');
+
+  // Deferred so the grid re-rendering behind a fast typist never makes the
+  // field itself feel sticky; `filterProducts` already scores the search.
+  const deferredQuery = useDeferredValue(query);
 
   const items = useMemo(
-    () => (category ? filterProducts({ category: slug, sort }) : []),
-    [category, slug, sort],
+    () => (category ? filterProducts({ category: slug, sort, query: deferredQuery }) : []),
+    [category, slug, sort, deferredQuery],
   );
 
   const others = useMemo(
@@ -40,6 +45,12 @@ export const Category = () => {
   useEffect(() => {
     if (category) analytics.categoryView(category);
   }, [category]);
+
+  // A term typed in one category should not follow you into the next and show
+  // an empty grid for a category that is actually full.
+  useEffect(() => {
+    setQuery('');
+  }, [slug]);
 
   if (!category) {
     return (
@@ -63,7 +74,6 @@ export const Category = () => {
         description={category.description}
         breadcrumbs={[{ label: 'Products', to: '/products' }, { label: category.name }]}
         art={artForCategory(category.slug)}
-        artVariant={2}
         accent={category.accent}
       >
         <div className="flex flex-wrap items-center gap-3">
@@ -79,18 +89,47 @@ export const Category = () => {
       </PageHeader>
 
       <div className="container pb-12 sm:pb-16">
-        <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-3xl border border-line bg-card px-4 py-3.5 shadow-soft sm:mb-7 sm:px-5 sm:py-4">
+        <div className="mb-6 flex flex-col gap-3 rounded-3xl border border-line bg-card px-4 py-3.5 shadow-soft sm:mb-7 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:px-5 sm:py-4">
           <p className="text-sm text-muted">
             <strong className="font-semibold text-dark">{items.length}</strong> product
-            {items.length === 1 ? '' : 's'} in {category.name}
+            {items.length === 1 ? '' : 's'}
+            {query.trim() ? <> matching “{query.trim()}”</> : <> in {category.name}</>}
           </p>
+
+          {/* Searching inside the category rather than across the shop: this
+              page exists because somebody already chose a category, and the
+              navbar's search is there for widening back out. */}
+          <label className="relative flex-1 sm:max-w-xs">
+            <span className="sr-only">Search in {category.name}</span>
+            <Search
+              size={15}
+              className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-muted"
+            />
+            <input
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder={`Search in ${category.name}`}
+              className="min-h-11 w-full rounded-full border border-line bg-card py-2.5 pl-10 pr-9 text-sm text-ink outline-none transition-colors placeholder:text-muted hover:border-secondary-300 focus:border-secondary-400"
+            />
+            {query ? (
+              <button
+                type="button"
+                onClick={() => setQuery('')}
+                aria-label="Clear the search"
+                className="absolute right-2.5 top-1/2 grid h-6 w-6 -translate-y-1/2 place-items-center rounded-full text-muted transition-colors hover:bg-secondary-50 hover:text-ink"
+              >
+                <X size={12} />
+              </button>
+            ) : null}
+          </label>
 
           <label className="flex items-center gap-2 text-sm">
             <span className="hidden text-muted sm:inline">Sort</span>
             <select
               value={sort}
               onChange={(e) => setSort(e.target.value)}
-              className="max-w-[52vw] min-h-10 cursor-pointer truncate rounded-full border border-line bg-card px-3 py-2.5 text-sm font-medium text-ink outline-none transition-colors hover:border-secondary-300 focus:border-secondary-400 sm:max-w-none sm:px-4"
+              className="max-w-[52vw] min-h-11 cursor-pointer truncate rounded-full border border-line bg-card px-3 py-2.5 text-sm font-medium text-ink outline-none transition-colors hover:border-secondary-300 focus:border-secondary-400 sm:max-w-none sm:px-4"
             >
               {SORT_OPTIONS.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -101,12 +140,37 @@ export const Category = () => {
           </label>
         </div>
 
-        <ProductGrid
-          products={items}
-          columns="lg:grid-cols-3 xl:grid-cols-4"
-          paginate
-          pageSize={12}
-        />
+        {items.length === 0 ? (
+          <EmptyState
+            title={query.trim() ? `Nothing in ${category.name} matches “${query.trim()}”` : 'Nothing here yet'}
+            hint={
+              query.trim()
+                ? 'Try a shorter word, or search the whole shop instead.'
+                : 'This category has no products on sale at the moment.'
+            }
+            action={
+              query.trim() ? (
+                <div className="flex flex-wrap justify-center gap-2">
+                  <Button variant="outline" onClick={() => setQuery('')}>
+                    Clear the search
+                  </Button>
+                  <Button to={`/products?q=${encodeURIComponent(query.trim())}`}>
+                    Search all products
+                  </Button>
+                </div>
+              ) : (
+                <Button to="/products">Browse all crackers</Button>
+              )
+            }
+          />
+        ) : (
+          <ProductGrid
+            products={items}
+            columns="lg:grid-cols-3 xl:grid-cols-4"
+            paginate
+            pageSize={12}
+          />
+        )}
       </div>
 
       {/* other categories */}
@@ -134,7 +198,7 @@ export const Category = () => {
                     className="grid h-14 w-14 place-items-center rounded-2xl transition-transform duration-500 ease-luxe group-hover:scale-110 sm:h-16 sm:w-16"
                     style={{ background: other.accentSoft }}
                   >
-                    <CrackerArt type={artForCategory(other.slug)} className="h-10 w-10 sm:h-12 sm:w-12" />
+                    <ArtIcon art={artForCategory(other.slug)} className="h-10 w-10 text-dark sm:h-12 sm:w-12" />
                   </span>
                   <span className="text-xs font-semibold leading-snug text-dark transition-colors group-hover:text-primary">
                     {other.name}

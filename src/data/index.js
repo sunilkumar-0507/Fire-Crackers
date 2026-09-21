@@ -5,35 +5,39 @@
  * reads through the bindings below at render time, synchronously — no awaiting,
  * no loading states scattered through thirty files.
  *
- * That stays true now the data is live. `hydrate()` swaps the whole catalogue in
- * one go, and because these are ES module *live bindings*, every importer sees
- * the new arrays on its next render. `bootstrap()` runs once in main.jsx before
- * React mounts, so the first paint already has real data — the JSON imported
- * below is the seed the app falls back to when the API is unreachable, which is
- * what lets `npm run dev` work on its own with the API stopped.
+ * Everything here starts empty and is filled from the API. There is no bundled
+ * copy of the shop any more: the database is the single source of truth, and a
+ * shop that cannot reach it shows an error rather than a catalogue that might
+ * be months stale. Seeded JSON used to live here as a fallback, which meant a
+ * broken API looked exactly like a working one — same products, same prices,
+ * no way for anyone to tell from the screen that the shop had stopped
+ * answering. Wrong prices are worse than no prices.
+ *
+ * `hydrate()` swaps the whole catalogue in one go, and because these are ES
+ * module *live bindings*, every importer sees the new arrays on its next
+ * render. `bootstrap()` runs once in main.jsx before React mounts, so the first
+ * paint already has real data.
+ *
+ * The JSON files still sitting beside this one are not dead: they are what the
+ * API seeds an empty database from, linked into the API project directly. They
+ * are simply no longer part of the shop's bundle.
  *
  * After an admin save, call `refresh()` to pull the catalogue again.
  */
-import categoriesJson from './categories.json';
-import productsJson from './products.json';
-import offersJson from './offers.json';
-import bannersJson from './banners.json';
-import combosJson from './combos.json';
-import testimonialsJson from './testimonials.json';
-import faqJson from './faq.json';
 import { api } from '@/lib/api';
+import { hydrateConfig, hydrateFulfilment, hydratePayments } from '@/constants';
 
 /* -------------------------------------------------------------------------- */
 /* Live bindings                                                               */
 /* -------------------------------------------------------------------------- */
 
-export let categories = categoriesJson;
-export let products = productsJson;
-export let offers = offersJson;
-export let banners = bannersJson;
-export let combos = combosJson;
-export let testimonials = testimonialsJson;
-export let faqs = faqJson;
+export let categories = [];
+export let products = [];
+export let offers = [];
+export let banners = [];
+export let combos = [];
+export let testimonials = [];
+export let faqs = [];
 
 /**
  * Count and cover photo derived from the catalogue so the three can never
@@ -53,6 +57,9 @@ export let allTags = [];
 
 export let priceBounds = { min: 0, max: 0 };
 
+/** The deepest discount in the catalogue, as a whole percentage. */
+export let deepestDiscount = 0;
+
 /**
  * Bumped on every hydrate. The router keys off it, so a catalogue that changed
  * under a mounted tree forces a clean remount rather than leaving half the page
@@ -60,7 +67,7 @@ export let priceBounds = { min: 0, max: 0 };
  */
 export let catalogVersion = 0;
 
-/** True once the API has answered. False means these are the bundled seeds. */
+/** True once the API has answered with a catalogue. */
 export let live = false;
 
 let bySlug = new Map();
@@ -113,7 +120,7 @@ const recompute = () => {
   featuredOffers = offers.filter((o) => o.featured);
 
   const counts = new Map();
-  for (const p of products) for (const t of p.tags) counts.set(t, (counts.get(t) ?? 0) + 1);
+  for (const p of products) for (const t of p.tags ?? []) counts.set(t, (counts.get(t) ?? 0) + 1);
   allTags = [...counts.entries()]
     .map(([tag, count]) => ({ tag, count }))
     .sort((a, b) => b.count - a.count);
@@ -124,43 +131,85 @@ const recompute = () => {
   );
   if (!Number.isFinite(priceBounds.min)) priceBounds = { min: 0, max: 0 };
 
+  // Recomputed here rather than at module load, which is when it used to be
+  // read off the bundled seed. With nothing bundled, a module-level constant
+  // would be a permanent zero.
+  deepestDiscount = products.reduce((best, p) => Math.max(best, p.discount ?? 0), 0);
+
   catalogVersion += 1;
 };
 
 /**
- * Replaces the catalogue with a bootstrap payload. Each list is only taken if
- * the API actually sent one, so a partial response degrades to the seed for the
- * missing part rather than blanking a section of the shop.
+ * Replaces the catalogue with a bootstrap payload.
+ *
+ * A list is taken whenever the API sent one, **including an empty one** — an
+ * empty array is an answer ("this shop has no combos"), and treating it as a
+ * missing field is how a section keeps showing rows the shopkeeper has
+ * deleted. Only an absent key leaves the current list alone.
  */
 export const hydrate = (payload) => {
   if (!payload) return;
 
-  if (payload.products?.length) products = payload.products;
-  if (payload.categories?.length) categories = payload.categories;
-  if (payload.combos?.length) combos = payload.combos;
-  if (payload.offers?.length) offers = payload.offers;
-  if (payload.banners?.length) banners = payload.banners;
-  if (payload.testimonials?.length) testimonials = payload.testimonials;
-  if (payload.faqs?.length) faqs = payload.faqs;
+  if (payload.products) products = payload.products;
+  if (payload.categories) categories = payload.categories;
+  if (payload.combos) combos = payload.combos;
+  if (payload.offers) offers = payload.offers;
+  if (payload.banners) banners = payload.banners;
+  if (payload.testimonials) testimonials = payload.testimonials;
+  if (payload.faqs) faqs = payload.faqs;
 
   recompute();
 };
 
 /**
- * Called once before React mounts. A failure is not fatal: the bundled JSON is
- * a complete catalogue, so the shop still works — it just will not show an
- * admin edit until the API is back. The reason is returned so the app can say so.
+ * Called once before React mounts.
+ *
+ * Four calls, not one. The catalogue, the shop's configuration (brand,
+ * shipping, coupon codes, districts, payment methods), the fulfilment copy and
+ * whether online payment is available are separate endpoints, and they are
+ * fetched together so the first paint has all four.
+ *
+ * The catalogue is the one that decides whether the shop can open at all: with
+ * no products there is nothing to sell, so a failure there is reported as fatal
+ * and main.jsx shows an error screen instead of mounting an empty shop. The
+ * other three have sensible defaults built in and only downgrade the page.
  */
 export const bootstrap = async () => {
-  try {
-    hydrate(await api.bootstrap());
-    live = true;
-    return { live: true };
-  } catch (error) {
-    recompute();
-    live = false;
-    return { live: false, reason: error.message };
+  const [catalogue, config, fulfilment, payments] = await Promise.allSettled([
+    api.bootstrap(),
+    api.config(),
+    api.fulfilment(),
+    api.paymentConfig(),
+  ]);
+
+  if (config.status === 'fulfilled') hydrateConfig(config.value);
+  if (fulfilment.status === 'fulfilled') hydrateFulfilment(fulfilment.value);
+  if (payments.status === 'fulfilled') hydratePayments(payments.value);
+
+  if (catalogue.status === 'rejected') {
+    return { live: false, fatal: true, reason: catalogue.reason?.message };
   }
+
+  hydrate(catalogue.value);
+  live = true;
+
+  // The shop reached the API and the API said it has nothing. That is a real
+  // answer, and it is still not a shop — an empty grid with a working search
+  // box reads as a bug to a customer and hides a genuine problem from the
+  // shopkeeper, so it gets the same screen as an unreachable API.
+  if (!products.length) {
+    return {
+      live: true,
+      fatal: true,
+      reason: 'The catalogue came back empty. The database has no products in it yet.',
+    };
+  }
+
+  const degraded = [config, fulfilment, payments].find((r) => r.status === 'rejected');
+
+  return degraded
+    ? { live: true, fatal: false, reason: degraded.reason?.message }
+    : { live: true, fatal: false };
 };
 
 /** Pulls the catalogue again — what an admin save calls when it has changed something. */
@@ -168,6 +217,3 @@ export const refresh = async () => {
   hydrate(await api.bootstrap());
   live = true;
 };
-
-// Derive once at module load so the seed is usable before bootstrap resolves.
-recompute();

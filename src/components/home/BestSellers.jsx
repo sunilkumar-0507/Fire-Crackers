@@ -1,6 +1,6 @@
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { A11y, FreeMode, Navigation, Pagination } from 'swiper/modules';
+import { A11y, Autoplay, FreeMode, Navigation, Pagination } from 'swiper/modules';
 import { ChevronLeft, ChevronRight, Flame } from '@/components/ui/icons';
 import { bestSellers } from '@/data';
 import Section, { SectionHeading } from '@/components/ui/Section';
@@ -13,12 +13,31 @@ import 'swiper/css/free-mode';
 /**
  * Best sellers carousel.
  *
- * It advances only when you do — by swipe, by arrow or by dot. It used to
- * autoplay every 3.2 seconds, which moved the row you were reading.
+ * It advances on its own every four seconds, and you can also swipe it, drag
+ * it, or use the arrows and dots.
+ *
+ * Autoplay that cannot be escaped is the failure mode here — a row that moves
+ * while you are reading it. So it pauses on hover and on keyboard focus,
+ * `disableOnInteraction: false` lets it resume after you have finished rather
+ * than dying at the first touch, and anyone who has asked their system for
+ * reduced motion never gets it started at all.
  */
+
 export const BestSellers = () => {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
+  const [autoplay, setAutoplay] = useState(false);
+
+  // Read in an effect, not at module scope: the preference can change while the
+  // page is open, and a module-level read would also run during SSR.
+  useEffect(() => {
+    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const apply = () => setAutoplay(!media.matches);
+
+    apply();
+    media.addEventListener('change', apply);
+    return () => media.removeEventListener('change', apply);
+  }, []);
 
   return (
     <Section id="best-sellers" className="overflow-hidden">
@@ -54,15 +73,37 @@ export const BestSellers = () => {
       </div>
 
       {/* Full-bleed track so slides can run off the right edge of the viewport. */}
-      <div className="container">
+      <div
+        className="container"
+        onFocusCapture={(e) => e.currentTarget.swiper?.autoplay?.stop()}
+        onBlurCapture={(e) => {
+          // Only resume once focus has actually left the carousel, not while it
+          // is moving between two cards inside it.
+          if (!e.currentTarget.contains(e.relatedTarget)) e.currentTarget.swiper?.autoplay?.start();
+        }}
+      >
         <Swiper
-          modules={[Navigation, Pagination, FreeMode, A11y]}
+          onSwiper={(swiper) => {
+            // Hang the instance off the container so the focus handlers above
+            // can reach it without another ref and another closure.
+            if (swiper.el?.parentElement) swiper.el.parentElement.swiper = swiper;
+          }}
+          modules={[Navigation, Pagination, FreeMode, Autoplay, A11y]}
           spaceBetween={20}
           slidesPerView={1.15}
           grabCursor
           watchSlidesProgress
           speed={400}
           loop={bestSellers.length > 4}
+          autoplay={
+            autoplay && {
+              delay: 4000,
+              // Keep advancing after a swipe rather than stopping for good.
+              disableOnInteraction: false,
+              pauseOnMouseEnter: true,
+            }
+          }
+
           pagination={{ clickable: true, el: '.bestseller-dots' }}
           onBeforeInit={(swiper) => {
             // Refs are not populated when Swiper reads its params, so wire the

@@ -34,7 +34,6 @@ export const Combos = () => {
         description="Each one is built from what families actually run out of first — heavy on fountains and sparklers, light on the things that end up unlit in the carton on the 3rd of November."
         breadcrumbs={[{ label: 'Combo packs' }]}
         art="giftbox"
-        artVariant={1}
         accent="#A6357A"
       >
         <div className="flex flex-wrap gap-2">

@@ -4,7 +4,6 @@ import { Check, Copy, Sparkles } from '@/components/ui/icons';
 import { cn } from '@/utils/cn';
 import { accentOf } from '@/constants/accents';
 import { formatPrice, resolveDeadline } from '@/utils/format';
-import CrackerArt from '@/components/ui/CrackerArt';
 import ArtIcon from '@/components/ui/ArtIcon';
 import Countdown from './Countdown';
 
@@ -55,7 +54,7 @@ export const OfferCard = ({ offer, featured = false, className }) => {
           featured ? '-bottom-8 -left-8 h-52 w-52 opacity-25' : '-bottom-10 -right-6 h-40 w-40 opacity-[.14]',
         )}
       >
-        <CrackerArt type={offer.art} variant={featured ? 4 : 1} className="h-full w-full" />
+        <ArtIcon art={offer.art} className="h-full w-full" />
       </div>
 
       <div className="relative flex flex-1 flex-col">
@@ -72,7 +71,7 @@ export const OfferCard = ({ offer, featured = false, className }) => {
 
           <span
             className={cn(
-              'shrink-0 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-[.12em]',
+              'shrink-0 rounded-full px-3 py-1 text-2xs font-bold uppercase tracking-[.12em]',
               featured ? 'bg-white/12 text-gold' : accent.pill,
             )}
           >
@@ -113,7 +112,7 @@ export const OfferCard = ({ offer, featured = false, className }) => {
           <div>
             <p
               className={cn(
-                'mb-2 text-[10px] font-semibold uppercase tracking-[.18em]',
+                'mb-2 text-2xs font-semibold uppercase tracking-[.18em]',
                 featured ? 'text-bg/55' : 'text-muted',
               )}
             >

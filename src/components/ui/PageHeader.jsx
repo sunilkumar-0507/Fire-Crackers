@@ -2,7 +2,7 @@ import { Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronRight } from '@/components/ui/icons';
 import { cn } from '@/utils/cn';
-import CrackerArt from '@/components/ui/CrackerArt';
+import ArtIcon from '@/components/ui/ArtIcon';
 
 /** Breadcrumb + title block that opens every inner page. */
 export const PageHeader = ({
@@ -11,7 +11,6 @@ export const PageHeader = ({
   description,
   breadcrumbs = [],
   art,
-  artVariant = 1,
   accent = '#FF8A00',
   children,
   className,
@@ -28,7 +27,7 @@ export const PageHeader = ({
         />
         <div className="absolute right-[8%] top-1/2 h-40 w-40 -translate-y-1/2 opacity-70 sm:h-56 sm:w-56">
           <div className="h-full w-full">
-            <CrackerArt type={art} variant={artVariant} className="h-full w-full" />
+            <ArtIcon art={art} className="h-full w-full" />
           </div>
         </div>
       </div>
@@ -40,7 +39,7 @@ export const PageHeader = ({
           <nav aria-label="Breadcrumb" className="mb-5">
             <ol className="flex flex-wrap items-center gap-1.5 text-2xs text-muted">
               <li>
-                <Link to="/" className="transition-colors hover:text-primary">
+                <Link to="/" className="inline-flex min-h-6 items-center transition-colors hover:text-primary">
                   Home
                 </Link>
               </li>
@@ -51,7 +50,7 @@ export const PageHeader = ({
                   </li>
                   <li>
                     {crumb.to && i < breadcrumbs.length - 1 ? (
-                      <Link to={crumb.to} className="transition-colors hover:text-primary">
+                      <Link to={crumb.to} className="inline-flex min-h-6 items-center transition-colors hover:text-primary">
                         {crumb.label}
                       </Link>
                     ) : (

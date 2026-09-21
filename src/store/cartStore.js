@@ -131,8 +131,13 @@ export const selectTotals = (s) => {
   const mrpTotal = selectMrpTotal(s);
   const catalogueSavings = mrpTotal - subtotal;
 
+  // A coupon of type `shipping` (FREESHIP) buys free delivery rather than money
+  // off the goods, so it is worth nothing here and waives the fee below.
+  const qualifies = s.coupon && subtotal >= s.coupon.minOrder;
+  const freeDelivery = Boolean(qualifies && s.coupon.type === 'shipping');
+
   let couponDiscount = 0;
-  if (s.coupon && subtotal >= s.coupon.minOrder) {
+  if (qualifies && !freeDelivery) {
     couponDiscount =
       s.coupon.type === 'percentage'
         ? Math.round((subtotal * s.coupon.value) / 100)
@@ -140,7 +145,8 @@ export const selectTotals = (s) => {
   }
 
   const afterCoupon = subtotal - couponDiscount;
-  const shipping = afterCoupon === 0 || afterCoupon >= SHIPPING.freeAbove ? 0 : SHIPPING.localFee;
+  const shipping =
+    freeDelivery || afterCoupon === 0 || afterCoupon >= SHIPPING.freeAbove ? 0 : SHIPPING.localFee;
   const total = afterCoupon + shipping;
 
   return {
@@ -151,7 +157,7 @@ export const selectTotals = (s) => {
     shipping,
     total,
     totalSavings: catalogueSavings + couponDiscount,
-    freeShippingGap: Math.max(0, SHIPPING.freeAbove - afterCoupon),
+    freeShippingGap: freeDelivery ? 0 : Math.max(0, SHIPPING.freeAbove - afterCoupon),
     count: selectCount(s),
   };
 };
