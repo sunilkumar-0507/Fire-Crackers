@@ -27,7 +27,7 @@ const NotFound = lazy(() => import('@/pages/NotFound'));
 
 /*
  * The admin used to live here, at /admin, lazily loaded out of this same
- * bundle. It is now its own Vite application in `admin/`, on its own port,
+ * bundle. It is now its own Vite application in its own repository, on its own port,
  * talking to the same API — so there is nothing admin-shaped left in the
  * storefront's build graph at all, rather than a chunk a shopper merely never
  * happens to request.

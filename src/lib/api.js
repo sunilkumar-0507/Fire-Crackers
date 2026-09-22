@@ -6,7 +6,7 @@
  * talks in plain objects and never touches `fetch` directly.
  *
  * There is deliberately nothing admin-shaped in here. The admin is its own
- * application in `admin/` with its own client and its own passcode handling,
+ * application, in its own repository, with its own client and passcode handling,
  * so the shop's bundle cannot ship the admin's credentials handling even by
  * accident, and a shopper never downloads a byte of it.
  *

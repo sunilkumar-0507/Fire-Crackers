@@ -5,7 +5,7 @@ Three projects that meet at one REST API:
 | Project | What it is | Port |
 | --- | --- | --- |
 | `src/` | The public storefront. React 19 + Vite. | 5173 |
-| `admin/` | The shop admin. **Its own Vite application**, its own build. | 5174 |
+| [Fire-Cracker-Admin-](https://github.com/sunilkumar-0507/Fire-Cracker-Admin-) | The shop admin. Its own repository now. | 5174 |
 | `api/` | ASP.NET Core 10. The only thing the other two share. | 5080 |
 
 The catalogue is the real 2026 price list — 177 products across 12 categories,
@@ -13,14 +13,11 @@ imported from `price_list_2k26_final_40pct_only.xlsx`.
 
 ```bash
 npm install                     # the storefront
-npm install --prefix admin      # the admin
 
 npm run api                     # :5080 — the API, run this first
 npm run dev                     # :5173 — the shop
-npm run admin                   # :5174 — the admin
 
 npm run build                   # storefront bundle
-npm run build:admin             # admin bundle
 npm test                        # 58 storefront tests
 npm run test:api                # 187 API tests
 npm run lint                    # oxlint, both projects
@@ -50,11 +47,18 @@ It is now a wholly separate application, and the separation buys three things:
 
 They share exactly two things, both deliberate: the REST API, and the product
 photography in `src/assets` (one library, globbed by both — see
-`admin/src/utils/productPhotos.js`).
+`src/utils/productPhotos.js` in the admin repository, which keeps its own copy).
 
 ### Admin passcode
 
-`gopi-2026`, from `Storefront:Admin:Passcode` in `api/GopiCrackers.Api/appsettings.json`.
+`Storefront:Admin:Passcode`. **It ships blank**, so a deployment that never sets
+it answers every `/api/admin/*` call with a 503 saying exactly that, rather than
+leaving the admin quietly open.
+
+| Where | Value |
+| --- | --- |
+| Local `npm run api` | `gopi-demo-2026`, from `appsettings.Development.json`. |
+| Production | Set `Storefront__Admin__Passcode` on the API host — never in `appsettings.json`, which is committed. See `api/DEPLOYMENT.md`. |
 
 One shared passcode, sent in plain text on every request, with no accounts, no
 sessions, no audit trail and no rate limiting. It keeps the admin out of casual
@@ -80,10 +84,10 @@ each one lives.
 | 7 | WhatsApp order / enquiry | `utils/whatsapp.js` — floating button, per-product, whole basket, confirmation |
 | 8 | Delivery / pickup | Checkout step 2; `Fulfilment` in the API, which also drops the delivery fee |
 | 9 | Order status | Pending → Confirmed → Processing → Ready → Completed, plus `/track` |
-| 10 | Admin product management | `admin/src/pages/Products.jsx`, including activate / deactivate |
-| 11 | Admin order management | `admin/src/pages/Orders.jsx` and `Enquiries.jsx` |
+| 10 | Admin product management | the admin repo's `src/pages/Products.jsx`, including activate / deactivate |
+| 11 | Admin order management | the admin repo's `src/pages/Orders.jsx` and `Enquiries.jsx` |
 | 12 | Customer notification | Confirmation screen + WhatsApp; `Services/Notifications.cs` for email |
-| 13 | Analytics | `lib/analytics.js` → `AnalyticsStore` → `admin/src/pages/Analytics.jsx` |
+| 13 | Analytics | `lib/analytics.js` → `AnalyticsStore` → the admin repo's `src/pages/Analytics.jsx` |
 | 14 | Policy / information | `constants/policies.js`, rendered at `/policies/:slug` |
 
 ### Three rules these share

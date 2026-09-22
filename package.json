@@ -5,11 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "admin": "npm run dev --prefix admin",
     "api": "dotnet run --project api/GopiCrackers.Api",
     "build": "vite build",
-    "build:admin": "npm run build --prefix admin",
-    "lint": "oxlint && npm run lint --prefix admin",
+    "lint": "oxlint",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:api": "dotnet test api/GopiCrackers.Api.Tests",
