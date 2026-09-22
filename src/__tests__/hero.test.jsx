@@ -7,10 +7,17 @@
  * redesign too: the picture is decoration, it is the page's largest paint, and
  * the copy beside it does not depend on it.
  *
- * The motion cases exist because the three animations are deliberately split
- * across three elements. Two `transform` animations on one element silently
- * fight, and the symptom — a drifting image that never rises into place, or a
- * glow that loses its centring — is the sort of thing that survives review.
+ * The motion cases exist because the three CSS animations are deliberately
+ * split across three elements. Two `transform` animations on one element
+ * silently fight, and the symptom — a drifting image that never rises into
+ * place, or a glow that loses its centring — is the sort of thing that
+ * survives review.
+ *
+ * The fireworks case is the one with teeth. Every other animation on this page
+ * is CSS, and the `prefers-reduced-motion` block at the end of globals.css
+ * switches all of them off on its own. It cannot touch a
+ * `requestAnimationFrame` loop, so the canvas has to be left unmounted
+ * instead — and nothing about the markup would tell you that had regressed.
  */
 import { describe, it, expect, beforeAll, afterEach } from 'vitest';
 import { createRoot } from 'react-dom/client';
@@ -24,7 +31,24 @@ import categories from '@/data/categories.json';
 
 import Hero from '@/components/home/Hero';
 
-beforeAll(installDomStubs);
+let reduceMotion = false;
+
+beforeAll(() => {
+  installDomStubs();
+
+  // installDomStubs answers `false` to everything; the hero branches on this
+  // one query, so it needs a handle on it.
+  window.matchMedia = (query) => ({
+    matches: query.includes('prefers-reduced-motion') ? reduceMotion : false,
+    media: query,
+    addEventListener() {},
+    removeEventListener() {},
+  });
+});
+
+afterEach(() => {
+  reduceMotion = false;
+});
 
 const hosts = [];
 
@@ -93,6 +117,32 @@ describe('the hero', () => {
     expect(rise).not.toBe(float);
     expect(float).not.toBe(glow);
     expect(rise).not.toBe(glow);
+  });
+
+  it('sets fireworks off behind the picture', async () => {
+    hydrate({ products, categories });
+    const host = await render();
+
+    const canvas = host.querySelector('canvas');
+    expect(canvas).not.toBeNull();
+
+    // Decoration, and masked off the headline rather than spread over it.
+    expect(canvas.closest('[aria-hidden="true"]')).not.toBeNull();
+    expect(host.querySelector('.mask-hero-fx')).not.toBeNull();
+  });
+
+  it('leaves the canvas unmounted when reduced motion is asked for', async () => {
+    reduceMotion = true;
+    hydrate({ products, categories });
+    const host = await render();
+
+    // Not "hidden" and not "paused" — absent. A canvas that mounts has already
+    // started its loop, and the CSS that stops the other animations on this
+    // page has no reach into it.
+    expect(host.querySelector('canvas')).toBeNull();
+
+    // The still image stays; the setting is about motion, not about pictures.
+    expect(host.querySelector('img')).not.toBeNull();
   });
 
   it('does not depend on the catalogue for its picture', async () => {

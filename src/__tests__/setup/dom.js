@@ -3,12 +3,15 @@
  *
  * Extracted from the mount smoke test so a second suite can mount the same
  * pages without a second copy of all this drifting out of step with the first.
- * Every stub here earned its place by breaking a render: IntersectionObserver
- * because the seven sections below the fold never mount without it, and
- * ResizeObserver because the carousels measure themselves on mount.
+ * Every stub here earned its place by breaking a render: the 2D context for
+ * the hero's fireworks, ResizeObserver because that canvas re-measures itself,
+ * and IntersectionObserver because the seven sections below the fold never
+ * mount without it — and because the fireworks use one to stop drawing once
+ * the hero has scrolled away.
  *
- * The 2D canvas context that used to head this list went out with the hero's
- * fireworks — the shop no longer draws to a canvas anywhere.
+ * The canvas stub is deliberately complete. A partial one is worse than none:
+ * anything reaching for a stroke or a composite mode throws on the first
+ * paint, which is how this list got long in the first place.
  *
  * Idempotent, so calling it from several `beforeAll` hooks is safe.
  */
@@ -24,6 +27,25 @@ export const installDomStubs = () => {
   });
 
   window.scrollTo = () => {};
+  Object.defineProperty(window, 'devicePixelRatio', { value: 1, writable: true });
+
+  HTMLCanvasElement.prototype.getContext = () => ({
+    globalAlpha: 1,
+    globalCompositeOperation: 'source-over',
+    fillStyle: '',
+    strokeStyle: '',
+    lineWidth: 1,
+    lineCap: 'butt',
+    shadowBlur: 0,
+    shadowColor: '',
+    setTransform() {}, scale() {}, translate() {},
+    clearRect() {}, fillRect() {},
+    beginPath() {}, closePath() {}, arc() {}, moveTo() {}, lineTo() {},
+    fill() {}, stroke() {},
+    drawImage() {}, save() {}, restore() {},
+    createRadialGradient: () => ({ addColorStop() {} }),
+    createLinearGradient: () => ({ addColorStop() {} }),
+  });
 
   window.requestAnimationFrame =
     window.requestAnimationFrame ?? ((cb) => setTimeout(() => cb(0), 0));

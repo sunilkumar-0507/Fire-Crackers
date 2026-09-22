@@ -264,6 +264,21 @@
     -webkit-mask-image: linear-gradient(180deg, #000 55%, transparent);
     mask-image: linear-gradient(180deg, #000 55%, transparent);
   }
+  /*
+    The hero's firework layer.
+
+    A page-wide version of that canvas was removed once for a good reason:
+    body copy on a moving coloured field. This one is sized to the still-life
+    instead of to the section, which is the one region of the hero with no text
+    and no controls in it at any width — so the mask only has to soften its
+    edges, not aim it. Aiming it was the first attempt, and it does not
+    survive the hero reflowing: shells burst in the top half of whatever box
+    they are given, and below lg that box's top half is where the copy is.
+  */
+  .mask-hero-fx {
+    -webkit-mask-image: radial-gradient(72% 68% at 50% 44%, #000 58%, transparent 88%);
+    mask-image: radial-gradient(72% 68% at 50% 44%, #000 58%, transparent 88%);
+  }
   .gpu {
     transform: translateZ(0);
     backface-visibility: hidden;
