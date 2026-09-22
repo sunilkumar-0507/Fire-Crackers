@@ -1,240 +1,174 @@
-import { useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ArrowRight, Flame, Phone, Search } from '@/components/ui/icons';
-import { cn } from '@/utils/cn';
-import { BRAND, POPULAR_SEARCHES } from '@/constants';
-import { ACCENT_KEYS, accentOf } from '@/constants/accents';
-import { products, categoriesWithCounts, priceBounds, deepestDiscount } from '@/data';
-import { searchProducts } from '@/utils/search';
-import { formatPrice } from '@/utils/format';
-import { usePrefersReducedMotion } from '@/hooks/useMediaQuery';
-import Fireworks from '@/components/fx/Fireworks';
-import HeroAura from '@/components/home/HeroAura';
+import { useMemo } from 'react';
+import { Link } from 'react-router-dom';
+import { ArrowRight, Phone } from '@/components/ui/icons';
+import { BRAND } from '@/constants';
+import { products, featuredProducts, bestSellers, categoriesWithCounts } from '@/data';
+import { primaryImage } from '@/utils/image';
 import Button from '@/components/ui/Button';
-import Chip from '@/components/ui/Chip';
 
 /**
  * Landing hero.
  *
- * Left-aligned rather than centred: the headline, the sub-line and the buttons
- * now share one left edge with the section headings further down the page, so
- * the eye tracks straight from the proposition into the shelves.
+ * Copy on the left, the actual product photography on the right.
  *
- * The confetti behind it is a fixed list of positions, not a generator, so the
- * same dots land in the same places on every render. They twinkle in place —
- * opacity only, never moving — which reads as depth rather than as motion.
+ * What used to sit in that right column was a fireworks canvas, a breathing
+ * glow and three catalogue glyphs drifting on separate cycles — a generated
+ * picture of a firework shop rather than a picture of this one. It is gone.
+ * The column now shows boxes we photographed and sell, which is both the
+ * honest thing to put at the top of a shop and the thing a visitor is
+ * actually deciding between.
  *
- * The decorative column on the right lives in `HeroAura`.
+ * The tiles are chosen from live catalogue data, not hard-coded, so the hero
+ * can never front a product that has been taken off the shelf — the same rule
+ * the category covers follow. Only products whose photo we genuinely ship are
+ * eligible: a tile that fell back to an icon would put exactly the kind of
+ * stand-in art back on the page that this section exists to keep off it.
  */
 
-/* Scattered by hand: x%, y%, px size, tone index. */
-const CONFETTI = [
-  [4, 18, 5, 3], [11, 62, 4, 2], [7, 88, 6, 0], [18, 8, 4, 4],
-  [23, 41, 5, 1], [16, 33, 3, 0], [31, 76, 4, 3], [37, 14, 5, 2],
-  [44, 92, 4, 1], [52, 6, 6, 4], [58, 55, 4, 0], [63, 24, 5, 3],
-  [69, 81, 4, 2], [74, 12, 5, 1], [81, 47, 4, 4], [86, 70, 6, 0],
-  [91, 29, 4, 3], [96, 58, 5, 2],
-];
+/** How many photographs the composition holds. */
+const TILE_COUNT = 3;
 
-const Confetti = ({ still = false }) => (
-  <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
-    {CONFETTI.map(([x, y, size, tone], i) => (
-      <span
-        key={`${x}-${y}`}
-        className={`absolute rounded-full ${still ? '' : 'animate-twinkle'}`}
-        style={{
-          left: `${x}%`,
-          top: `${y}%`,
-          width: size,
-          height: size,
-          background: accentOf(ACCENT_KEYS[tone]).hex,
-          opacity: 0.55,
-          // Staggered off the index so no two neighbours pulse together and
-          // the field never flashes as one.
-          animationDelay: still ? undefined : `${(i % 7) * 0.55}s`,
-          animationDuration: still ? undefined : `${4 + (i % 4)}s`,
-        }}
-      />
-    ))}
-  </div>
+/**
+ * The first `TILE_COUNT` products with real photography, preferring the ones
+ * the shop already promotes. Deduped by image, so a repeated pack shot cannot
+ * fill two of the three frames.
+ */
+const pickTiles = () => {
+  const seen = new Set();
+  const tiles = [];
+
+  for (const item of [...featuredProducts, ...bestSellers, ...products]) {
+    if (tiles.length === TILE_COUNT) break;
+
+    const image = primaryImage(item);
+    if (image.kind !== 'url' || seen.has(image.src)) continue;
+
+    seen.add(image.src);
+    tiles.push({ slug: item.slug, name: item.name, src: image.src });
+  }
+
+  return tiles;
+};
+
+/**
+ * One framed pack shot.
+ *
+ * The photographs are catalogue shots on white at around 240px, so they are
+ * contained rather than cropped — scaling one up to fill a bleed would show
+ * every artefact in it. The frame is white rather than the page's cream `card`
+ * for the same reason the tiles are contained: on cream, each shot's own white
+ * background read as a second, paler rectangle floating inside the border.
+ *
+ * `eager` on the first tile only: it is the one that lands inside the fold.
+ */
+const PhotoTile = ({ tile, className, eager = false }) => (
+  <Link
+    to={`/product/${tile.slug}`}
+    className={`group relative overflow-hidden rounded-3xl border border-line bg-white p-2.5 shadow-card sm:p-3 transition-colors hover:border-primary-200 focus-visible:border-primary ${className}`}
+  >
+    <img
+      src={tile.src}
+      alt={tile.name}
+      loading={eager ? 'eager' : 'lazy'}
+      fetchPriority={eager ? 'high' : undefined}
+      decoding="async"
+      className="h-full w-full object-contain"
+    />
+    <span className="sr-only">{tile.name}</span>
+  </Link>
 );
 
 export const Hero = () => {
-  const navigate = useNavigate();
-  const [query, setQuery] = useState('');
-
-  // Fireworks are the one thing on this page that genuinely should not run for
-  // somebody who has asked their system for less motion. They fall back to the
-  // static glyphs that stood here before.
-  const stillness = usePrefersReducedMotion();
-
-  // Live count under the input — reassurance that typing is doing something.
-  const liveCount = useMemo(
-    () => (query.trim().length > 1 ? searchProducts(query).length : null),
-    [query],
-  );
-
-  const submit = (event) => {
-    event?.preventDefault();
-    const term = query.trim();
-    navigate(term ? `/products?q=${encodeURIComponent(term)}` : '/products');
-  };
+  const tiles = useMemo(pickTiles, []);
 
   return (
     <section className="relative overflow-hidden pb-12 pt-10 sm:pb-16 sm:pt-14">
-      <Confetti still={stillness} />
-
-      {/*
-        The decorative side of the hero: the fireworks canvas with the drifting
-        art, the glow and the embers layered over it.
-
-        Two things keep all of it off the copy at every width, without a
-        breakpoint per element. The box is right-anchored and never wider than
-        roughly half, so it does not reach the text column's left edge. And the
-        mask fades it towards the bottom-left — the corner the headline and the
-        search bar grow into — so the busiest part is always the empty
-        top-right, whatever the viewport does to the layout underneath.
-
-        Both motion states render the same box now. Asking for reduced motion
-        used to swap in a different, `lg`-only composition, which meant a
-        visitor on a phone with that setting on got a completely bare hero.
-        They get the same picture as everyone else; it simply holds still.
-      */}
+      {/* The only decoration left: one soft, static warm wash in the corner
+          the photographs sit in. Pure CSS, no canvas, nothing that moves, so
+          there is nothing here to turn off for reduced motion. */}
       <div
         aria-hidden="true"
-        className={cn(
-          'pointer-events-none absolute right-0 top-0',
-          // Phone: the copy runs the full width, so there is no free column to
-          // sit in. It sits behind the headline band instead — large, dark
-          // display type with contrast to spare — and stops above the body
-          // paragraph, which is the text that would actually suffer. A fixed
-          // height rather than a percentage, so that holds on every handset
-          // instead of only the one it was measured against.
-          'h-52 w-[72%] opacity-75',
-          // From `sm` the text column stops short of the right edge, so it gets
-          // more presence — but the same short height, because the body
-          // paragraph still runs underneath it until `lg`.
-          'sm:w-[58%] sm:opacity-90',
-          // From `lg` the hero has a genuine empty half. Full height, full
-          // strength, and nothing of the copy anywhere near it.
-          'lg:inset-y-0 lg:h-auto lg:w-[52%] lg:opacity-100',
-        )}
+        className="pointer-events-none absolute -right-24 -top-24 h-[28rem] w-[28rem] rounded-full blur-3xl"
         style={{
-          maskImage: 'radial-gradient(125% 115% at 84% 18%, #000 46%, transparent 88%)',
-          WebkitMaskImage: 'radial-gradient(125% 115% at 84% 18%, #000 46%, transparent 88%)',
+          background:
+            'radial-gradient(circle, rgba(255,178,56,.30) 0%, rgba(255,178,56,.12) 45%, transparent 72%)',
         }}
-      >
-        {/* The canvas is the one piece that genuinely should not run for
-            somebody who asked for less motion — it is the only thing here
-            that animates continuously and unpredictably. */}
-        {stillness ? null : <Fireworks />}
-        <HeroAura still={stillness} />
-      </div>
+      />
 
       <div className="container relative">
-        <div className="flex max-w-3xl flex-col items-start text-left">
-          <p className="flex items-center gap-2 text-2xs font-semibold uppercase tracking-[.18em] text-primary-700">
-            <Flame size={14} className="shrink-0 text-secondary-600" />
-            Sivakasi · direct from the factory
-          </p>
-
-          {/* The italic serif clause is the emphasis, not a colour change on a
-              full line — it marks the one word the sentence turns on. */}
-          <h1 className="mt-4 font-display text-display-lg font-semibold text-dark">
-            Light up Diwali <em className="mr-[.06em] text-primary-700">without</em> lighting up your budget.
-          </h1>
-
-          <p className="mt-5 max-w-xl text-base leading-relaxed text-muted sm:text-lg">
-            {products.length} crackers across {categoriesWithCounts.length} categories, made on our
-            own floor and sold at factory price. Pick your quantities, or let a curated box decide
-            for you.
-          </p>
-
-          {/* CTAs — full-width stacked on a phone so neither wraps to a two-line
-              pill and both stay comfortably thumb-sized. The phone number sits
-              alongside them because a good share of orders here are still
-              placed by call. */}
-          <div className="mt-7 flex w-full flex-col items-stretch gap-3 xs:w-auto xs:flex-row xs:flex-wrap xs:items-center">
-            <Button to="/products" size="lg" rightIcon={<ArrowRight size={18} />}>
-              See the price list
-            </Button>
-            <Button href={BRAND.phoneHref} size="lg" variant="outline" leftIcon={<Phone size={16} />}>
-              {BRAND.phone}
-            </Button>
-            <Button to="/combos" size="lg" variant="outline">
-              Browse combo packs
-            </Button>
-          </div>
-
-          {/* search */}
-          <form onSubmit={submit} className="mt-8 w-full max-w-2xl">
-            <div className="flex items-center gap-2 rounded-full border border-line bg-card p-1.5 pl-4 shadow-card focus-within:border-primary sm:pl-5">
-              <Search size={20} className="shrink-0 text-primary" />
-              <input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                type="search"
-                placeholder="Search Lakshmi, flower pots, sky shots…"
-                aria-label="Search crackers"
-                className="h-12 min-w-0 flex-1 bg-transparent text-ink outline-none placeholder:text-muted sm:h-14 sm:text-base"
+        <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:gap-14">
+          <div className="flex flex-col items-start text-left">
+            {/* `items-start`, not `items-center`: the label wraps to two lines on a
+                320px handset, and centred the dot floated in the gap between
+                them instead of marking the first word. */}
+            <p className="flex items-start gap-2 text-2xs font-semibold uppercase tracking-[.18em] text-primary-700">
+              <span
+                aria-hidden="true"
+                className="mt-[.42em] h-1.5 w-1.5 shrink-0 rounded-full bg-secondary-500"
               />
-              {/* Icon-only below sm — a labelled pill would take a third of
-                  the bar and squeeze the placeholder out. */}
-              <Button
-                type="submit"
-                size="icon"
-                onClick={submit}
-                aria-label="Search"
-                className="shrink-0 sm:hidden"
-              >
-                <ArrowRight size={17} />
+              Sivakasi · direct from the factory
+            </p>
+
+            {/* The italic serif clause is the emphasis, not a colour change on a
+                full line — it marks the one word the sentence turns on. */}
+            <h1 className="mt-4 font-display text-display-lg font-semibold text-dark">
+              Light up Diwali <em className="mr-[.06em] text-primary-700">without</em> lighting up your budget.
+            </h1>
+
+            <p className="mt-5 max-w-xl text-base leading-relaxed text-muted sm:text-lg">
+              {products.length} crackers across {categoriesWithCounts.length} categories, made on our
+              own floor and sold at factory price. Pick your quantities, or let a curated box decide
+              for you.
+            </p>
+
+            {/* CTAs — full-width stacked on a phone so neither wraps to a two-line
+                pill and both stay comfortably thumb-sized. The phone number sits
+                alongside them because a good share of orders here are still
+                placed by call. */}
+            <div className="mt-8 flex w-full flex-col items-stretch gap-3 xs:w-auto xs:flex-row xs:flex-wrap xs:items-center">
+              <Button to="/products" size="lg" rightIcon={<ArrowRight size={18} />}>
+                See the price list
               </Button>
-              <Button
-                type="submit"
-                size="md"
-                onClick={submit}
-                className="hidden shrink-0 sm:inline-flex"
-                rightIcon={<ArrowRight size={16} />}
-              >
-                Search
+              <Button href={BRAND.phoneHref} size="lg" variant="outline" leftIcon={<Phone size={16} />}>
+                {BRAND.phone}
+              </Button>
+              <Button to="/combos" size="lg" variant="outline">
+                Browse combo packs
               </Button>
             </div>
-
-            <div className="mt-2.5 flex h-5 items-center">
-              {liveCount != null ? (
-                <p className="text-2xs text-muted">
-                  {liveCount === 0
-                    ? 'No match yet — try a shorter word'
-                    : `${liveCount} match${liveCount === 1 ? '' : 'es'} — press enter to see them`}
-                </p>
-              ) : null}
-            </div>
-          </form>
-
-          <div className="mt-3 flex flex-wrap items-center gap-2">
-            {POPULAR_SEARCHES.slice(0, 4).map((term) => (
-              <Chip key={term} onClick={() => navigate(`/products?q=${encodeURIComponent(term)}`)}>
-                {term}
-              </Chip>
-            ))}
           </div>
 
-          {/* stat strip */}
-          <dl className="mt-9 grid w-full max-w-2xl grid-cols-2 gap-px overflow-hidden rounded-3xl border border-line bg-line sm:grid-cols-4">
-            {[
-              { label: 'Crackers', value: `${products.length}` },
-              { label: 'Categories', value: `${categoriesWithCounts.length}` },
-              { label: 'Starts at', value: formatPrice(priceBounds.min) },
-              { label: 'Off MRP', value: `${deepestDiscount}%` },
-            ].map((stat) => (
-              <div key={stat.label} className="bg-card px-3 py-4 sm:px-4 sm:py-5">
-                <dd className="flex items-center justify-center gap-1 font-display text-xl font-semibold text-dark sm:text-2xl">
-                  {stat.value}
-                </dd>
-                <dt className="mt-1 text-center text-2xs text-muted">{stat.label}</dt>
+          {/*
+            The photographs.
+
+            Three tiles in a row on a phone, where the column has no height to
+            spend and a row reads as a shelf. From `lg` it becomes the bento the
+            reference lays out: one tall frame beside two square ones, sized off
+            the grid track rather than off a viewport unit so it keeps its
+            proportions between breakpoints.
+
+            The section omits itself entirely when the catalogue has no
+            photography to show — an empty grid of borders would be worse than
+            copy that simply runs full width.
+          */}
+          {tiles.length > 0 ? (
+            <div>
+              <div className="grid grid-cols-3 gap-3 sm:gap-4 lg:grid-cols-2 lg:grid-rows-2">
+                <PhotoTile
+                  eager
+                  tile={tiles[0]}
+                  className="aspect-square lg:row-span-2 lg:aspect-[4/5]"
+                />
+                {tiles.slice(1).map((tile) => (
+                  <PhotoTile key={tile.slug} tile={tile} className="aspect-square" />
+                ))}
               </div>
-            ))}
-          </dl>
+
+              <p className="mt-3 text-2xs text-muted">
+                Every picture here is the box that arrives.
+              </p>
+            </div>
+          ) : null}
         </div>
       </div>
     </section>

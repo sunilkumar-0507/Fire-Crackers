@@ -169,61 +169,9 @@ export default {
         shimmer: {
           '100%': { transform: 'translateX(100%)' },
         },
-
-        /*
-          The hero's decorative column, and nowhere else.
-
-          Idle motion was stripped out of this theme once, for good reason: it
-          was everywhere, on components people were trying to read and click.
-          These are deliberately readmitted for one region — the empty side of
-          the hero, which has no copy and no controls in it at any width — and
-          every one is transform/opacity only, so they composite on the GPU and
-          never touch layout. Anything that wants to bob next to text should
-          still be told no.
-        */
-
-        // Slow vertical drift with a touch of roll, for the floating art.
-        drift: {
-          '0%, 100%': { transform: 'translate3d(0, 0, 0) rotate(0deg)' },
-          '50%': { transform: 'translate3d(0, -14px, 0) rotate(3deg)' },
-        },
-
-        // The counter-drift, so adjacent pieces never move in lockstep.
-        driftAlt: {
-          '0%, 100%': { transform: 'translate3d(0, 0, 0) rotate(0deg)' },
-          '50%': { transform: 'translate3d(6px, 10px, 0) rotate(-4deg)' },
-        },
-
-        // A soft breath behind the fireworks, so the corner never sits
-        // completely still between bursts.
-        aura: {
-          '0%, 100%': { opacity: '.35', transform: 'scale(1)' },
-          '50%': { opacity: '.7', transform: 'scale(1.12)' },
-        },
-
-        // Embers rising off the bottom of the column and fading out.
-        ember: {
-          '0%': { opacity: '0', transform: 'translate3d(0, 0, 0) scale(.6)' },
-          '15%': { opacity: '.9' },
-          '80%': { opacity: '.35' },
-          '100%': { opacity: '0', transform: 'translate3d(8px, -120px, 0) scale(1)' },
-        },
-
-        // Confetti catching the light.
-        twinkle: {
-          // Kept low: the confetti field crosses the body copy at every width,
-          // so it has to read as texture rather than as something blinking.
-          '0%, 100%': { opacity: '.2' },
-          '50%': { opacity: '.5' },
-        },
       },
       animation: {
         shimmer: 'shimmer 2.2s ease-in-out infinite',
-        drift: 'drift 7s ease-in-out infinite',
-        'drift-alt': 'driftAlt 9s ease-in-out infinite',
-        aura: 'aura 5.5s ease-in-out infinite',
-        ember: 'ember 6s linear infinite',
-        twinkle: 'twinkle 4s ease-in-out infinite',
       },
       transitionTimingFunction: {
         luxe: 'cubic-bezier(.22,1,.36,1)',
