@@ -21,20 +21,44 @@ import 'swiper/css/free-mode';
  * `disableOnInteraction: false` lets it resume after you have finished rather
  * than dying at the first touch, and anyone who has asked their system for
  * reduced motion never gets it started at all.
+ *
+ * The reduced-motion preference is read synchronously, on the first render.
+ * It used to start `false` and be corrected in an effect, which looked
+ * harmless and meant the carousel never moved for anybody: Swiper reads
+ * `autoplay` once, when it initialises, so the module registered with
+ * `enabled: false` and the later prop change never started it. Hence both
+ * halves below — the initial value is right, and a preference that changes
+ * while the page is open drives the live instance by hand.
  */
+
+/** Synchronous, and safe to call before the first paint. */
+const wantsStillness = () =>
+  typeof window !== 'undefined' &&
+  typeof window.matchMedia === 'function' &&
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 export const BestSellers = () => {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
-  const [autoplay, setAutoplay] = useState(false);
+  const swiperRef = useRef(null);
+  const [autoplay, setAutoplay] = useState(() => !wantsStillness());
 
-  // Read in an effect, not at module scope: the preference can change while the
-  // page is open, and a module-level read would also run during SSR.
+  // Only for a preference that changes while the page is open. The initial
+  // value is already correct above, so there is no `apply()` on mount.
   useEffect(() => {
     const media = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const apply = () => setAutoplay(!media.matches);
+    const apply = () => {
+      const wanted = !media.matches;
+      setAutoplay(wanted);
 
-    apply();
+      // Re-rendering with a new `autoplay` prop does not start a module that
+      // initialised disabled, so say it outright.
+      const swiper = swiperRef.current;
+      if (!swiper?.autoplay) return;
+      if (wanted) swiper.autoplay.start();
+      else swiper.autoplay.stop();
+    };
+
     media.addEventListener('change', apply);
     return () => media.removeEventListener('change', apply);
   }, []);
@@ -84,6 +108,7 @@ export const BestSellers = () => {
       >
         <Swiper
           onSwiper={(swiper) => {
+            swiperRef.current = swiper;
             // Hang the instance off the container so the focus handlers above
             // can reach it without another ref and another closure.
             if (swiper.el?.parentElement) swiper.el.parentElement.swiper = swiper;

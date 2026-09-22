@@ -11,12 +11,22 @@ import { createRoot } from 'react-dom/client';
 import { act } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
-/** Captures the props the component hands to Swiper, without rendering one. */
+/**
+ * Captures the props the component hands to Swiper, without rendering one.
+ *
+ * `renders` keeps every pass, not just the last. Swiper reads `autoplay` once,
+ * when it initialises, so the only render that decides whether the carousel
+ * ever moves is the first one — and a version of this component that started
+ * `autoplay` at `false` and corrected it in an effect passed every assertion
+ * against `current` while standing completely still in a browser.
+ */
 const swiperProps = { current: null };
+const renders = [];
 
 vi.mock('swiper/react', () => ({
   Swiper: (props) => {
     swiperProps.current = props;
+    renders.push(props);
     return <div data-testid="swiper">{props.children}</div>;
   },
   SwiperSlide: ({ children }) => <div>{children}</div>,
@@ -49,6 +59,7 @@ beforeAll(() => {
 });
 
 const render = async () => {
+  renders.length = 0;
   const host = document.createElement('div');
   document.body.appendChild(host);
   const root = createRoot(host);
@@ -70,6 +81,23 @@ describe('best sellers carousel', () => {
     const { autoplay } = swiperProps.current;
     expect(autoplay).toBeTruthy();
     expect(autoplay.delay).toBeGreaterThan(0);
+  });
+
+  it('has autoplay on from the very first render', async () => {
+    reduceMotion = false;
+    await render();
+
+    // Not `swiperProps.current` — the last render is not the one that matters.
+    expect(renders.length).toBeGreaterThan(0);
+    expect(renders[0].autoplay).toBeTruthy();
+    expect(renders[0].autoplay.delay).toBeGreaterThan(0);
+  });
+
+  it('keeps autoplay off from the first render under reduced motion', async () => {
+    reduceMotion = true;
+    await render();
+
+    expect(renders[0].autoplay).toBeFalsy();
   });
 
   it('keeps advancing after the reader has touched it', async () => {

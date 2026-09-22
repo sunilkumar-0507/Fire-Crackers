@@ -193,14 +193,20 @@ export const ProductCard = memo(function ProductCard({ product, className, compa
                   : 'bg-flame text-dark shadow-glow hover:brightness-[1.04]',
               )}
             >
+              {/* The icons drop below `xs`. The grid is two columns from 320px
+                  up, which leaves roughly 140px of card there — enough for
+                  "Add to cart" on one line, but not once a 16px glyph and its
+                  gap are in front of it, and the label wrapping to two lines
+                  is what actually made the row look broken on a small handset.
+                  From 420px there is room for both. */}
               {qtyInCart > 0 ? (
                 <>
-                  <Check size={16} />
+                  <Check size={16} className="hidden shrink-0 xs:block" />
                   In cart ({qtyInCart})
                 </>
               ) : (
                 <>
-                  <ShoppingCart size={16} />
+                  <ShoppingCart size={16} className="hidden shrink-0 xs:block" />
                   {soldOut ? level.label : 'Add to cart'}
                 </>
               )}

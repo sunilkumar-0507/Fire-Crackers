@@ -1,6 +1,6 @@
 import { useCallback, useDeferredValue, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { SlidersHorizontal, X } from '@/components/ui/icons';
+import { Search, SlidersHorizontal, X } from '@/components/ui/icons';
 import { cn } from '@/utils/cn';
 import { filterProducts, SORT_OPTIONS } from '@/utils/search';
 import { analytics } from '@/lib/analytics';
@@ -132,7 +132,6 @@ export const Products = () => {
             : `${products.length} products across ${categoriesWithCounts.length} categories, all made on our own floor in Sivakasi and priced without a distributor in the middle.`
         }
         breadcrumbs={[{ label: 'Products' }]}
-        art="aerial"
       >
         <div className="flex flex-wrap gap-2">
           {QUICK_FILTERS.map((quick) => (
@@ -157,14 +156,51 @@ export const Products = () => {
           </aside>
 
           <div>
-            {/* toolbar */}
-            <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-3xl border border-line bg-card px-4 py-3.5 shadow-soft sm:mb-7 sm:px-5 sm:py-4">
+            {/*
+              Toolbar: count, search, sort, filters.
+
+              On a phone the input takes the first row full-width and the count
+              shares the second with sort and filters — `order-first` plus
+              `w-full`, both undone from `sm`. Typing is what people came to
+              this bar to do, and a search box squeezed into a third of a 320px
+              row cannot show a product name.
+            */}
+            <div className="mb-6 flex flex-wrap items-center gap-3 rounded-3xl border border-line bg-card px-4 py-3.5 shadow-soft sm:mb-7 sm:px-5 sm:py-4">
               <p className="text-sm text-muted">
                 <strong className="font-semibold text-dark">{results.length}</strong> product
                 {results.length === 1 ? '' : 's'}
               </p>
 
-              <div className="flex items-center gap-3">
+              {/* Bound straight to the URL like every other filter on this
+                  page, so a search is shareable and the back button undoes it.
+                  `replace: true` inside `update` keeps the keystrokes out of
+                  the history stack. */}
+              <label className="relative order-first w-full sm:order-none sm:w-auto sm:flex-1">
+                <span className="sr-only">Search the catalogue</span>
+                <Search
+                  size={15}
+                  className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-muted"
+                />
+                <input
+                  type="search"
+                  value={filters.query}
+                  onChange={(e) => update({ query: e.target.value })}
+                  placeholder="Search Lakshmi, flower pots, sky shots…"
+                  className="min-h-11 w-full rounded-full border border-line bg-card py-2.5 pl-10 pr-9 text-sm text-ink outline-none transition-colors placeholder:text-muted hover:border-secondary-300 focus:border-secondary-400"
+                />
+                {filters.query ? (
+                  <button
+                    type="button"
+                    onClick={() => update({ query: '' })}
+                    aria-label="Clear the search"
+                    className="absolute right-2.5 top-1/2 grid h-6 w-6 -translate-y-1/2 place-items-center rounded-full text-muted transition-colors hover:bg-secondary-50 hover:text-ink"
+                  >
+                    <X size={12} />
+                  </button>
+                ) : null}
+              </label>
+
+              <div className="ml-auto flex items-center gap-3 sm:ml-0">
                 <label className="flex items-center gap-2 text-sm">
                   <span className="hidden text-muted sm:inline">Sort</span>
                   <select
