@@ -1,16 +1,16 @@
 /**
- * The hero's photography.
+ * The hero's still-life.
  *
- * The right-hand column used to be generated decoration — a fireworks canvas,
- * a breathing glow and three catalogue glyphs drifting behind the copy. It is
- * now real product photography, and the point of this suite is that it stays
- * real: every tile has to resolve to a photograph we actually ship, never to
- * the icon fallback that `ProductImage` draws for a missing one.
+ * The right-hand column has been three different things now — a fireworks
+ * canvas, then a grid of pack shots, now the festival still-life the brand
+ * supplied. What this suite pins down is the part that should survive the next
+ * redesign too: the picture is decoration, it is the page's largest paint, and
+ * the copy beside it does not depend on it.
  *
- * The second case is the one that used to blank the page. The hero mounts
- * eagerly, before anything below the fold, so it is the first component to see
- * an empty catalogue — and a grid of three empty frames is worse than copy
- * that simply runs the full width.
+ * The motion cases exist because the three animations are deliberately split
+ * across three elements. Two `transform` animations on one element silently
+ * fight, and the symptom — a drifting image that never rises into place, or a
+ * glow that loses its centring — is the sort of thing that survives review.
  */
 import { describe, it, expect, beforeAll, afterEach } from 'vitest';
 import { createRoot } from 'react-dom/client';
@@ -28,7 +28,6 @@ beforeAll(installDomStubs);
 
 const hosts = [];
 
-/** `pickTiles` reads the live bindings once per mount, so hydrate first. */
 const render = async () => {
   const host = document.createElement('div');
   document.body.appendChild(host);
@@ -50,48 +49,59 @@ afterEach(() => {
 });
 
 describe('the hero', () => {
-  it('fronts the shop with real product photographs', async () => {
+  it('carries the still-life as decoration, not as content', async () => {
     hydrate({ products, categories });
     const host = await render();
 
-    const images = [...host.querySelectorAll('img')];
-    expect(images.length).toBeGreaterThan(0);
+    const art = host.querySelector('img');
+    expect(art).not.toBeNull();
 
-    for (const img of images) {
-      // A real asset URL, and a name a screen reader can read out — not the
-      // tinted icon box that stands in for a photo we do not have.
-      expect(img.getAttribute('src')).toBeTruthy();
-      expect(img.getAttribute('alt')).toBeTruthy();
-    }
-
-    // Each one links to the product it shows, so the picture is a way in.
-    const hrefs = [...host.querySelectorAll('a[href^="/product/"]')];
-    expect(hrefs.length).toBe(images.length);
+    // Everything the picture says, the copy beside it already says in words,
+    // so it is announced to nobody: empty alt inside an aria-hidden container.
+    expect(art.getAttribute('alt')).toBe('');
+    expect(art.closest('[aria-hidden="true"]')).not.toBeNull();
   });
 
-  it('never repeats a photograph across the tiles', async () => {
+  it('declares the art as the largest paint, at a fixed ratio', async () => {
+    hydrate({ products, categories });
+    const host = await render();
+    const art = host.querySelector('img');
+
+    // It is the LCP element on the homepage, so it must not be lazy.
+    expect(art.getAttribute('loading')).toBe('eager');
+    expect(art.getAttribute('fetchpriority')).toBe('high');
+
+    // Intrinsic dimensions, so the copy below it does not jump when it lands.
+    expect(art.getAttribute('width')).toBe('1254');
+    expect(art.getAttribute('height')).toBe('1254');
+  });
+
+  it('keeps the three animations on three separate elements', async () => {
     hydrate({ products, categories });
     const host = await render();
 
-    const sources = [...host.querySelectorAll('img')].map((img) => img.getAttribute('src'));
-    expect(new Set(sources).size).toBe(sources.length);
+    const rise = host.querySelector('.animate-rise-in');
+    const float = host.querySelector('.animate-float');
+    const glow = host.querySelector('.animate-glow');
+
+    expect(rise).not.toBeNull();
+    expect(float).not.toBeNull();
+    expect(glow).not.toBeNull();
+
+    // `rise-in` and `float` both drive transform. On one element the later
+    // animation would win outright and the entrance would never play.
+    expect(rise).not.toBe(float);
+    expect(float).not.toBe(glow);
+    expect(rise).not.toBe(glow);
   });
 
-  it('drops the photo column rather than framing nothing', async () => {
+  it('does not depend on the catalogue for its picture', async () => {
+    // The art is a bundled asset, not a product photo, so an empty database
+    // costs the numbers in the sentence and nothing else.
     hydrate({ products: [], categories: [] });
     const host = await render();
 
-    expect(host.querySelector('img')).toBeNull();
-    // The proposition still renders — an empty catalogue costs the pictures,
-    // not the headline.
+    expect(host.querySelector('img')).not.toBeNull();
     expect(host.querySelector('h1')?.textContent).toContain('Light up Diwali');
-  });
-
-  it('leaves no animated decoration behind', async () => {
-    hydrate({ products, categories });
-    const host = await render();
-
-    expect(host.querySelector('canvas')).toBeNull();
-    expect(host.querySelector('[class*="animate-"]')).toBeNull();
   });
 });

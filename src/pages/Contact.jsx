@@ -98,7 +98,6 @@ export const Contact = () => {
         title="Talk to someone who knows the stock"
         description="During October the phone is the fastest route — the person answering it has usually packed the box you are asking about."
         breadcrumbs={[{ label: 'Contact' }]}
-        art="kids"
         accent="#D9539B"
       />
 

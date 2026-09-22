@@ -114,7 +114,6 @@ export const BulkOrders = () => {
         title="Ordering for a street, a temple or an office"
         description="About a third of what leaves our floor goes out as a bulk order. Several of the associations we supply have been with us for more than a decade — this is the form that starts it."
         breadcrumbs={[{ label: 'Bulk orders' }]}
-        art="bomb"
         accent="#8C3A12"
       />
 

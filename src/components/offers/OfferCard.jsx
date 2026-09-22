@@ -4,7 +4,6 @@ import { Check, Copy, Sparkles } from '@/components/ui/icons';
 import { cn } from '@/utils/cn';
 import { accentOf } from '@/constants/accents';
 import { formatPrice, resolveDeadline } from '@/utils/format';
-import ArtIcon from '@/components/ui/ArtIcon';
 import Countdown from './Countdown';
 
 /**
@@ -46,29 +45,8 @@ export const OfferCard = ({ offer, featured = false, className }) => {
         className,
       )}
     >
-      {/* backdrop art */}
-      <div
-        aria-hidden="true"
-        className={cn(
-          'pointer-events-none absolute',
-          featured ? '-bottom-8 -left-8 h-52 w-52 opacity-25' : '-bottom-10 -right-6 h-40 w-40 opacity-[.14]',
-        )}
-      >
-        <ArtIcon art={offer.art} className="h-full w-full" />
-      </div>
-
       <div className="relative flex flex-1 flex-col">
-        <div className="flex items-start justify-between gap-3">
-          <span
-            className={cn(
-              'grid h-12 w-12 shrink-0 place-items-center rounded-2xl',
-              accent.tile,
-              featured ? null : accent.glow,
-            )}
-          >
-            <ArtIcon art={offer.art} size={22} />
-          </span>
-
+        <div className="flex items-start justify-end gap-3">
           <span
             className={cn(
               'shrink-0 rounded-full px-3 py-1 text-2xs font-bold uppercase tracking-[.12em]',

@@ -4,7 +4,6 @@ import { products, categoriesWithCounts } from '@/data';
 import PageHeader from '@/components/ui/PageHeader';
 import Section, { SectionHeading } from '@/components/ui/Section';
 import FaqSection from '@/components/home/FaqSection';
-import ArtIcon from '@/components/ui/ArtIcon';
 import Button from '@/components/ui/Button';
 
 const TIMELINE = [
@@ -49,7 +48,6 @@ export const About = () => (
       title="Three generations, one factory floor"
       description="We are a Sivakasi manufacturing family that got tired of watching a sparkler box leave our gate at ₹70 and reach a customer at ₹280. So we started selling it ourselves."
       breadcrumbs={[{ label: 'About' }]}
-      art="sparkler"
     />
 
     {/* stats */}
@@ -134,11 +132,6 @@ export const About = () => (
               description="Almost every firework injury we hear about comes from breaking one of these. None of them cost anything to follow."
               className="pb-8"
             />
-            <div className="relative grid h-56 place-items-center overflow-hidden rounded-4xl border border-line bg-gradient-to-br from-secondary-50 to-white">
-              <div className="h-40 w-40">
-                <ArtIcon art="flowerpot" className="h-full w-full text-primary-700" />
-              </div>
-            </div>
           </div>
 
           <ul className="grid gap-3 sm:grid-cols-2">

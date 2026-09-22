@@ -1,7 +1,6 @@
 import { ArrowRight, Leaf, VolumeX } from '@/components/ui/icons';
 import { banners, products, combos } from '@/data';
 import { COUPONS } from '@/constants';
-import ArtIcon from '@/components/ui/ArtIcon';
 import Button from '@/components/ui/Button';
 
 const SILENT_TAGS = ['silent', 'kids-safe'];
@@ -109,7 +108,7 @@ export const GreenDiwaliBanner = () => {
             </div>
           </div>
 
-          {/* art panel */}
+          {/* The panel beside the copy: warm colour, nothing drawn on it. */}
           <div
             className="relative min-h-[180px] overflow-hidden sm:min-h-[280px] lg:min-h-full"
             style={{
@@ -126,23 +125,6 @@ export const GreenDiwaliBanner = () => {
                   'radial-gradient(70% 70% at 60% 40%, rgba(255,213,106,.45), transparent 70%)',
               }}
             />
-            {[
-              { art: 'sparkler', className: 'left-[8%] top-[12%] h-24 w-24 sm:h-40 sm:w-40', d: 4 },
-              {
-                art: 'flowerpot',
-                className: 'right-[10%] top-[26%] h-20 w-20 sm:h-36 sm:w-36',
-                d: 6.5,
-              },
-              {
-                art: 'kids',
-                className: 'bottom-[8%] left-[22%] h-20 w-20 sm:h-36 sm:w-36',
-                d: 5.5,
-              },
-            ].map((art) => (
-              <div key={art.art} className={`absolute ${art.className}`}>
-                <ArtIcon art={art.art} className="h-full w-full" />
-              </div>
-            ))}
           </div>
         </div>
       </div>

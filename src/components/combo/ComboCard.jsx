@@ -7,7 +7,6 @@ import { accentOf } from '@/constants/accents';
 import { formatPrice } from '@/utils/format';
 import { comboToCartItem } from '@/utils/cart';
 import { useCartStore, selectInCart } from '@/store/cartStore';
-import ArtIcon from '@/components/ui/ArtIcon';
 
 /**
  * Curated bundle card.
@@ -46,18 +45,7 @@ export const ComboCard = ({ combo, className, showContents = true }) => {
           accent.ring,
         )}
       >
-        <div className="flex items-start justify-between gap-3">
-          {/* Icon tile, lit from below by a shadow in the same hue. */}
-          <span
-            className={cn(
-              'grid h-14 w-14 shrink-0 place-items-center rounded-2xl',
-              accent.tile,
-              accent.glow,
-            )}
-          >
-            <ArtIcon art={combo.art} size={24} />
-          </span>
-
+        <div className="flex items-start justify-end gap-3">
           {combo.badge ? (
             <span
               className={cn(

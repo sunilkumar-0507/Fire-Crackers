@@ -2,7 +2,6 @@ import { Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronRight } from '@/components/ui/icons';
 import { cn } from '@/utils/cn';
-import ArtIcon from '@/components/ui/ArtIcon';
 
 /** Breadcrumb + title block that opens every inner page. */
 export const PageHeader = ({
@@ -10,26 +9,22 @@ export const PageHeader = ({
   title,
   description,
   breadcrumbs = [],
-  art,
+  wash = false,
   accent = '#FF8A00',
   children,
   className,
 }) => (
   <header className={cn('relative overflow-hidden pb-8 pt-8 sm:pb-14 sm:pt-14', className)}>
-    {/* The art sits in the right half of the header, which on a phone is
-        directly behind the title and description — so it only renders once
-        there is a column free for it. */}
-    {art ? (
+    {/* A warm wash in the right half, which on a phone is directly behind the
+        title and description — so it only renders once there is a column free
+        for it. This used to be an `art` prop naming a glyph to draw on top of
+        the wash; the glyph is gone and the prop now says what it does. */}
+    {wash ? (
       <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 right-0 hidden w-1/2 max-w-lg sm:block">
         <div
           className="absolute inset-0"
           style={{ background: `radial-gradient(60% 60% at 70% 45%, ${accent}2e, transparent 70%)` }}
         />
-        <div className="absolute right-[8%] top-1/2 h-40 w-40 -translate-y-1/2 opacity-70 sm:h-56 sm:w-56">
-          <div className="h-full w-full">
-            <ArtIcon art={art} className="h-full w-full" />
-          </div>
-        </div>
       </div>
     ) : null}
 

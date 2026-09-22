@@ -5,12 +5,11 @@ import { cn } from '@/utils/cn';
 import { categoriesWithCounts, findCategory, products } from '@/data';
 import { filterProducts, SORT_OPTIONS } from '@/utils/search';
 import { analytics } from '@/lib/analytics';
-import { artForCategory } from '@/utils/image';
 import { accentOf } from '@/constants/accents';
 import PageHeader from '@/components/ui/PageHeader';
 import ProductGrid from '@/components/product/ProductGrid';
 import Section from '@/components/ui/Section';
-import ArtIcon from '@/components/ui/ArtIcon';
+import ProductImage from '@/components/ui/ProductImage';
 import EmptyState from '@/components/ui/EmptyState';
 import Button from '@/components/ui/Button';
 
@@ -73,7 +72,7 @@ export const Category = () => {
         title={category.name}
         description={category.description}
         breadcrumbs={[{ label: 'Products', to: '/products' }, { label: category.name }]}
-        art={artForCategory(category.slug)}
+        wash
         accent={category.accent}
       >
         <div className="flex flex-wrap items-center gap-3">
@@ -194,11 +193,19 @@ export const Category = () => {
                   to={`/category/${other.slug}`}
                   className="group flex h-full flex-col items-center gap-2.5 rounded-3xl border border-line bg-card p-4 text-center shadow-soft transition-all duration-500 ease-luxe hover:-translate-y-1.5 hover:shadow-lift sm:gap-3 sm:p-5"
                 >
+                  {/* The category's own cover photo — the lead shot of the
+                      product it fronts — rather than a drawing of the kind of
+                      thing it sells. `cover` is derived in @/data, so it can
+                      never point at something we have stopped stocking. */}
                   <span
-                    className="grid h-14 w-14 place-items-center rounded-2xl transition-transform duration-500 ease-luxe group-hover:scale-110 sm:h-16 sm:w-16"
-                    style={{ background: other.accentSoft }}
+                    className="grid h-14 w-14 place-items-center overflow-hidden rounded-2xl bg-white transition-transform duration-500 ease-luxe group-hover:scale-110 sm:h-16 sm:w-16"
                   >
-                    <ArtIcon art={artForCategory(other.slug)} className="h-10 w-10 text-dark sm:h-12 sm:w-12" />
+                    <ProductImage
+                      source={other.cover}
+                      alt=""
+                      className="h-full w-full"
+                      imgClassName="p-1"
+                    />
                   </span>
                   <span className="text-xs font-semibold leading-snug text-dark transition-colors group-hover:text-primary">
                     {other.name}

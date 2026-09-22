@@ -169,9 +169,46 @@ export default {
         shimmer: {
           '100%': { transform: 'translateX(100%)' },
         },
+
+        /*
+          The hero still-life, and nowhere else.
+
+          Three separate elements carry these — the group, the picture inside
+          it and the glow behind it — because two animations on one element
+          would fight over `transform`. All three are transform/opacity only,
+          so they composite on the GPU and never trigger layout.
+
+          The `prefers-reduced-motion` block at the end of globals.css
+          collapses all of them to one 0.001ms pass, which lands each on its
+          finished state and holds.
+        */
+
+        // Arrival: up into place, once.
+        'rise-in': {
+          '0%': { opacity: '0', transform: 'translate3d(0, 28px, 0)' },
+          '100%': { opacity: '1', transform: 'translate3d(0, 0, 0)' },
+        },
+
+        // Idle drift, slow enough to read as breathing rather than as bobbing.
+        float: {
+          '0%, 100%': { transform: 'translate3d(0, 0, 0)' },
+          '50%': { transform: 'translate3d(0, -14px, 0)' },
+        },
+
+        // The warm light behind it, on a longer cycle than the drift so the
+        // two never come back into phase.
+        glow: {
+          '0%, 100%': { opacity: '.55', transform: 'translate(-50%, -50%) scale(1)' },
+          '50%': { opacity: '.85', transform: 'translate(-50%, -50%) scale(1.07)' },
+        },
       },
       animation: {
         shimmer: 'shimmer 2.2s ease-in-out infinite',
+        // `both` holds the 0% frame before the delay and the 100% frame after,
+        // so the art never flashes at full opacity before it starts.
+        'rise-in': 'rise-in .9s cubic-bezier(.22,1,.36,1) both',
+        float: 'float 6.5s ease-in-out infinite',
+        glow: 'glow 9s ease-in-out infinite',
       },
       transitionTimingFunction: {
         luxe: 'cubic-bezier(.22,1,.36,1)',

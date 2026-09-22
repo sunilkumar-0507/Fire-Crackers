@@ -33,7 +33,6 @@ export const Combos = () => {
         title="Boxes we assembled so you don't have to"
         description="Each one is built from what families actually run out of first — heavy on fountains and sparklers, light on the things that end up unlit in the carton on the 3rd of November."
         breadcrumbs={[{ label: 'Combo packs' }]}
-        art="giftbox"
         accent="#A6357A"
       >
         <div className="flex flex-wrap gap-2">

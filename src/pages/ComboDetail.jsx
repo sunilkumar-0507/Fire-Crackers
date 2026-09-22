@@ -2,14 +2,14 @@ import { useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { Check, Clock, Package, ShoppingBag, Truck, Users } from '@/components/ui/icons';
-import { combos, findCombo } from '@/data';
+import { combos, findCombo, findProduct } from '@/data';
 import { formatPrice, addWorkingDays, formatDay } from '@/utils/format';
 import { comboToCartItem } from '@/utils/cart';
+import { primaryImage } from '@/utils/image';
 import { useCartStore, selectInCart } from '@/store/cartStore';
 import PageHeader from '@/components/ui/PageHeader';
 import Section, { SectionHeading } from '@/components/ui/Section';
 import ComboCard from '@/components/combo/ComboCard';
-import ArtIcon from '@/components/ui/ArtIcon';
 import Button from '@/components/ui/Button';
 import Badge from '@/components/ui/Badge';
 import QtyStepper from '@/components/ui/QtyStepper';
@@ -52,6 +52,24 @@ export const ComboDetail = () => {
 
   const itemTotal = combo.includes.reduce((n, line) => n + line.qty, 0);
 
+  /*
+    Up to four photographs of what is in the box.
+
+    A plain const rather than a `useMemo`: everything above this point has
+    already returned early when the slug matches no combo, so a hook here would
+    be a conditional one. Lines whose product we do not stock a photo for are
+    skipped rather than drawn as an icon, and four is the grid — a fifth would
+    leave a ragged row.
+  */
+  const contentShots = combo.includes
+    .map((line) => {
+      const product = findProduct(line.slug);
+      const image = product ? primaryImage(product) : null;
+      return image?.kind === 'url' ? { slug: line.slug, name: line.name, src: image.src } : null;
+    })
+    .filter(Boolean)
+    .slice(0, 4);
+
   return (
     <>
       <PageHeader
@@ -75,9 +93,29 @@ export const ComboDetail = () => {
                 className="absolute inset-x-0 bottom-0 h-40 opacity-45"
                 style={{ background: `radial-gradient(55% 100% at 50% 100%, ${combo.accent}, transparent 72%)` }}
               />
-              <div className="relative h-3/4 w-3/4">
-                <ArtIcon art={combo.art} className="h-full w-full text-dark/80" />
-              </div>
+              {/* What is actually in the box, photographed. This panel used
+                  to hold one large drawing of a gift box, which told a buyer
+                  nothing about a combo whose whole selling point is its
+                  contents. Only the items we ship a photo of are shown, so a
+                  tile can never fall back to a stand-in picture. */}
+              {contentShots.length ? (
+                <div className="relative grid h-3/4 w-3/4 grid-cols-2 gap-3">
+                  {contentShots.map((shot) => (
+                    <span
+                      key={shot.slug}
+                      className="grid place-items-center overflow-hidden rounded-2xl bg-white p-2 shadow-card"
+                    >
+                      <img
+                        src={shot.src}
+                        alt={shot.name}
+                        loading="lazy"
+                        decoding="async"
+                        className="h-full w-full object-contain"
+                      />
+                    </span>
+                  ))}
+                </div>
+              ) : null}
               <Badge tone="gold" className="absolute left-4 top-4 sm:left-6 sm:top-6">
                 {combo.badge}
               </Badge>

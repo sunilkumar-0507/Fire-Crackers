@@ -2,7 +2,6 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { Check, Mail, Send } from '@/components/ui/icons';
 import { api } from '@/lib/api';
-import ArtIcon from '@/components/ui/ArtIcon';
 import Button from '@/components/ui/Button';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -37,11 +36,6 @@ export const Newsletter = () => {
           className="relative overflow-hidden rounded-4xl px-5 py-12 text-center shadow-lift sm:px-12 sm:py-16"
           style={{ background: 'linear-gradient(140deg,#2B1408 0%,#4A270A 52%,#6F3A09 100%)' }}
         >
-          {/* decorative art */}
-          <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-[.18]">
-            <ArtIcon art="sparkler" className="absolute -left-8 top-2 h-32 w-32 text-white sm:h-48 sm:w-48" />
-            <ArtIcon art="rocket" className="absolute -bottom-6 -right-6 h-36 w-36 text-white sm:h-52 sm:w-52" />
-          </div>
           <div
             aria-hidden="true"
             className="pointer-events-none absolute inset-x-0 top-0 h-64 opacity-40"

@@ -306,7 +306,6 @@ export const TrackOrder = () => {
         title="Where is my order?"
         description="Your reference number and the mobile number you booked with. We ask for both because a reference on its own would let anyone read anyone else's order."
         breadcrumbs={[{ label: 'Track order' }]}
-        art="rocket"
       />
 
       <div className="container pb-16 sm:pb-20">

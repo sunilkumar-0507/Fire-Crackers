@@ -107,7 +107,6 @@ export const PaymentReturn = () => {
           eyebrow="Payment"
           title="Nothing to show here"
           breadcrumbs={[{ label: 'Payment' }]}
-          art="giftbox"
         />
         <div className="container pb-16">
           <p className="max-w-prose text-sm leading-relaxed text-muted">
@@ -132,7 +131,6 @@ export const PaymentReturn = () => {
           eyebrow="Payment"
           title="Confirm it is you"
           breadcrumbs={[{ label: 'Payment' }]}
-          art="giftbox"
         />
         <div className="container pb-16">
           <p className="max-w-prose text-sm leading-relaxed text-muted">
@@ -173,7 +171,6 @@ export const PaymentReturn = () => {
         eyebrow="Payment"
         title={checking && !result ? 'Checking your payment…' : state.title}
         breadcrumbs={[{ label: 'Payment' }]}
-        art="giftbox"
       />
 
       <div className="container pb-16">

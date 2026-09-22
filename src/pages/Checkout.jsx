@@ -39,7 +39,6 @@ import CheckoutStepper from '@/components/cart/CheckoutStepper';
 import ProductImage from '@/components/ui/ProductImage';
 import Button from '@/components/ui/Button';
 import EmptyState from '@/components/ui/EmptyState';
-import ArtIcon from '@/components/ui/ArtIcon';
 
 const inputClass =
   'h-12 w-full rounded-2xl border border-line bg-card px-4 text-sm text-ink outline-none transition-colors placeholder:text-muted focus:border-secondary-400';
@@ -905,8 +904,7 @@ export const Checkout = () => {
                 </ul>
               ) : null}
 
-              <div className="flex items-center gap-3 border-t border-line bg-secondary-50/50 px-5 py-4 sm:px-6">
-                <ArtIcon art="giftbox" className="h-10 w-10 shrink-0 text-primary-700" />
+              <div className="border-t border-line bg-secondary-50/50 px-5 py-4 sm:px-6">
                 <p className="text-2xs leading-relaxed text-muted">
                   You are saving{' '}
                   <strong className="font-semibold text-emerald-600">
