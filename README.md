@@ -1,4 +1,4 @@
-# Gopi Crackers — premium Diwali cracker storefront
+# SKV Pyros — premium Diwali cracker storefront
 
 Three projects that meet at one REST API:
 

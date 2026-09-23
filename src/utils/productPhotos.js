@@ -1,5 +1,5 @@
 /**
- * The real Gopi Crackers product photography.
+ * The real SKV Pyros product photography.
  *
  * Every file under `src/assets/GOPI Crackers` is picked up here and handed to
  * the bundler, which rewrites each one to a hashed, cache-busted URL. That way

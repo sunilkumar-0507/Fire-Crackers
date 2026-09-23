@@ -19,7 +19,7 @@ import { formatPrice } from '@/utils/format';
  * API has already issued.
  */
 
-/** `+91 98420 11994` → `919842011994`. WhatsApp wants digits and nothing else. */
+/** `+91 94874 79000` → `919487479000`. WhatsApp wants digits and nothing else. */
 const digitsOf = (value) => (value ?? '').replace(/\D/g, '');
 
 /**

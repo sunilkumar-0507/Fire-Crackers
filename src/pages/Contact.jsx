@@ -20,6 +20,10 @@ const channels = () => [
     title: 'Call the shop',
     value: BRAND.phone,
     href: BRAND.phoneHref,
+    // Printed under the primary rather than linked: the whole card is already
+    // one big anchor, and an anchor inside an anchor is invalid HTML that
+    // browsers recover from by splitting the card in two.
+    alt: BRAND.phoneAlt,
     hint: 'Fastest during the season. Someone who knows the stock will pick up.',
   },
   {
@@ -29,13 +33,19 @@ const channels = () => [
     href: whatsappHref(),
     hint: 'Send a photo of a list and we will price it back to you.',
   },
-  {
-    icon: Mail,
-    title: 'Email',
-    value: BRAND.email,
-    href: BRAND.emailHref,
-    hint: 'Best for bulk quotes, invoices and anything that needs a paper trail.',
-  },
+  // Only when there is an address to show. A card headed "Email" with nothing
+  // under it invites people to write to a mailbox that does not exist.
+  ...(BRAND.email
+    ? [
+        {
+          icon: Mail,
+          title: 'Email',
+          value: BRAND.email,
+          href: BRAND.emailHref,
+          hint: 'Best for bulk quotes, invoices and anything that needs a paper trail.',
+        },
+      ]
+    : []),
 ];
 
 const SUBJECTS = [
@@ -103,8 +113,10 @@ export const Contact = () => {
 
       {/* channels */}
       <div className="container">
-        <div className="grid gap-5 md:grid-cols-3">
-          {channels().map(({ icon: Icon, title, value, href, hint }) => (
+        {/* Columns follow the count: with no published email there are two
+            channels, and a fixed three-column grid would leave a dead cell. */}
+        <div className={cn('grid gap-5', channels().length === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3')}>
+          {channels().map(({ icon: Icon, title, value, href, alt, hint }) => (
             <a
               key={title}
               href={href}
@@ -121,6 +133,11 @@ export const Contact = () => {
               <p className="mt-2 break-words font-display text-lg font-semibold text-dark transition-colors group-hover:text-primary sm:text-xl">
                 {value}
               </p>
+              {alt && (
+                <p className="mt-1 break-words font-display text-base font-semibold text-muted sm:text-lg">
+                  {alt}
+                </p>
+              )}
               <p className="mt-2.5 text-[13px] leading-relaxed text-muted">{hint}</p>
             </a>
           ))}

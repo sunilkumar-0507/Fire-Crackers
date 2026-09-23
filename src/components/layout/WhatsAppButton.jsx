@@ -41,7 +41,7 @@ export const WhatsAppButton = () => {
       target="_blank"
       rel="noopener noreferrer"
       onClick={() => analytics.whatsappClick(pathname)}
-      aria-label="Message Gopi Crackers on WhatsApp"
+      aria-label="Message SKV Pyros on WhatsApp"
       className="group fixed bottom-24 left-5 z-40 grid h-12 w-12 place-items-center rounded-full bg-[#25D366] text-white shadow-lift transition-all duration-300 hover:-translate-y-1 hover:bg-[#1FB855] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#25D366] lg:bottom-8 lg:left-8 lg:h-14 lg:w-14"
     >
       <WhatsAppGlyph />

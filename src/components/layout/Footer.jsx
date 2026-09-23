@@ -76,10 +76,19 @@ export const Footer = () => (
                 <Phone size={15} className="shrink-0 text-gold/70" />
                 {BRAND.phone}
               </a>
-              <a href={BRAND.emailHref} className="flex min-h-11 items-center gap-3 text-bg/85 transition-colors hover:text-gold lg:min-h-0">
-                <Mail size={15} className="shrink-0 text-gold/70" />
-                <span className="min-w-0 break-all">{BRAND.email}</span>
-              </a>
+              {/* The second line, indented under the first rather than given
+                  its own icon — it is the same channel, not another one. */}
+              {BRAND.phoneAlt && (
+                <a href={BRAND.phoneAltHref} className="-mt-1 flex min-h-11 items-center gap-3 pl-[27px] text-bg/70 transition-colors hover:text-gold lg:min-h-0">
+                  {BRAND.phoneAlt}
+                </a>
+              )}
+              {BRAND.email && (
+                <a href={BRAND.emailHref} className="flex min-h-11 items-center gap-3 text-bg/85 transition-colors hover:text-gold lg:min-h-0">
+                  <Mail size={15} className="shrink-0 text-gold/70" />
+                  <span className="min-w-0 break-all">{BRAND.email}</span>
+                </a>
+              )}
               <p className="flex items-start gap-3 text-bg/75">
                 <MapPin size={15} className="mt-0.5 shrink-0 text-gold/70" />
                 {BRAND.address}

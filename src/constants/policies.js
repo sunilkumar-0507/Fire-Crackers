@@ -184,9 +184,9 @@ export const POLICIES = [
       {
         heading: 'Talking to a person',
         list: [
-          `Phone: ${BRAND.phone}`,
+          BRAND.phoneAlt ? `Phone: ${BRAND.phone} / ${BRAND.phoneAlt}` : `Phone: ${BRAND.phone}`,
           `WhatsApp: ${BRAND.whatsapp}`,
-          `Email: ${BRAND.email}`,
+          ...(BRAND.email ? [`Email: ${BRAND.email}`] : []),
           `Hours: ${BRAND.hours}`,
           `Address: ${BRAND.address}`,
         ],
@@ -297,7 +297,11 @@ export const POLICIES = [
       {
         heading: 'Asking us about your data',
         body: [
-          `Write to ${BRAND.email} or call ${BRAND.phone} and ask. We will tell you what we hold about you, correct it if it is wrong, and delete what we are not required to keep.`,
+          // A data-access route has to stay reachable whether or not there is a
+          // published email address, so the phone line is the one constant here.
+          BRAND.email
+            ? `Write to ${BRAND.email} or call ${BRAND.phone} and ask. We will tell you what we hold about you, correct it if it is wrong, and delete what we are not required to keep.`
+            : `Call ${BRAND.phone}, or message us on WhatsApp at ${BRAND.whatsapp}, and ask. We will tell you what we hold about you, correct it if it is wrong, and delete what we are not required to keep.`,
         ],
       },
     ],

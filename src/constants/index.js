@@ -1,12 +1,19 @@
 export let BRAND = {
-  name: 'Gopi Crackers',
-  short: 'Gopi',
+  name: 'SKV Pyros',
+  short: 'SKV Pyros',
   tagline: 'Sivakasi · Since 1994',
-  phone: '+91 98420 11994',
-  phoneHref: 'tel:+919842011994',
-  whatsapp: '+91 98420 11994',
-  email: 'orders@gopicrackers.in',
-  emailHref: 'mailto:orders@gopicrackers.in',
+  // `phone` is the one every Call button on the site dials, and the one
+  // WhatsApp messages are addressed to. `phoneAlt` is the second line at the
+  // shop: it is listed wherever we print the full set of ways to reach us, but
+  // it is never a button target, because a customer offered two Call buttons
+  // has to make a decision we should be making for them.
+  phone: '+91 94874 79000',
+  phoneHref: 'tel:+919487479000',
+  phoneAlt: '+91 89393 89000',
+  phoneAltHref: 'tel:+918939389000',
+  whatsapp: '+91 94874 79000',
+  email: 'skvpyros@gmail.com',
+  emailHref: 'mailto:skvpyros@gmail.com',
   address: '14/3 Sattur Main Road, Sivakasi, Virudhunagar District, Tamil Nadu 626123',
   licence: 'PESO Licence No. E/HQ/TN/22/1994 (S)',
   gstin: '33AABCA1994K1Z8',
@@ -117,7 +124,7 @@ export let FULFILMENT_METHODS = [
 
 /** Where a collection order is picked up from, and what to bring. */
 export let PICKUP = {
-  name: 'Gopi Crackers factory counter',
+  name: 'SKV Pyros factory counter',
   address: '14/3 Sattur Main Road, Sivakasi, Virudhunagar District, Tamil Nadu 626123',
   hours: 'Mon–Sat, 9:00 AM – 8:00 PM IST',
   notes: [
@@ -190,7 +197,18 @@ export const SOCIALS = [
   { label: 'Instagram', href: 'https://instagram.com', icon: 'instagram' },
   { label: 'Facebook', href: 'https://facebook.com', icon: 'facebook' },
   { label: 'YouTube', href: 'https://youtube.com', icon: 'youtube' },
-  { label: 'WhatsApp', href: 'https://wa.me/919842011994', icon: 'whatsapp' },
+  // Read off `BRAND` at access time rather than written out again. This entry
+  // held a literal `wa.me/919842011994` and was missed when the shop's number
+  // changed, because nothing about a bare string of digits says which shop it
+  // belongs to. A getter also survives hydration: consumers touch `.href` when
+  // they render, by which point the API's number has landed.
+  {
+    label: 'WhatsApp',
+    get href() {
+      return `https://wa.me/${(BRAND.whatsapp ?? '').replace(/\D/g, '')}`;
+    },
+    icon: 'whatsapp',
+  },
 ];
 
 export const STORAGE_KEYS = {
@@ -231,11 +249,21 @@ export let PAYMENTS = { enabled: false, provider: 'none', mode: 'off' };
  * degrades to the seed for the missing part rather than blanking a form.
  */
 
-/** `tel:` and `mailto:` are derived here — the API sends the plain values. */
+/**
+ * `tel:` and `mailto:` are derived here — the API sends the plain values.
+ *
+ * Both are optional, and an absent one yields a null href rather than a
+ * half-built `tel:` or `mailto:` — a link with nothing after the colon opens
+ * an empty draft or a blank dialler, which reads as a bug and loses the
+ * enquiry. Consumers check the value before rendering the row at all.
+ */
+const tel = (number) => (number ? `tel:${number.replace(/[^\d+]/g, '')}` : null);
+
 const hrefs = (brand) => ({
   ...brand,
-  phoneHref: `tel:${(brand.phone ?? '').replace(/[^\d+]/g, '')}`,
-  emailHref: `mailto:${brand.email ?? ''}`,
+  phoneHref: tel(brand.phone) ?? 'tel:',
+  phoneAltHref: tel(brand.phoneAlt),
+  emailHref: brand.email ? `mailto:${brand.email}` : null,
 });
 
 /** The delivery/pickup hints the API writes, keeping the icons declared here. */
@@ -244,7 +272,14 @@ const ICON_BY_FULFILMENT = { delivery: 'truck', pickup: 'store' };
 export const hydrateConfig = (config) => {
   if (!config) return false;
 
-  if (config.brand) BRAND = hrefs(config.brand);
+  // Merged, not replaced. Every other line in this function already falls back
+  // to the built-in value when the API omits a key; brand now behaves the same
+  // way one level down. It has to: the second shop number lives only here until
+  // the API's brand payload grows a `phoneAlt`, and a wholesale replace would
+  // drop it on every boot. Keys the API does send still win, including an
+  // explicit null — that is how a detail gets cleared, rather than by removing
+  // the key and quietly inheriting whatever is written below.
+  if (config.brand) BRAND = hrefs({ ...BRAND, ...config.brand });
   if (config.shipping) SHIPPING = config.shipping;
   if (config.coupons) COUPONS = config.coupons;
   if (config.paymentMethods?.length) PAYMENT_METHODS = config.paymentMethods;
