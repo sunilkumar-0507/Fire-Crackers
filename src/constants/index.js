@@ -28,7 +28,6 @@ export const NAV_LINKS = [
     // anyone renamed, added or removed a category in the admin.
     dynamic: 'categories',
   },
-  { label: 'Offers', to: '/offers' },
   { label: 'Combo Packs', to: '/combos' },
   { label: 'Bulk Orders', to: '/bulk-orders' },
   { label: 'About', to: '/about' },
@@ -128,7 +127,7 @@ export let PICKUP = {
   ],
 };
 
-/** Coupon codes the mock checkout accepts. Mirrors `offers.json`. */
+/** Coupon codes the checkout accepts. Entered at checkout — there is no page listing them. */
 export let COUPONS = {
   DIWALI75: { type: 'percentage', value: 0, minOrder: 0, note: 'Already applied to every price' },
   EARLYBIRD: { type: 'percentage', value: 10, minOrder: 1500, note: '10% off before the rush' },
@@ -149,7 +148,6 @@ export const FOOTER_LINKS = [
     links: [
       { label: 'All crackers', to: '/products' },
       { label: 'Combo packs', to: '/combos' },
-      { label: 'Festival offers', to: '/offers' },
       { label: 'Gift boxes', to: '/category/gift-boxes' },
       { label: 'Family packs', to: '/category/family-packs' },
       { label: 'Silent range', to: '/products?tag=silent' },

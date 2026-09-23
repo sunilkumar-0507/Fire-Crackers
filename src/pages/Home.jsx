@@ -2,7 +2,6 @@ import Hero from '@/components/home/Hero';
 import CategoryStrip from '@/components/home/CategoryStrip';
 import TrustStrip from '@/components/home/TrustStrip';
 import FeaturedProducts from '@/components/home/FeaturedProducts';
-import OffersSection from '@/components/home/OffersSection';
 import BestSellers from '@/components/home/BestSellers';
 import GreenDiwaliBanner from '@/components/home/GreenDiwaliBanner';
 import ComboPacks from '@/components/home/ComboPacks';
@@ -26,10 +25,6 @@ export const Home = () => (
 
     <DeferredSection estimatedHeight={1200}>
       <FeaturedProducts />
-    </DeferredSection>
-
-    <DeferredSection estimatedHeight={900}>
-      <OffersSection />
     </DeferredSection>
 
     <DeferredSection estimatedHeight={800}>

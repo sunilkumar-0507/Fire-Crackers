@@ -80,29 +80,6 @@ export const availabilityOf = (item) => {
 /** True when a customer can actually put this in a basket. */
 export const isPurchasable = (item) => availabilityOf(item).purchasable;
 
-/** Splits a countdown in ms into padded day/hour/minute/second parts. */
-export const splitDuration = (ms) => {
-  const clamped = Math.max(0, ms);
-  const total = Math.floor(clamped / 1000);
-  return {
-    days: String(Math.floor(total / 86400)).padStart(2, '0'),
-    hours: String(Math.floor((total % 86400) / 3600)).padStart(2, '0'),
-    minutes: String(Math.floor((total % 3600) / 60)).padStart(2, '0'),
-    seconds: String(total % 60).padStart(2, '0'),
-    expired: clamped <= 0,
-  };
-};
-
-/**
- * Offers carry a fixed `endsAt`, but a demo should never show a dead timer.
- * Once the fixed date passes we roll forward by `fallbackHours` instead.
- */
-export const resolveDeadline = (offer) => {
-  const fixed = new Date(offer.endsAt).getTime();
-  if (Number.isFinite(fixed) && fixed > Date.now()) return fixed;
-  return Date.now() + (offer.fallbackHours ?? 48) * 3600 * 1000;
-};
-
 export const formatDate = (iso) =>
   new Intl.DateTimeFormat('en-IN', { dateStyle: 'medium', timeStyle: 'short' }).format(
     new Date(iso),

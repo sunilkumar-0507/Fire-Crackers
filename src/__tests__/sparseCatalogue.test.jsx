@@ -2,7 +2,7 @@
  * The shop against a half-filled database.
  *
  * Removing the bundled catalogue made this reachable for the first time. The
- * seed JSON always had four banners, six combos, six offers and twelve FAQs in
+ * seed JSON always had four banners, six combos and twelve FAQs in
  * it, so every component could assume its data existed — and several did, by
  * indexing straight into an array at module load. A real database does not make
  * that promise: a shopkeeper who has added products but not yet written a
@@ -29,7 +29,6 @@ import RootLayout from '@/layouts/RootLayout';
 import Home from '@/pages/Home';
 import Products from '@/pages/Products';
 import Category from '@/pages/Category';
-import Offers from '@/pages/Offers';
 import Combos from '@/pages/Combos';
 import About from '@/pages/About';
 import Checkout from '@/pages/Checkout';
@@ -42,7 +41,6 @@ const routes = [
       { index: true, element: <Home /> },
       { path: 'products', element: <Products /> },
       { path: 'category/:slug', element: <Category /> },
-      { path: 'offers', element: <Offers /> },
       { path: 'combos', element: <Combos /> },
       { path: 'about', element: <About /> },
       { path: 'checkout', element: <Checkout /> },
@@ -51,7 +49,7 @@ const routes = [
 ];
 
 /** Every page that reads one of the optional collections. */
-const PATHS = ['/', '/products', '/category/sparklers', '/offers', '/combos', '/about', '/checkout'];
+const PATHS = ['/', '/products', '/category/sparklers', '/combos', '/about', '/checkout'];
 
 beforeAll(() => {
   installDomStubs();
@@ -63,7 +61,6 @@ beforeAll(() => {
     products,
     categories,
     combos: [],
-    offers: [],
     banners: [],
     testimonials: [],
     faqs: [],

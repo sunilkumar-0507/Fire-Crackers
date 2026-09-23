@@ -13,7 +13,6 @@ import Home from '@/pages/Home';
 const Products = lazy(() => import('@/pages/Products'));
 const ProductDetail = lazy(() => import('@/pages/ProductDetail'));
 const Category = lazy(() => import('@/pages/Category'));
-const Offers = lazy(() => import('@/pages/Offers'));
 const Combos = lazy(() => import('@/pages/Combos'));
 const ComboDetail = lazy(() => import('@/pages/ComboDetail'));
 const BulkOrders = lazy(() => import('@/pages/BulkOrders'));
@@ -42,7 +41,6 @@ export const router = createBrowserRouter([
       { path: 'products', element: <Products /> },
       { path: 'product/:slug', element: <ProductDetail /> },
       { path: 'category/:slug', element: <Category /> },
-      { path: 'offers', element: <Offers /> },
       { path: 'combos', element: <Combos /> },
       { path: 'combo/:slug', element: <ComboDetail /> },
       { path: 'bulk-orders', element: <BulkOrders /> },

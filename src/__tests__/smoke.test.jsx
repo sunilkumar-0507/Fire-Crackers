@@ -17,7 +17,6 @@ import Home from '@/pages/Home';
 import Products from '@/pages/Products';
 import ProductDetail from '@/pages/ProductDetail';
 import Category from '@/pages/Category';
-import Offers from '@/pages/Offers';
 import Combos from '@/pages/Combos';
 import ComboDetail from '@/pages/ComboDetail';
 import BulkOrders from '@/pages/BulkOrders';
@@ -37,7 +36,6 @@ const routes = [
       { path: 'products', element: <Products /> },
       { path: 'product/:slug', element: <ProductDetail /> },
       { path: 'category/:slug', element: <Category /> },
-      { path: 'offers', element: <Offers /> },
       { path: 'combos', element: <Combos /> },
       { path: 'combo/:slug', element: <ComboDetail /> },
       { path: 'bulk-orders', element: <BulkOrders /> },
@@ -59,7 +57,6 @@ const PATHS = [
   '/product/does-not-exist',
   '/category/sparklers',
   '/category/nope',
-  '/offers',
   '/combos',
   '/combo/family-festival-box',
   '/bulk-orders',

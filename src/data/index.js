@@ -33,7 +33,6 @@ import { hydrateConfig, hydrateFulfilment, hydratePayments } from '@/constants';
 
 export let categories = [];
 export let products = [];
-export let offers = [];
 export let banners = [];
 export let combos = [];
 export let testimonials = [];
@@ -50,7 +49,6 @@ export let featuredProducts = [];
 export let bestSellers = [];
 export let newArrivals = [];
 export let featuredCombos = [];
-export let featuredOffers = [];
 
 /** Every distinct tag in the catalogue, with usage counts, most used first. */
 export let allTags = [];
@@ -117,7 +115,6 @@ const recompute = () => {
   bestSellers = products.filter((p) => p.bestSeller);
   newArrivals = products.filter((p) => p.isNew);
   featuredCombos = combos.filter((c) => c.featured);
-  featuredOffers = offers.filter((o) => o.featured);
 
   const counts = new Map();
   for (const p of products) for (const t of p.tags ?? []) counts.set(t, (counts.get(t) ?? 0) + 1);
@@ -153,7 +150,6 @@ export const hydrate = (payload) => {
   if (payload.products) products = payload.products;
   if (payload.categories) categories = payload.categories;
   if (payload.combos) combos = payload.combos;
-  if (payload.offers) offers = payload.offers;
   if (payload.banners) banners = payload.banners;
   if (payload.testimonials) testimonials = payload.testimonials;
   if (payload.faqs) faqs = payload.faqs;

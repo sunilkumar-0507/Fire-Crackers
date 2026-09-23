@@ -21,10 +21,9 @@ import { hydrate } from '@/data';
 
 import categories from '@/data/categories.json';
 import products from '@/data/products.json';
-import offers from '@/data/offers.json';
 import banners from '@/data/banners.json';
 import combos from '@/data/combos.json';
 import testimonials from '@/data/testimonials.json';
 import faqs from '@/data/faq.json';
 
-hydrate({ products, categories, offers, banners, combos, testimonials, faqs });
+hydrate({ products, categories, banners, combos, testimonials, faqs });

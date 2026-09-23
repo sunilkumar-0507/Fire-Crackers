@@ -55,7 +55,7 @@ export const installDomStubs = () => {
    * Reports every observed element as visible, immediately.
    *
    * A no-op stub meant `DeferredSection` never mounted its children, so the
-   * sections below the fold on the homepage — best sellers, offers, combos,
+   * sections below the fold on the homepage — best sellers, combos,
    * the FAQ, the newsletter — were not covered by a single test. A smoke test
    * exists to catch a page that blanks at runtime, and those were exactly the
    * components it could not see.

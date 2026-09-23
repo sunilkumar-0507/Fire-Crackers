@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { AlertTriangle, Check, Heart, HeartFilled, Info, MessageCircle, ShieldAlert, ShoppingBag, Sparkles, Truck } from '@/components/ui/icons';
+import { AlertTriangle, Check, Heart, HeartFilled, MessageCircle, ShieldAlert, ShoppingBag, Sparkles, Truck } from '@/components/ui/icons';
 import { cn } from '@/utils/cn';
-import { findProduct, getRelated, findCategory, featuredOffers } from '@/data';
+import { findProduct, getRelated, findCategory } from '@/data';
 import { SAFETY_RULES, SHIPPING } from '@/constants';
 import { formatPrice, availabilityOf, addWorkingDays, formatDay } from '@/utils/format';
 import { analytics } from '@/lib/analytics';
@@ -312,22 +312,6 @@ export const ProductDetail = () => {
               ))}
             </ul>
 
-            {/* live offer */}
-            {featuredOffers[1] ? (
-              <div
-                className="mt-6 flex items-start gap-3 rounded-3xl border border-dashed border-secondary-300 bg-secondary-50/60 p-5"
-              >
-                <Info size={17} className="mt-0.5 shrink-0 text-primary" />
-                <p className="text-[13px] leading-relaxed text-ink">
-                  <strong className="font-semibold text-dark">{featuredOffers[1].code}</strong> —{' '}
-                  {featuredOffers[1].title.toLowerCase()} on orders above{' '}
-                  {formatPrice(featuredOffers[1].minOrder)}.{' '}
-                  <Link to="/offers" className="font-semibold text-primary underline underline-offset-2">
-                    See all offers
-                  </Link>
-                </p>
-              </div>
-            ) : null}
           </div>
         </div>
 
