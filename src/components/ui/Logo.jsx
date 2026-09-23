@@ -52,33 +52,48 @@ export const LogoMark = ({ className, size = 40 }) => (
  * scroll; a logo that resizes as you move is a small thing that never stops
  * being distracting, and it made the header's height read as unstable.
  */
-export const Logo = ({ className, compact = false, onClick }) => (
-  <Link
-    to="/"
-    onClick={onClick}
-    aria-label={`${BRAND.name} — home`}
-    className={cn('group inline-flex min-h-11 min-w-0 select-none items-center gap-2 sm:gap-3', className)}
-  >
-    {/* The mark carries the brand on its own below 420px, where the wordmark
-        plus three header controls will not fit on one line. */}
-    <span className="relative grid shrink-0 place-items-center">
-      <LogoMark size={compact ? 32 : 36} className="sm:hidden" />
-      <LogoMark size={compact ? 34 : 40} className="hidden sm:block" />
-    </span>
+/**
+ * "SKV Pyros" → ["SKV", "Pyros"]. The last word takes the accent colour, so the
+ * wordmark follows the shop's name as the API serves it rather than bolting a
+ * fixed word onto the end of it.
+ */
+const splitName = (name) => {
+  const words = name.trim().split(/\s+/);
+  return words.length > 1 ? [words.slice(0, -1).join(' '), words.at(-1)] : ['', words[0]];
+};
 
-    <span className="flex min-w-0 flex-col leading-none">
-      {/* 15px is the largest size at which the full wordmark still clears the
-          three header controls on a 320px screen without ellipsing. */}
-      {/* "Crackers" used to be gradient-clipped text running from #C84D0E to
-          #FF8A00 — the bright half measured under 3:1 on the page. */}
-      <span className="truncate font-display text-[15px] font-semibold tracking-tight text-dark xs:text-[19px] sm:text-[21px]">
-        {BRAND.short} <span className="text-primary-700">Crackers</span>
+export const Logo = ({ className, compact = false, onClick }) => {
+  const [lead, accent] = splitName(BRAND.name);
+
+  return (
+    <Link
+      to="/"
+      onClick={onClick}
+      aria-label={`${BRAND.name} — home`}
+      className={cn('group inline-flex min-h-11 min-w-0 select-none items-center gap-2 sm:gap-3', className)}
+    >
+      {/* The mark carries the brand on its own below 420px, where the wordmark
+          plus three header controls will not fit on one line. */}
+      <span className="relative grid shrink-0 place-items-center">
+        <LogoMark size={compact ? 32 : 36} className="sm:hidden" />
+        <LogoMark size={compact ? 34 : 40} className="hidden sm:block" />
       </span>
-      <span className="mt-1 hidden text-2xs font-semibold uppercase tracking-[.16em] text-muted xs:block">
-        {BRAND.tagline}
+
+      <span className="flex min-w-0 flex-col leading-none">
+        {/* 15px is the largest size at which the full wordmark still clears the
+            three header controls on a 320px screen without ellipsing. */}
+        {/* The accent word used to be gradient-clipped text running from
+            #C84D0E to #FF8A00 — the bright half measured under 3:1 on the page. */}
+        <span className="truncate font-display text-[15px] font-semibold tracking-tight text-dark xs:text-[19px] sm:text-[21px]">
+          {lead ? `${lead} ` : null}
+          <span className="text-primary-700">{accent}</span>
+        </span>
+        <span className="mt-1 hidden text-2xs font-semibold uppercase tracking-[.16em] text-muted xs:block">
+          {BRAND.tagline}
+        </span>
       </span>
-    </span>
-  </Link>
-);
+    </Link>
+  );
+};
 
 export default Logo;
