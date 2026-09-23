@@ -100,7 +100,7 @@ const validators = {
 
 /* ------------------------------ confirmation ------------------------------ */
 
-const Confirmation = ({ order, totals }) => {
+const Confirmation = ({ order, totals, items }) => {
   const pickup = order.fulfilment === 'pickup';
 
   return (
@@ -193,7 +193,7 @@ const Confirmation = ({ order, totals }) => {
             the shop its first notice of the order on the same thread. */}
         <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
           <Button
-            href={whatsappHref(orderMessage(order))}
+            href={whatsappHref(orderMessage(order, items, totals))}
             size="lg"
             leftIcon={<MessageCircle size={17} />}
             onClick={() => analytics.whatsappClick('confirmation')}
@@ -246,6 +246,7 @@ export const Checkout = () => {
   const [order, setOrder] = useState(null);
   // Frozen at the moment of placing, so the receipt survives clearing the cart.
   const [placedTotals, setPlacedTotals] = useState(null);
+  const [placedLines, setPlacedLines] = useState([]);
   // The API's price for this basket. Null until the first quote lands, and
   // again whenever one fails — both mean "show the local sum instead".
   const [quote, setQuote] = useState(null);
@@ -364,7 +365,18 @@ export const Checkout = () => {
   const place = async () => {
     setPlacing(true);
     setPlacedTotals(totals);
+    setPlacedLines(lines);
 
+    // Cash on delivery is settled at the door, and a shop with no merchant
+    // account has no other option — either way the receipt is the next thing
+    // the customer sees, exactly as before.
+    const payOnline = PAYMENTS.enabled && form.payment !== 'cod';
+
+    // The order goes to the shop's WhatsApp the moment it is placed. The tab is
+    // opened now, inside the click, because browsers block a window opened
+    // after an `await`; it is pointed at WhatsApp once the API has issued the
+    // reference. If it is blocked anyway, the confirmation's button remains.
+    const whatsappTab = payOnline ? null : window.open('', '_blank');
 
     try {
       const result = await api.placeOrder({
@@ -395,11 +407,6 @@ export const Checkout = () => {
         session: analyticsSession(),
       });
 
-      // Cash on delivery is settled at the door, and a shop with no merchant
-      // account has no other option — either way the receipt is the next thing
-      // the customer sees, exactly as before.
-      const payOnline = PAYMENTS.enabled && form.payment !== 'cod';
-
       if (payOnline) {
         // The order is real and saved before any of this. If the payment page
         // fails to open, or the customer closes it, the shop still has a
@@ -419,8 +426,17 @@ export const Checkout = () => {
       setOrder(result);
       clearCart();
       toast.success('Order placed');
+
+      if (whatsappTab) {
+        whatsappTab.location.href = whatsappHref(
+          orderMessage(result, lines, result.totals ?? totals),
+        );
+        analytics.whatsappClick('checkout');
+      }
     } catch (error) {
+      whatsappTab?.close();
       setPlacedTotals(null);
+      setPlacedLines([]);
       toast.error(error.message);
     } finally {
       setPlacing(false);
@@ -436,7 +452,14 @@ export const Checkout = () => {
   // legitimately disagree with the preview (a line capped to stock, a coupon
   // that stopped qualifying). Fall back to the frozen local copy only if the
   // response somehow arrived without them.
-  if (order) return <Confirmation order={order} totals={order.totals ?? placedTotals ?? totals} />;
+  if (order)
+    return (
+      <Confirmation
+        order={order}
+        totals={order.totals ?? placedTotals ?? totals}
+        items={placedLines}
+      />
+    );
 
   if (!items.length) {
     return (

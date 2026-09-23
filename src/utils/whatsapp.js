@@ -88,20 +88,47 @@ export const cartEnquiryMessage = (items, totals) =>
  * Sent after checkout, quoting the reference the API issued. This is the
  * customer's own copy of the confirmation and the shop's first notice of it,
  * which is why it leads with the reference number rather than the total.
+ *
+ * Every line is itemised with its unit price and line total, so the shopkeeper
+ * can pack and bill from the chat alone. `items` are the lines the checkout
+ * showed at the moment of placing: the API's re-priced lines when it had
+ * quoted, the cart's own otherwise.
  */
-export const orderMessage = (order) =>
+export const orderMessage = (order, items = [], totals = order.totals) =>
   [
     `Hello ${BRAND.name}, I have just placed an order on your website.`,
     '',
     `Reference: ${order.orderId}`,
     `Name: ${order.name}`,
-    `Total: ${formatPrice(order.totals.total)}`,
+    order.phone ? `Phone: ${order.phone}` : null,
+    '',
+    ...(items.length
+      ? [
+          '*Items*',
+          ...items.map((item, index) => {
+            const lineTotal = item.lineTotal ?? item.price * item.qty;
+            const unitPrice = item.price ?? lineTotal / item.qty;
+            return (
+              `${index + 1}. ${item.name}${item.unit ? ` (${item.unit})` : ''}\n` +
+              `    ${item.qty} × ${formatPrice(unitPrice)} = ${formatPrice(lineTotal)}`
+            );
+          }),
+          '',
+        ]
+      : []),
+    `Subtotal: ${formatPrice(totals.subtotal)}`,
+    totals.couponDiscount > 0 ? `Coupon: −${formatPrice(totals.couponDiscount)}` : null,
+    totals.shipping > 0 ? `Delivery: ${formatPrice(totals.shipping)}` : null,
+    `*Total: ${formatPrice(totals.total)}*`,
+    '',
     order.fulfilment === 'pickup'
       ? 'Collecting from the shop.'
       : `Delivering to: ${order.address}, ${order.city} ${order.pincode}`,
     '',
     'Please confirm.',
-  ].join('\n');
+  ]
+    .filter((part) => part !== null)
+    .join('\n');
 
 /** Used by the tracking page when a customer wants to chase an order. */
 export const trackingEnquiryMessage = (orderId) =>
