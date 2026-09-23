@@ -21,7 +21,26 @@ describe('cart store', () => {
     const { items } = useCartStore.getState();
     expect(items).toHaveLength(1);
     expect(items[0].qty).toBe(5);
-    expect(selectCount(useCartStore.getState())).toBe(5);
+    // One product, held five times over — the badge counts products, not units.
+    expect(selectCount(useCartStore.getState())).toBe(1);
+  });
+
+  it('counts products rather than units, so a repeat add never moves the badge', () => {
+    const { addItem } = useCartStore.getState();
+
+    addItem(sparkler, 1);
+    expect(selectCount(useCartStore.getState())).toBe(1);
+
+    // The reported bug: tapping the same card again used to read as a second
+    // product arriving in the basket.
+    addItem(sparkler, 1);
+    addItem(sparkler, 1);
+    expect(selectCount(useCartStore.getState())).toBe(1);
+    expect(useCartStore.getState().items[0].qty).toBe(3);
+
+    // A genuinely different product is what moves it.
+    addItem(tower, 4);
+    expect(selectCount(useCartStore.getState())).toBe(2);
   });
 
   it('never lets quantity exceed available stock', () => {

@@ -109,7 +109,18 @@ export const useCartStore = create(
 /* only re-render when the value they actually use changes.                    */
 /* -------------------------------------------------------------------------- */
 
-export const selectCount = (s) => s.items.reduce((n, i) => n + i.qty, 0);
+/**
+ * How many *products* are in the basket — one per line, regardless of quantity.
+ *
+ * Adding the same product five times is one thing in the basket held five
+ * times over, not five things, and the badge is read as "how many entries will
+ * I see when I open this". Summing quantities made a second tap on one card
+ * look like a second product had been added, which is alarming when the tap
+ * was a mis-click and indistinguishable from one when it was not. The quantity
+ * itself is never hidden: it shows on the card, on the cart line, and in the
+ * stepper beside it.
+ */
+export const selectCount = (s) => s.items.length;
 
 export const selectSubtotal = (s) => s.items.reduce((n, i) => n + i.price * i.qty, 0);
 
