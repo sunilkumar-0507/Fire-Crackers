@@ -6,20 +6,22 @@ Three projects that meet at one REST API:
 | --- | --- | --- |
 | `src/` | The public storefront. React 19 + Vite. | 5173 |
 | [Fire-Cracker-Admin-](https://github.com/sunilkumar-0507/Fire-Cracker-Admin-) | The shop admin. Its own repository now. | 5174 |
-| `api/` | ASP.NET Core 10. The only thing the other two share. | 5080 |
+| [Fire_Cracker_API](https://github.com/sunilkumar-0507/Fire_Cracker_API) | ASP.NET Core 10. The only thing the other two share. Its own repository too. | 5080 |
 
 The catalogue is the real 2026 price list — 177 products across 12 categories,
 imported from `price_list_2k26_final_40pct_only.xlsx`.
 
+Paths below that start `api/` are in the Fire_Cracker_API repository.
+
 ```bash
 npm install                     # the storefront
 
-npm run api                     # :5080 — the API, run this first
+# the API, run this first — from a checkout of Fire_Cracker_API:
+#   dotnet run --project api/GopiCrackers.Api   (:5080)
 npm run dev                     # :5173 — the shop
 
 npm run build                   # storefront bundle
 npm test                        # 58 storefront tests
-npm run test:api                # 187 API tests
 npm run lint                    # oxlint, both projects
 ```
 
@@ -57,7 +59,7 @@ leaving the admin quietly open.
 
 | Where | Value |
 | --- | --- |
-| Local `npm run api` | `gopi-demo-2026`, from `appsettings.Development.json`. |
+| Local `dotnet run` of the API | `gopi-demo-2026`, from `appsettings.Development.json`. |
 | Production | Set `Storefront__Admin__Passcode` on the API host — never in `appsettings.json`, which is committed. See `api/DEPLOYMENT.md`. |
 
 One shared passcode, sent in plain text on every request, with no accounts, no
@@ -507,7 +509,7 @@ src/
 - **`heroMotion.test.jsx`** checks the hero runs the canvas by default and
   falls back to static art for a reader who asked for reduced motion.
 
-`npm run test:api` — 187 API tests against the real pipeline, booted in-process:
+`dotnet test api/GopiCrackers.Api.Tests`, in Fire_Cracker_API — the API tests against the real pipeline, booted in-process:
 routing, model binding and JSON are all real, nothing is stubbed. They cover the
 catalogue and its filters, cart pricing and coupons, the order lifecycle,
 analytics, the admin write paths, stock movement and the intake ledger, and the

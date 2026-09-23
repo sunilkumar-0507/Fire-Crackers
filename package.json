@@ -5,12 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "api": "dotnet run --project api/GopiCrackers.Api",
     "build": "vite build",
     "lint": "oxlint",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:api": "dotnet test api/GopiCrackers.Api.Tests",
     "preview": "vite preview",
     "test:responsive": "node scripts/responsive.mjs"
   },
