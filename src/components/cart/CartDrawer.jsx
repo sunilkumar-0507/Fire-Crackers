@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { ArrowRight, MessageCircle, Tag, Trash2, Truck, X } from '@/components/ui/icons';
 import { cn } from '@/utils/cn';
-import { SHIPPING } from '@/constants';
+import { COUPONS, SHIPPING } from '@/constants';
 import { formatPrice } from '@/utils/format';
 import { cartItemHref } from '@/utils/cart';
 import { products } from '@/data';
@@ -105,6 +105,13 @@ const CouponBox = () => {
     );
   }
 
+  // Only codes that exist and are worth something — a zero-value rule (one
+  // already inside every price) is no reason to type a code.
+  const suggestions = Object.entries(COUPONS)
+    .filter(([, rule]) => rule.value > 0)
+    .slice(0, 2)
+    .map(([c]) => c);
+
   const submit = (event) => {
     event.preventDefault();
     const result = applyCoupon(code);
@@ -138,10 +145,15 @@ const CouponBox = () => {
         </Button>
       </div>
       {error ? <p className="mt-2 pl-1 text-2xs text-rose-600">{error}</p> : null}
-      {!error ? (
+      {!error && suggestions.length ? (
         <p className="mt-2 pl-1 text-2xs text-muted">
-          Try <button type="button" onClick={() => setCode('EARLYBIRD')} className="font-semibold text-primary underline underline-offset-2">EARLYBIRD</button> or{' '}
-          <button type="button" onClick={() => setCode('COMBO500')} className="font-semibold text-primary underline underline-offset-2">COMBO500</button>
+          Try{' '}
+          {suggestions.map((c, i) => (
+            <span key={c}>
+              {i ? ' or ' : null}
+              <button type="button" onClick={() => setCode(c)} className="font-semibold text-primary underline underline-offset-2">{c}</button>
+            </span>
+          ))}
         </p>
       ) : null}
     </form>

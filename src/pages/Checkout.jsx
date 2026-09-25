@@ -8,7 +8,6 @@ import {
   Check,
   Clock,
   Info,
-  Lock,
   MapPin,
   MessageCircle,
   Package,
@@ -21,14 +20,10 @@ import {
   CHECKOUT_STEPS,
   DISTRICTS,
   FULFILMENT_METHODS,
-  PAYMENT_METHODS,
-  PAYMENTS,
   PICKUP,
-  STORAGE_KEYS,
   BRAND,
 } from '@/constants';
 import { api } from '@/lib/api';
-import { openCashfreeCheckout } from '@/lib/cashfree';
 import { analytics, analyticsSession } from '@/lib/analytics';
 import { whatsappHref, orderMessage } from '@/utils/whatsapp';
 import { formatPrice, addWorkingDays, formatDay } from '@/utils/format';
@@ -68,8 +63,15 @@ const emptyForm = {
   city: '',
   district: '',
   pincode: '',
-  payment: 'upi',
 };
+
+/**
+ * Payment is not taken on the site: the order lands on the shop's WhatsApp and
+ * is settled there. The API still wants a method on every order, and cash on
+ * delivery is the one that charges nothing up front.
+ */
+const PAYMENT_ON_WHATSAPP = 'cod';
+const PAYMENT_LABEL = 'Settled on WhatsApp';
 
 /* Per-step validation. Returning a map keeps the caller free of branching. */
 const validators = {
@@ -95,7 +97,6 @@ const validators = {
     return e;
   },
   2: () => ({}),
-  3: () => ({}),
 };
 
 /* ------------------------------ confirmation ------------------------------ */
@@ -160,9 +161,9 @@ const Confirmation = ({ order, totals, items }) => {
               value: pickup ? 'Sivakasi counter' : `${order.district} ${order.pincode}`,
             },
             {
-              icon: Lock,
-              label: 'Paid by',
-              value: PAYMENT_METHODS.find((p) => p.id === order.payment)?.label,
+              icon: MessageCircle,
+              label: 'Payment',
+              value: PAYMENT_LABEL,
             },
           ].map(({ icon: Icon, label, value }) => (
             <div key={label} className="flex items-start gap-3 bg-card px-5 py-5">
@@ -234,13 +235,7 @@ export const Checkout = () => {
 
   const [step, setStep] = useState(0);
   const [furthest, setFurthest] = useState(0);
-  // Default to a method the shop can actually take. With no gateway configured
-  // the online options are filtered out below, and a form still holding `upi`
-  // would place an order nobody ever charged.
-  const [form, setForm] = useState(() => ({
-    ...emptyForm,
-    payment: PAYMENTS.enabled ? emptyForm.payment : 'cod',
-  }));
+  const [form, setForm] = useState(emptyForm);
   const [errors, setErrors] = useState({});
   const [placing, setPlacing] = useState(false);
   const [order, setOrder] = useState(null);
@@ -337,19 +332,6 @@ export const Checkout = () => {
   const notices = quote?.notices ?? [];
 
   /**
-   * The methods this shop can actually take money through.
-   *
-   * With no payment gateway configured, every online method would be a promise
-   * the shop cannot keep — the order would be placed and nothing charged, and
-   * the customer would believe they had paid. Cash on delivery is the honest
-   * remainder, and it is what the shop has always run on.
-   */
-  const payableMethods = useMemo(
-    () => (PAYMENTS.enabled ? PAYMENT_METHODS : PAYMENT_METHODS.filter((m) => m.id === 'cod')),
-    [],
-  );
-
-  /**
    * The lines to show on the summary. The API's when we have them — they carry
    * the quantity it will actually charge for — so a capped row cannot read
    * "Qty 200 · ₹2,000" above a ₹740 subtotal.
@@ -367,16 +349,11 @@ export const Checkout = () => {
     setPlacedTotals(totals);
     setPlacedLines(lines);
 
-    // Cash on delivery is settled at the door, and a shop with no merchant
-    // account has no other option — either way the receipt is the next thing
-    // the customer sees, exactly as before.
-    const payOnline = PAYMENTS.enabled && form.payment !== 'cod';
-
     // The order goes to the shop's WhatsApp the moment it is placed. The tab is
     // opened now, inside the click, because browsers block a window opened
     // after an `await`; it is pointed at WhatsApp once the API has issued the
     // reference. If it is blocked anyway, the confirmation's button remains.
-    const whatsappTab = payOnline ? null : window.open('', '_blank');
+    const whatsappTab = window.open('', '_blank');
 
     try {
       const result = await api.placeOrder({
@@ -395,7 +372,7 @@ export const Checkout = () => {
         city: pickup ? null : form.city,
         district: pickup ? null : form.district,
         pincode: pickup ? null : form.pincode,
-        payment: form.payment,
+        payment: PAYMENT_ON_WHATSAPP,
         // The API prices the basket itself from ids and quantities, so the
         // confirmation total is its own rather than one the browser sent.
         items: items.map((line) => ({ id: line.id, qty: line.qty })),
@@ -406,22 +383,6 @@ export const Checkout = () => {
         // lets it attribute the order to this visit in the funnel.
         session: analyticsSession(),
       });
-
-      if (payOnline) {
-        // The order is real and saved before any of this. If the payment page
-        // fails to open, or the customer closes it, the shop still has a
-        // booking to chase rather than a lost sale.
-        try {
-          sessionStorage.setItem(STORAGE_KEYS.paymentPhone, form.phone.trim());
-        } catch {
-          /* Private mode — the return page will ask for the number instead. */
-        }
-
-        const session = await api.paymentSession(result.orderId, form.phone.trim());
-        clearCart();
-        await openCashfreeCheckout(session.paymentSessionId, session.mode);
-        return;
-      }
 
       setOrder(result);
       clearCart();
@@ -485,11 +446,7 @@ export const Checkout = () => {
       <PageHeader
         eyebrow="Checkout"
         title="Nearly there"
-        description={
-          PAYMENTS.enabled
-            ? 'Four short steps. Payment is taken on the provider’s own secure page — no card details ever reach this site.'
-            : 'Four short steps. This shop settles on delivery or at the counter, so no payment details are collected here.'
-        }
+        description="Three short steps. Your order goes to our WhatsApp, and payment is settled with us there — no payment details are collected here."
         breadcrumbs={[{ label: 'Checkout' }]}
       />
 
@@ -701,66 +658,8 @@ export const Checkout = () => {
                 </div>
               ) : null}
 
-              {/* ---------------- step 2: payment ---------------- */}
+              {/* ---------------- step 2: review ---------------- */}
               {step === 2 ? (
-                <div className="grid gap-5">
-                  <header className="flex items-center gap-3">
-                    <span className="grid h-10 w-10 place-items-center rounded-2xl bg-secondary-50 text-primary">
-                      <Lock size={18} />
-                    </span>
-                    <div>
-                      <h2 className="font-display text-xl font-semibold text-dark">Payment method</h2>
-                      <p className="text-2xs text-muted">Nothing is charged — this is a demo</p>
-                    </div>
-                  </header>
-
-                  <div className="grid gap-3">
-                    {payableMethods.map((method) => {
-                      const disabled = method.id === 'cod' && totals.total > 5000;
-                      const selected = form.payment === method.id;
-
-                      return (
-                        <label
-                          key={method.id}
-                          className={cn(
-                            'flex cursor-pointer items-center gap-3.5 rounded-3xl border p-4 transition-all duration-300 sm:gap-4 sm:p-5',
-                            selected
-                              ? 'border-primary bg-secondary-50/70 shadow-soft'
-                              : 'border-line bg-card hover:border-secondary-300',
-                            disabled && 'cursor-not-allowed opacity-45',
-                          )}
-                        >
-                          <input
-                            type="radio"
-                            name="payment"
-                            value={method.id}
-                            checked={selected}
-                            disabled={disabled}
-                            onChange={set('payment')}
-                            className="h-4 w-4 shrink-0 accent-primary"
-                          />
-                          <span className="flex-1">
-                            <span className="block text-sm font-semibold text-dark">{method.label}</span>
-                            <span className="mt-0.5 block text-2xs text-muted">
-                              {disabled ? 'Not available above ₹5,000' : method.hint}
-                            </span>
-                          </span>
-                          {selected ? <Check size={17} className="shrink-0 text-primary" /> : null}
-                        </label>
-                      );
-                    })}
-                  </div>
-
-                  <p className="flex items-start gap-3 rounded-2xl bg-secondary-50/70 p-4 text-2xs leading-relaxed text-muted">
-                    <Lock size={14} className="mt-0.5 shrink-0 text-primary" />
-                    This is a frontend demonstration. No card, UPI or bank detail is requested,
-                    stored or transmitted anywhere.
-                  </p>
-                </div>
-              ) : null}
-
-              {/* ---------------- step 3: review ---------------- */}
-              {step === 3 ? (
                 <div className="grid gap-6">
                   <header className="flex items-center gap-3">
                     <span className="grid h-10 w-10 place-items-center rounded-2xl bg-secondary-50 text-primary">
@@ -791,7 +690,7 @@ export const Checkout = () => {
                             ['District', `${form.district} — ${form.pincode}`],
                             ['Delivery', deliveryWindow],
                           ]),
-                      ['Payment', PAYMENT_METHODS.find((p) => p.id === form.payment)?.label],
+                      ['Payment', PAYMENT_LABEL],
                     ].map(([label, value]) => (
                       <div key={label} className="bg-card px-4 py-3.5 sm:px-5 sm:py-4">
                         <dt className="text-2xs uppercase tracking-[.14em] text-muted">{label}</dt>
@@ -806,9 +705,6 @@ export const Checkout = () => {
                     </Button>
                     <Button variant="ghost" size="sm" onClick={() => setStep(1)}>
                       {pickup ? 'Change to delivery' : 'Edit address'}
-                    </Button>
-                    <Button variant="ghost" size="sm" onClick={() => setStep(2)}>
-                      Change payment
                     </Button>
                   </div>
                 </div>

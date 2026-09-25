@@ -7,6 +7,7 @@ import { formatPrice, addWorkingDays, formatDay } from '@/utils/format';
 import { comboToCartItem } from '@/utils/cart';
 import { primaryImage } from '@/utils/image';
 import { useCartStore, selectInCart } from '@/store/cartStore';
+import { COUPONS } from '@/constants';
 import PageHeader from '@/components/ui/PageHeader';
 import Section, { SectionHeading } from '@/components/ui/Section';
 import ComboCard from '@/components/combo/ComboCard';
@@ -209,10 +210,16 @@ export const ComboDetail = () => {
                   Arrives {formatDay(addWorkingDays(2))} – {formatDay(addWorkingDays(4))}, free
                   above {formatPrice(2000)}
                 </p>
-                <p className="flex items-start gap-2.5">
-                  <Check size={15} className="mt-0.5 shrink-0 text-emerald-500" />
-                  Use <strong className="font-semibold text-dark">COMBO500</strong> for a further ₹500 off
-                </p>
+                {COUPONS.COMBO500 ? (
+                  <p className="flex items-start gap-2.5">
+                    <Check size={15} className="mt-0.5 shrink-0 text-emerald-500" />
+                    Use <strong className="font-semibold text-dark">COMBO500</strong> for a further{' '}
+                    {COUPONS.COMBO500.type === 'flat'
+                      ? formatPrice(COUPONS.COMBO500.value)
+                      : `${COUPONS.COMBO500.value}%`}{' '}
+                    off
+                  </p>
+                ) : null}
               </div>
 
               <div className="mt-5 flex items-center justify-end border-t border-line pt-5">

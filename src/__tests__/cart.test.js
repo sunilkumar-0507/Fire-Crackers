@@ -2,11 +2,19 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { useCartStore, selectTotals, selectCount } from '@/store/cartStore';
 import { toCartItem, comboToCartItem } from '@/utils/cart';
 import { findProduct, findCombo } from '@/data';
-import { SHIPPING } from '@/constants';
+import { SHIPPING, hydrateConfig } from '@/constants';
 
-const sparkler = toCartItem(findProduct('30-cm-electric-sparkler')); // ₹70, stock 181
-const tower = toCartItem(findProduct('dazzling-pot-deluxe')); //         ₹630, stock 20
+const sparkler = toCartItem(findProduct('30-cm-electric-sparkler')); // ₹69, stock 181
+const tower = toCartItem(findProduct('dazzling-pot-deluxe')); //         ₹446, stock 20
 const combo = comboToCartItem(findCombo('family-festival-box')); //      ₹2,419
+
+// The shop ships with no coupons of its own; they come from the API's config.
+hydrateConfig({
+  coupons: {
+    EARLYBIRD: { type: 'percentage', value: 10, minOrder: 1500, note: '10% off before the rush' },
+    COMBO500: { type: 'flat', value: 500, minOrder: 1899, note: '₹500 off combo packs' },
+  },
+});
 
 const reset = () => useCartStore.setState({ items: [], wishlist: [], coupon: null });
 
@@ -61,12 +69,12 @@ describe('cart store', () => {
 
   it('charges delivery below the free threshold and not above it', () => {
     const { addItem } = useCartStore.getState();
-    addItem(sparkler, 1); // ₹70
+    addItem(sparkler, 1); // ₹69
 
     let totals = selectTotals(useCartStore.getState());
-    expect(totals.subtotal).toBe(70);
+    expect(totals.subtotal).toBe(69);
     expect(totals.shipping).toBe(SHIPPING.localFee);
-    expect(totals.total).toBe(70 + SHIPPING.localFee);
+    expect(totals.total).toBe(69 + SHIPPING.localFee);
 
     addItem(combo, 1); // pushes past ₹2,000
     totals = selectTotals(useCartStore.getState());
@@ -76,7 +84,7 @@ describe('cart store', () => {
 
   it('rejects a coupon below its minimum order and accepts it above', () => {
     const { addItem, applyCoupon } = useCartStore.getState();
-    addItem(sparkler, 1); // ₹70, below EARLYBIRD's ₹1,500 floor
+    addItem(sparkler, 1); // ₹69, below EARLYBIRD's ₹1,500 floor
 
     expect(applyCoupon('EARLYBIRD').ok).toBe(false);
     expect(useCartStore.getState().coupon).toBeNull();

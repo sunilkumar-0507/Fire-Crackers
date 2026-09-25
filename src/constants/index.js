@@ -96,7 +96,6 @@ export let PAYMENT_METHODS = [
 export const CHECKOUT_STEPS = [
   { id: 'details', label: 'Your details', hint: 'Name and phone' },
   { id: 'fulfilment', label: 'Delivery', hint: 'Deliver or collect' },
-  { id: 'payment', label: 'Payment', hint: 'How you pay' },
   { id: 'review', label: 'Review', hint: 'Confirm and place' },
 ];
 
@@ -134,14 +133,12 @@ export let PICKUP = {
   ],
 };
 
-/** Coupon codes the checkout accepts. Entered at checkout — there is no page listing them. */
-export let COUPONS = {
-  DIWALI75: { type: 'percentage', value: 0, minOrder: 0, note: 'Already applied to every price' },
-  EARLYBIRD: { type: 'percentage', value: 10, minOrder: 1500, note: '10% off before the rush' },
-  COMBO500: { type: 'flat', value: 500, minOrder: 1899, note: '₹500 off combo packs' },
-  SILENT15: { type: 'percentage', value: 15, minOrder: 999, note: '15% off the silent range' },
-  BULK20: { type: 'percentage', value: 20, minOrder: 25000, note: '20% off bulk orders' },
-};
+/**
+ * Coupon codes the checkout accepts. Empty until the API's config arrives:
+ * the codes are the ones created under Coupons in the admin, and a built-in
+ * list here would keep accepting codes the admin never made (or deleted).
+ */
+export let COUPONS = {};
 
 export let SHIPPING = {
   freeAbove: 2000,
