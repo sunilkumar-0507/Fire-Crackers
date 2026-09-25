@@ -68,7 +68,7 @@ describe('catalogue filtering', () => {
   it('applies the price ceiling inclusively', () => {
     const cheap = filterProducts({ maxPrice: 150 });
     expect(cheap.every((p) => p.price <= 150)).toBe(true);
-    expect(cheap.some((p) => p.price === 140)).toBe(true);
+    expect(cheap.some((p) => p.price === 139)).toBe(true);
   });
 
   it('sorts by price ascending and descending', () => {

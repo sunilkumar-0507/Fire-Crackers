@@ -9,7 +9,7 @@ Three projects that meet at one REST API:
 | [Fire_Cracker_API](https://github.com/sunilkumar-0507/Fire_Cracker_API) | ASP.NET Core 10. The only thing the other two share. Its own repository too. | 5080 |
 
 The catalogue is the real 2026 price list — 177 products across 12 categories,
-imported from `price_list_2k26_final_40pct_only.xlsx`.
+imported from `Final_list_SKV_PYROS_plus10percent.xlsx`.
 
 Paths below that start `api/` are in the Fire_Cracker_API repository.
 
