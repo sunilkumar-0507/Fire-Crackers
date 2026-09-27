@@ -1,6 +1,5 @@
 import { ArrowRight, Leaf, VolumeX } from '@/components/ui/icons';
 import { banners, products, combos } from '@/data';
-import { COUPONS } from '@/constants';
 import Button from '@/components/ui/Button';
 
 const SILENT_TAGS = ['silent', 'kids-safe'];
@@ -29,10 +28,6 @@ export const GreenDiwaliBanner = () => {
     (p.tags ?? []).some((t) => SILENT_TAGS.includes(t)),
   ).length;
   if (!silentCount) return null;
-
-  // The discount is the coupon's own, read from the shop's configuration, so
-  // changing SILENT15 in one place changes what this panel promises.
-  const silentCoupon = COUPONS.SILENT15;
 
   // Prefer whatever second action the banner itself carries; fall back to the
   // silent combo, but only while that combo actually exists — a deleted one
@@ -81,16 +76,6 @@ export const GreenDiwaliBanner = () => {
                   Reports in the range
                 </dt>
               </div>
-              {silentCoupon ? (
-                <div>
-                  <dd className="font-display text-2xl font-semibold text-dark sm:text-3xl">
-                    {silentCoupon.value}%
-                  </dd>
-                  <dt className="mt-1 text-2xs uppercase tracking-[.14em] text-muted">
-                    Extra off with SILENT15
-                  </dt>
-                </div>
-              ) : null}
             </dl>
 
             <div className="mt-7 flex flex-col gap-3 xs:flex-row xs:flex-wrap sm:mt-9">
