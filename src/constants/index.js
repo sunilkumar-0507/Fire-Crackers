@@ -90,7 +90,6 @@ export let PAYMENT_METHODS = [
   { id: 'upi', label: 'UPI', hint: 'GPay, PhonePe, Paytm, BHIM' },
   { id: 'card', label: 'Card', hint: 'Credit or debit, all major banks' },
   { id: 'netbanking', label: 'Net banking', hint: '58 banks supported' },
-  { id: 'cod', label: 'Cash on delivery', hint: 'Available up to ₹5,000' },
 ];
 
 export const CHECKOUT_STEPS = [
@@ -219,8 +218,8 @@ export const STORAGE_KEYS = {
  * Whether this shop can take money online.
  *
  * Off until the API says otherwise, which is the safe direction: a checkout
- * that offered a card and could not charge it would be worse than one that only
- * offers cash on delivery. Replaced by `hydratePayments` during boot.
+ * that offered a card and could not charge it would be worse than one that
+ * settles every order on WhatsApp. Replaced by `hydratePayments` during boot.
  */
 export let PAYMENTS = { enabled: false, provider: 'none', mode: 'off' };
 
@@ -279,7 +278,10 @@ export const hydrateConfig = (config) => {
   if (config.brand) BRAND = hrefs({ ...BRAND, ...config.brand });
   if (config.shipping) SHIPPING = config.shipping;
   if (config.coupons) COUPONS = config.coupons;
-  if (config.paymentMethods?.length) PAYMENT_METHODS = config.paymentMethods;
+  // Cash on delivery is off for now. The API still lists it, so it is dropped
+  // here and no screen can offer it.
+  if (config.paymentMethods?.length)
+    PAYMENT_METHODS = config.paymentMethods.filter((m) => m.id !== 'cod');
   if (config.districts?.length) DISTRICTS = config.districts;
   if (config.safetyRules?.length) SAFETY_RULES = config.safetyRules;
   if (config.popularSearches?.length) POPULAR_SEARCHES = config.popularSearches;

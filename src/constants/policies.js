@@ -16,7 +16,7 @@ import { BRAND, SHIPPING } from '@/constants';
  * A note for whoever maintains this
  *
  * The wording below is drafted to describe how this shop actually operates —
- * the delivery windows, the COD ceiling and the coupon rules are the ones the
+ * the delivery windows and the coupon rules are the ones the
  * code enforces. It is **not** a lawyer's work. Fireworks retail in India sits
  * under the Explosives Act 1884, the Explosive Rules 2008 and a series of
  * Supreme Court directions on permitted formulations and bursting hours, and
@@ -164,7 +164,6 @@ export const POLICIES = [
           'UPI — GPay, PhonePe, Paytm, BHIM.',
           'Credit or debit card.',
           'Net banking.',
-          'Cash on delivery, up to ₹5,000.',
         ],
       },
       {

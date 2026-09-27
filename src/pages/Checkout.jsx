@@ -67,8 +67,9 @@ const emptyForm = {
 
 /**
  * Payment is not taken on the site: the order lands on the shop's WhatsApp and
- * is settled there. The API still wants a method on every order, and cash on
- * delivery is the one that charges nothing up front.
+ * is settled there. The API still wants a method on every order, and this id
+ * is the one it accepts that charges nothing up front. It is never shown: the
+ * customer sees PAYMENT_LABEL instead.
  */
 const PAYMENT_ON_WHATSAPP = 'cod';
 const PAYMENT_LABEL = 'Settled on WhatsApp';

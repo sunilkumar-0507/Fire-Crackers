@@ -137,6 +137,16 @@ const recompute = () => {
 };
 
 /**
+ * Cash on delivery is off for now, but FAQ answers written while it was on are
+ * still in the database. Cut the mention out rather than show an offer the shop
+ * no longer makes. Remove once the FAQs are edited at the source.
+ */
+const COD_MENTION = /(?:,|\s+and)?\s+cash on delivery(?:\s+up to ₹[\d,]+)?/gi;
+
+const withoutCashOnDelivery = (faq) =>
+  faq?.answer ? { ...faq, answer: faq.answer.replace(COD_MENTION, '') } : faq;
+
+/**
  * Replaces the catalogue with a bootstrap payload.
  *
  * A list is taken whenever the API sent one, **including an empty one** — an
@@ -152,7 +162,7 @@ export const hydrate = (payload) => {
   if (payload.combos) combos = payload.combos;
   if (payload.banners) banners = payload.banners;
   if (payload.testimonials) testimonials = payload.testimonials;
-  if (payload.faqs) faqs = payload.faqs;
+  if (payload.faqs) faqs = payload.faqs.map(withoutCashOnDelivery);
 
   recompute();
 };
