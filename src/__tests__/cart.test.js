@@ -69,12 +69,12 @@ describe('cart store', () => {
 
   it('charges delivery below the free threshold and not above it', () => {
     const { addItem } = useCartStore.getState();
-    addItem(sparkler, 1); // ₹69
+    addItem(sparkler, 1);
 
     let totals = selectTotals(useCartStore.getState());
-    expect(totals.subtotal).toBe(69);
+    expect(totals.subtotal).toBe(sparkler.price);
     expect(totals.shipping).toBe(SHIPPING.localFee);
-    expect(totals.total).toBe(69 + SHIPPING.localFee);
+    expect(totals.total).toBe(sparkler.price + SHIPPING.localFee);
 
     addItem(combo, 1); // pushes past ₹2,000
     totals = selectTotals(useCartStore.getState());
