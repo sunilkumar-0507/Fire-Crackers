@@ -129,7 +129,10 @@ export const BestSellers = () => {
             }
           }
 
-          pagination={{ clickable: true, el: '.bestseller-dots' }}
+          // Dynamic bullets only tag the dots around the active one; the CSS
+          // uses those tags to show a short single row on phones and the full
+          // row from `sm` up.
+          pagination={{ clickable: true, el: '.bestseller-dots', dynamicBullets: true, dynamicMainBullets: 3 }}
           onBeforeInit={(swiper) => {
             // Refs are not populated when Swiper reads its params, so wire the
             // custom arrows up here instead of via the `navigation` option.
@@ -152,7 +155,7 @@ export const BestSellers = () => {
           ))}
         </Swiper>
 
-        <div className="bestseller-dots mt-6 flex flex-wrap items-center justify-center sm:mt-8" />
+        <div className="bestseller-dots mt-6 flex flex-nowrap items-center sm:flex-wrap justify-center sm:mt-8" />
       </div>
     </Section>
   );

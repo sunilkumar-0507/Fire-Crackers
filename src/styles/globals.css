@@ -326,6 +326,39 @@
   background: #954c05;
 }
 
+/* Best-seller dots run in Swiper's dynamic mode purely for the classes it puts
+   on the dots near the active one. Its own sizing and sliding (inline width and
+   `left`, scaled dots) is switched off so the row lays out like normal dots. */
+.bestseller-dots.swiper-pagination-bullets-dynamic {
+  width: auto !important;
+  overflow: visible;
+  font-size: inherit;
+}
+.bestseller-dots.swiper-pagination-bullets-dynamic .swiper-pagination-bullet {
+  position: static;
+  left: auto !important;
+  transform: none;
+}
+/* A phone gets one short row — the active dot and its neighbours, the outer
+   pair smaller — instead of every slide's dot wrapping onto three lines. */
+@media (max-width: 639px) {
+  .bestseller-dots.swiper-pagination-bullets-dynamic
+    .swiper-pagination-bullet:not(
+      .swiper-pagination-bullet-active,
+      .swiper-pagination-bullet-active-main,
+      .swiper-pagination-bullet-active-prev,
+      .swiper-pagination-bullet-active-prev-prev,
+      .swiper-pagination-bullet-active-next,
+      .swiper-pagination-bullet-active-next-next
+    ) {
+    display: none;
+  }
+  .bestseller-dots.swiper-pagination-bullets-dynamic .swiper-pagination-bullet-active-prev-prev,
+  .bestseller-dots.swiper-pagination-bullets-dynamic .swiper-pagination-bullet-active-next-next {
+    transform: scale(0.6);
+  }
+}
+
 /* ------------------------------------------------------------------ *
  * Accessibility: respect reduced-motion across every animated surface
  * ------------------------------------------------------------------ */

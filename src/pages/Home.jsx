@@ -3,7 +3,6 @@ import CategoryStrip from '@/components/home/CategoryStrip';
 import TrustStrip from '@/components/home/TrustStrip';
 import FeaturedProducts from '@/components/home/FeaturedProducts';
 import BestSellers from '@/components/home/BestSellers';
-import GreenDiwaliBanner from '@/components/home/GreenDiwaliBanner';
 import ComboPacks from '@/components/home/ComboPacks';
 import FaqSection from '@/components/home/FaqSection';
 import Newsletter from '@/components/home/Newsletter';
@@ -29,10 +28,6 @@ export const Home = () => (
 
     <DeferredSection estimatedHeight={800}>
       <BestSellers />
-    </DeferredSection>
-
-    <DeferredSection estimatedHeight={620}>
-      <GreenDiwaliBanner />
     </DeferredSection>
 
     <DeferredSection estimatedHeight={1000}>
