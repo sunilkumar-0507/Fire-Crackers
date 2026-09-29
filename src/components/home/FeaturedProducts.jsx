@@ -1,19 +1,24 @@
 import { useMemo, useState } from 'react';
-import { ArrowRight, Star } from '@/components/ui/icons';
+import { ArrowRight, Search, Star } from '@/components/ui/icons';
 import { products, categoriesWithCounts } from '@/data';
 import Section, { SectionHeading } from '@/components/ui/Section';
 import ProductGrid from '@/components/product/ProductGrid';
 import Button from '@/components/ui/Button';
 import Chip from '@/components/ui/Chip';
+import { useUIStore } from '@/store/uiStore';
 
 /**
- * Catalogue shelf with inline category filtering. "All" is the whole catalogue;
- * the grid paginates as you scroll so the first paint stays cheap. Only
- * categories that actually have products get a chip, so no filter can ever
- * return zero.
+ * Catalogue shelf with inline category filtering. It stops at `SHELF_SIZE`
+ * cards so the rest of the homepage stays reachable, and hands off to the full
+ * listing below the grid. Only categories that actually have products get a
+ * chip, so no filter can ever return zero.
  */
+// 36 fills whole rows at two, three and four columns.
+const SHELF_SIZE = 36;
+
 export const FeaturedProducts = () => {
   const [filter, setFilter] = useState('all');
+  const openSearch = useUIStore((s) => s.openSearch);
 
   const availableFilters = useMemo(() => {
     const present = new Set(products.map((p) => p.category));
@@ -21,7 +26,7 @@ export const FeaturedProducts = () => {
   }, [products]);
 
   const visible = useMemo(
-    () => (filter === 'all' ? products : products.filter((p) => p.category === filter)),
+    () => (filter === 'all' ? products : products.filter((p) => p.category === filter)).slice(0, SHELF_SIZE),
     [filter, products],
   );
 
@@ -34,8 +39,8 @@ export const FeaturedProducts = () => {
           title="What we'd put in our own basket"
           description="The ones we make the most of, sell the most of, and get the fewest complaints about. Filter by category or add straight from the card."
           action={
-            <Button to="/products" variant="outline" rightIcon={<ArrowRight size={16} />}>
-              See everything
+            <Button onClick={openSearch} variant="outline" leftIcon={<Search size={16} />}>
+              Search
             </Button>
           }
         />
@@ -57,6 +62,16 @@ export const FeaturedProducts = () => {
         </div>
 
         <ProductGrid products={visible} paginate />
+
+        <div className="mt-8 flex justify-center sm:mt-10">
+          <Button
+            to={filter === 'all' ? '/products' : `/category/${filter}`}
+            size="lg"
+            rightIcon={<ArrowRight size={16} />}
+          >
+            See everything
+          </Button>
+        </div>
       </div>
     </Section>
   );
