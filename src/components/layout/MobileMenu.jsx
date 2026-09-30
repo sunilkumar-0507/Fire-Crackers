@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Link, NavLink } from 'react-router-dom';
-import { ChevronDown, Phone, Search, X } from '@/components/ui/icons';
+import { ArrowRight, ChevronDown, Phone, Search, X } from '@/components/ui/icons';
 import { cn } from '@/utils/cn';
 import { BRAND, SOCIALS } from '@/constants';
 import { buildNavLinks } from '@/utils/nav';
-import { categoriesWithCounts } from '@/data';
+import { categoriesWithCounts, products } from '@/data';
 import { useUIStore } from '@/store/uiStore';
 import { useLockBodyScroll } from '@/hooks/useLockBodyScroll';
 import Logo from '@/components/ui/Logo';
@@ -101,6 +101,17 @@ export const MobileMenu = () => {
                   {isExpanded ? (
                     <div className="overflow-hidden">
                       <div className="grid grid-cols-1 gap-2 px-1 pb-3 pt-2 xs:grid-cols-2">
+                        <Link
+                          to="/products"
+                          onClick={close}
+                          className="col-span-full flex items-center justify-between rounded-xl bg-dark px-4 py-3 text-bg transition-colors hover:bg-primary-900"
+                        >
+                          <span>
+                            <span className="block text-sm font-semibold">All products</span>
+                            <span className="block text-2xs text-bg/70">{products.length} items</span>
+                          </span>
+                          <ArrowRight size={16} />
+                        </Link>
                         {categoriesWithCounts.map((category) => (
                           <Link
                             key={category.id}
@@ -134,7 +145,7 @@ export const MobileMenu = () => {
             {BRAND.phone}
           </a>
 
-          <div className="flex items-center justify-center gap-2 pt-1">
+          <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
             {SOCIALS.map((social) => (
               <a
                 key={social.label}

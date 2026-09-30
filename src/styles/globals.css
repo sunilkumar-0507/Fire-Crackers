@@ -331,6 +331,11 @@
    `left`, scaled dots) is switched off so the row lays out like normal dots. */
 .bestseller-dots.swiper-pagination-bullets-dynamic {
   width: auto !important;
+  /* Swiper centres an absolutely positioned dynamic row with `left: 50%` plus
+     `translateX(-50%)`. This row sits in normal flow at full width, so the
+     translate alone pushed it half off-screen and clipped the dots. */
+  left: auto !important;
+  transform: none !important;
   overflow: visible;
   font-size: inherit;
 }
