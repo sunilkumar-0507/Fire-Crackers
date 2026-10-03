@@ -85,7 +85,8 @@ export const cartEnquiryMessage = (items, totals) =>
     .join('\n');
 
 /**
- * Sent after checkout, quoting the reference the API issued. This is the
+ * Sent after checkout, quoting the reference the API issued (or, when the API
+ * could not take the order, the same order without a reference). This is the
  * customer's own copy of the confirmation and the shop's first notice of it,
  * which is why it leads with the reference number rather than the total.
  *
@@ -96,9 +97,11 @@ export const cartEnquiryMessage = (items, totals) =>
  */
 export const orderMessage = (order, items = [], totals = order.totals) =>
   [
-    `Hello ${BRAND.name}, I have just placed an order on your website.`,
+    order.orderId
+      ? `Hello ${BRAND.name}, I have just placed an order on your website.`
+      : `Hello ${BRAND.name}, I would like to place this order from your website.`,
     '',
-    `Reference: ${order.orderId}`,
+    order.orderId ? `Reference: ${order.orderId}` : null,
     `Name: ${order.name}`,
     order.phone ? `Phone: ${order.phone}` : null,
     '',

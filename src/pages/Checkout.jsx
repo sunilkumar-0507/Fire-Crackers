@@ -395,11 +395,32 @@ export const Checkout = () => {
         );
         analytics.whatsappClick('checkout');
       }
-    } catch (error) {
-      whatsappTab?.close();
+    } catch {
+      // Every order is settled on WhatsApp whatever its amount, so a refusal
+      // from the API (an old amount cap, a timeout, an outage) must not leave
+      // the customer stuck. The order goes to the shop's WhatsApp as it is,
+      // without a reference, and the shop confirms it there.
+      const href = whatsappHref(
+        orderMessage(
+          {
+            orderId: null,
+            name: form.name,
+            phone: form.phone,
+            fulfilment: form.fulfilment,
+            address: form.address,
+            city: form.city,
+            pincode: form.pincode,
+          },
+          lines,
+          totals,
+        ),
+      );
+      analytics.whatsappClick('checkout-fallback');
+      toast.success('Sending your order to us on WhatsApp');
       setPlacedTotals(null);
       setPlacedLines([]);
-      toast.error(error.message);
+      if (whatsappTab) whatsappTab.location.href = href;
+      else window.location.href = href;
     } finally {
       setPlacing(false);
     }
