@@ -196,7 +196,7 @@ export const Navbar = () => {
           </nav>
 
           <div className="ml-auto flex shrink-0 items-center gap-0.5 sm:gap-2 lg:ml-0">
-            {/* On a phone Search and Cart live in the bottom tab bar instead. */}
+            {/* On a phone Search lives in the bottom tab bar instead. */}
             <button
               type="button"
               onClick={openSearch}
@@ -210,7 +210,7 @@ export const Navbar = () => {
               type="button"
               onClick={openCart}
               aria-label={`Open cart, ${count} item${count === 1 ? '' : 's'}`}
-              className="relative hidden h-11 items-center gap-2 rounded-full bg-flame lg:flex px-3.5 text-sm font-semibold text-dark transition-[filter] duration-200 hover:brightness-[1.04] active:scale-95 sm:px-4"
+              className="relative flex h-11 items-center gap-2 rounded-full bg-flame px-3.5 text-sm font-semibold text-dark transition-[filter] duration-200 hover:brightness-[1.04] active:scale-95 sm:px-4"
             >
               <ShoppingBag size={18} />
             <span className="hidden sm:inline">Cart</span>

@@ -9,6 +9,10 @@ import fireArt from '@/assets/art/Fire.webp';
 /**
  * Landing hero.
  *
+ * On a phone the still-life and its fireworks sit behind the copy as a faded
+ * backdrop instead of stacking below it, where they were a screen's scroll
+ * away from the headline they decorate.
+ *
  * Copy on the left, the festival still-life on the right — the arrangement in
  * the reference: rocket, flower pot, chakkar, diya and a bundle of crackers
  * around a gift box, cut out on transparency so it sits on the page's cream
@@ -51,7 +55,7 @@ export const Hero = () => {
     <section className="relative overflow-hidden pb-12 pt-10 sm:pb-16 sm:pt-14">
       <div className="container relative">
         <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:gap-12">
-          <div className="flex flex-col items-start text-left">
+          <div className="relative z-10 flex flex-col items-start text-left">
             {/* `items-start`, not `items-center`: the label wraps to two lines on a
                 320px handset, and centred the dot floated in the gap between
                 them instead of marking the first word. */}
@@ -105,7 +109,10 @@ export const Hero = () => {
             `aria-hidden`, which keeps a screen reader from announcing a
             description of a photograph nobody needs read aloud.
           */}
-          <div aria-hidden="true" className="relative animate-rise-in">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 flex items-center justify-center animate-rise-in lg:pointer-events-auto lg:relative lg:inset-auto lg:block"
+          >
             {/* Shells launching and bursting, behind everything else in this
                 column. The box is deliberately larger than the picture so the
                 bursts open around it rather than being clipped to its edges;
@@ -135,8 +142,12 @@ export const Hero = () => {
               loading="eager"
               fetchPriority="high"
               decoding="async"
-              className="relative mx-auto block w-full max-w-sm object-contain animate-float sm:max-w-md lg:max-w-none"
+              className="relative mx-auto block w-full max-w-sm object-contain opacity-40 animate-float sm:max-w-md lg:max-w-none lg:opacity-100"
             />
+
+            {/* Phones only: a cream wash over the backdrop so the headline and
+                buttons keep their contrast against the artwork behind them. */}
+            <div className="absolute inset-0 bg-gradient-to-b from-bg/30 via-bg/20 to-bg/40 lg:hidden" />
           </div>
         </div>
       </div>
