@@ -1,70 +1,103 @@
-import { useLocation } from 'react-router-dom';
-import { ShoppingBag, ArrowRight } from '@/components/ui/icons';
-import { useCartTotals } from '@/store/cartStore';
+import { Link, useLocation } from 'react-router-dom';
+import { Home, LayoutGrid, Phone, Search, ShoppingBag } from '@/components/ui/icons';
+import { cn } from '@/utils/cn';
+import { useCartStore, selectCount } from '@/store/cartStore';
 import { useUIStore } from '@/store/uiStore';
-import { formatPrice } from '@/utils/format';
 
 /**
- * Floating cart pill for small screens.
+ * App-style tab bar for small screens: Home, Products, Search, Contact, Cart.
  *
- * Hidden on checkout — a persistent "view cart" button on the page where you
- * are already reviewing the cart is just noise in front of the form.
+ * It replaces the floating "view basket" pill, which only appeared once
+ * something was in the cart — so a first-time visitor on a phone had no
+ * persistent way to reach the catalogue, search or the shop's number. Every
+ * one of those is now one thumb-tap away on every page.
+ *
+ * Search and Cart open their overlays rather than navigating, so they are
+ * buttons; the rest are links.
  */
+
+// "Products" stays lit anywhere inside the catalogue, not only on /products.
+const isCatalogue = (pathname) =>
+  /^\/(products|product\/|category\/|combos|combo\/)/.test(pathname);
+
+const TABS = [
+  { label: 'Home', icon: Home, to: '/', match: (p) => p === '/' },
+  { label: 'Products', icon: LayoutGrid, to: '/products', match: isCatalogue },
+  { label: 'Search', icon: Search, action: 'search' },
+  { label: 'Contact', icon: Phone, to: '/contact', match: (p) => p === '/contact' },
+  { label: 'Cart', icon: ShoppingBag, action: 'cart' },
+];
+
+const tabClass = (active) =>
+  cn(
+    'relative flex h-14 min-w-0 flex-1 flex-col items-center justify-center gap-1 rounded-2xl text-xs font-semibold transition-colors duration-200 active:scale-95',
+    active ? 'bg-white/10 text-secondary' : 'text-bg/75 hover:text-bg',
+  );
+
 export const MobileBottomBar = () => {
-  const totals = useCartTotals();
-  const openCart = useUIStore((s) => s.openCart);
   const { pathname } = useLocation();
-
-  const hidden = pathname.startsWith('/checkout') || totals.count === 0;
-
-  if (hidden) return null;
+  const count = useCartStore(selectCount);
+  const cartOpen = useUIStore((s) => s.cartOpen);
+  const searchOpen = useUIStore((s) => s.searchOpen);
+  const openCart = useUIStore((s) => s.openCart);
+  const openSearch = useUIStore((s) => s.openSearch);
 
   return (
     <>
       {/*
-        Reserves the height the fixed bar occupies.
-
-        A fixed element is out of flow, so it cannot push anything: without
-        this, the last ~100px of every page sits underneath the bar, and
-        because the document is already scrolled to its end there is no way to
-        get at it. It buried the FAQ's last question on the home page and a
-        whole product card on the catalogue.
-
-        Rendered here rather than as permanent padding in the layout, so the
-        space only exists while the bar does — an empty cart gets no dead strip
-        under its footer. Sized a little above the measured 101px, with the
-        safe-area inset added for the home-indicator gesture area.
+        Reserves the height the fixed bar occupies. A fixed element is out of
+        flow, so without this the end of every page — the footer's last links,
+        the last row of products — would sit underneath the bar with no way to
+        scroll it clear.
       */}
-      <div aria-hidden="true" className="h-[calc(6.5rem+env(safe-area-inset-bottom))] lg:hidden" />
+      <div aria-hidden="true" className="h-[calc(4.5rem+env(safe-area-inset-bottom))] lg:hidden" />
 
-      <div className="fixed inset-x-0 bottom-0 z-40 p-4 pb-[max(1rem,env(safe-area-inset-bottom))] lg:hidden">
-      <button
-        type="button"
-        onClick={openCart}
-        className="flex w-full items-center gap-4 rounded-full bg-dark py-3 pl-3 pr-5 text-left shadow-lift"
+      <nav
+        aria-label="Quick navigation"
+        className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-dark px-2 pb-[max(0.25rem,env(safe-area-inset-bottom))] pt-1 shadow-[0_-8px_24px_-12px_rgba(43,20,8,.45)] lg:hidden"
       >
-        <span className="relative grid h-11 w-11 shrink-0 place-items-center rounded-full bg-flame text-dark">
-          <ShoppingBag size={18} />
-          <span className="absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-gold px-1 text-[10px] font-bold text-dark">
-            {totals.count}
-          </span>
-        </span>
+        <ul className="mx-auto flex max-w-md items-center gap-1">
+          {TABS.map(({ label, icon: Icon, to, match, action }) => {
+            if (to) {
+              const active = match(pathname);
+              return (
+                <li key={label} className="flex min-w-0 flex-1">
+                  <Link to={to} aria-current={active ? 'page' : undefined} className={tabClass(active)}>
+                    <Icon size={20} />
+                    {label}
+                  </Link>
+                </li>
+              );
+            }
 
-        <span className="min-w-0 flex-1">
-          <span className="block text-2xs uppercase tracking-[.16em] text-gold/80">
-            {totals.count} item{totals.count === 1 ? '' : 's'} in basket
-          </span>
-          <span className="block truncate font-display text-lg font-semibold text-bg">
-            {formatPrice(totals.total)}
-          </span>
-        </span>
-
-        <span className="flex shrink-0 items-center gap-1.5 text-sm font-semibold text-gold">
-          View
-          <ArrowRight size={15} />
-        </span>
-        </button>
-      </div>
+            const isCart = action === 'cart';
+            const active = isCart ? cartOpen : searchOpen;
+            return (
+              <li key={label} className="flex min-w-0 flex-1">
+                <button
+                  type="button"
+                  onClick={isCart ? openCart : openSearch}
+                  aria-label={isCart ? `Cart, ${count} item${count === 1 ? '' : 's'}` : 'Search products'}
+                  className={tabClass(active)}
+                >
+                  <span className="relative">
+                    <Icon size={20} />
+                    {isCart && count > 0 ? (
+                      <span
+                        key={count}
+                        className="absolute -right-3 -top-2 grid h-[18px] min-w-[18px] place-items-center rounded-full bg-secondary px-1 text-[10px] font-bold leading-none text-dark"
+                      >
+                        {count > 99 ? '99+' : count}
+                      </span>
+                    ) : null}
+                  </span>
+                  {label}
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
     </>
   );
 };

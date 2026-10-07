@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import { ChevronDown, Menu, Search, ShoppingBag } from '@/components/ui/icons';
+import { ChevronDown, Menu, Phone, Search, ShoppingBag, Truck } from '@/components/ui/icons';
+import { BRAND } from '@/constants';
 import { cn } from '@/utils/cn';
 import { buildNavLinks } from '@/utils/nav';
 import { categoriesWithCounts } from '@/data';
@@ -148,6 +149,22 @@ export const Navbar = () => {
 
   return (
     <header className="fixed inset-x-0 top-0 z-50">
+      {/* Phones get the shop's number as the top strip, one tap to call. It
+          takes the place of the announcement sentence, which is too long to
+          read at this width and kept the header at three bands. */}
+      <div className="bg-dark lg:hidden">
+        <div className="container flex h-9 items-center justify-between gap-3">
+          <a
+            href={BRAND.phoneHref}
+            className="flex min-h-9 items-center gap-2 text-[13px] font-semibold tracking-wide text-bg"
+          >
+            <Phone size={13} className="text-secondary" />
+            {BRAND.phone}
+          </a>
+          <span className="truncate text-2xs font-semibold text-gold">{BRAND.tagline}</span>
+        </div>
+      </div>
+
       {/* The bar is opaque at every scroll position. It used to be fully
           transparent until 28px, which meant the logo and every nav label sat
           directly on whatever the page happened to be showing underneath —
@@ -180,11 +197,24 @@ export const Navbar = () => {
           </nav>
 
           <div className="ml-auto flex shrink-0 items-center gap-0.5 sm:gap-2 lg:ml-0">
+            {/* On a phone Search and Cart live in the bottom tab bar, so the
+                header keeps the one thing that bar has no room for. */}
+            <Link
+              to="/track"
+              onClick={closeDropdown}
+              className="flex h-11 items-center gap-1.5 rounded-xl border-2 border-line-strong bg-card px-3 text-[13px] font-semibold text-dark transition-colors duration-200 hover:border-primary hover:text-primary-700 active:scale-95 lg:hidden"
+            >
+              <Truck size={16} />
+              <span>
+                Track<span className="max-[359px]:hidden"> Order</span>
+              </span>
+            </Link>
+
             <button
               type="button"
               onClick={openSearch}
               aria-label="Search crackers"
-              className="grid h-11 w-11 place-items-center rounded-full text-ink transition-colors duration-200 hover:bg-secondary-50 hover:text-primary-700 active:scale-95"
+              className="hidden h-11 w-11 lg:grid place-items-center rounded-full text-ink transition-colors duration-200 hover:bg-secondary-50 hover:text-primary-700 active:scale-95"
             >
               <Search size={19} />
             </button>
@@ -193,7 +223,7 @@ export const Navbar = () => {
               type="button"
               onClick={openCart}
               aria-label={`Open cart, ${count} item${count === 1 ? '' : 's'}`}
-              className="relative flex h-11 items-center gap-2 rounded-full bg-flame px-3.5 text-sm font-semibold text-dark transition-[filter] duration-200 hover:brightness-[1.04] active:scale-95 sm:px-4"
+              className="relative hidden h-11 items-center gap-2 rounded-full bg-flame lg:flex px-3.5 text-sm font-semibold text-dark transition-[filter] duration-200 hover:brightness-[1.04] active:scale-95 sm:px-4"
             >
               <ShoppingBag size={18} />
             <span className="hidden sm:inline">Cart</span>
@@ -219,7 +249,9 @@ export const Navbar = () => {
         </div>
       </div>
 
-      <AnnouncementBar />
+      <div className="hidden lg:block">
+        <AnnouncementBar />
+      </div>
     </header>
   );
 };

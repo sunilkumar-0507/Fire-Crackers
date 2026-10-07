@@ -22,6 +22,7 @@ import {
   TfiHeart,
   TfiHome,
   TfiInfoAlt,
+  TfiLayoutGrid2,
   TfiLocationPin,
   TfiLock,
   TfiMenu,
@@ -92,6 +93,7 @@ export const ChevronLeft = icon(TfiAngleLeft, 'ChevronLeft');
 export const ChevronRight = icon(TfiAngleRight, 'ChevronRight');
 export const CornerDownLeft = icon(FaTurnDown, 'CornerDownLeft');
 export const Home = icon(TfiHome, 'Home');
+export const LayoutGrid = icon(TfiLayoutGrid2, 'LayoutGrid');
 export const Menu = icon(TfiMenu, 'Menu');
 export const X = icon(TfiClose, 'X');
 

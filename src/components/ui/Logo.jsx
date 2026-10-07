@@ -1,50 +1,27 @@
 import { Link } from 'react-router-dom';
 import { cn } from '@/utils/cn';
 import { BRAND } from '@/constants';
+import logoArt from '@/assets/art/logo-skv-192.jpg';
 
-/** Diya mark: a lit lamp inside a spark ring. */
-export const LogoMark = ({ className, size = 40 }) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 48 48"
-    fill="none"
-    className={className}
-    aria-hidden="true"
-  >
-    <defs>
-      <linearGradient id="lg-flame" x1="0" y1="1" x2="0" y2="0">
-        <stop offset="0%" stopColor="#C84D0E" />
-        <stop offset="45%" stopColor="#FF8A00" />
-        <stop offset="100%" stopColor="#FFD56A" />
-      </linearGradient>
-      <linearGradient id="lg-bowl" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stopColor="#E2762F" />
-        <stop offset="100%" stopColor="#8C3A12" />
-      </linearGradient>
-    </defs>
-
-    {/* spark ring */}
-    <circle cx="24" cy="24" r="22" stroke="#FFD56A" strokeWidth="1.5" strokeDasharray="2 6" opacity=".75" />
-
-    {/* flame */}
-    <path
-      d="M24 6 C29 13 32 18 32 22 C32 26.5 28.4 30 24 30 C19.6 30 16 26.5 16 22 C16 18 19 13 24 6 Z"
-      fill="url(#lg-flame)"
-    />
-    <path
-      d="M24 15 C26.6 19 28 21.6 28 24 C28 26.2 26.2 28 24 28 C21.8 28 20 26.2 20 24 C20 21.6 21.4 19 24 15 Z"
-      fill="#FFF6DC"
-      opacity=".9"
-    />
-
-    {/* bowl */}
-    <path
-      d="M7 31 C7 31 14 29 24 29 C34 29 41 31 41 31 C39.5 37.5 32.5 42 24 42 C15.5 42 8.5 37.5 7 31 Z"
-      fill="url(#lg-bowl)"
-    />
-    <ellipse cx="24" cy="31" rx="17" ry="2.6" fill="#FFB44B" />
-  </svg>
+/**
+ * The SKV Pyros badge: gold lettering on black.
+ *
+ * Imported from a 192px export rather than the 1254px master in the same
+ * folder — the master is 276 KB for something drawn at 44px on every page.
+ * Re-export from `Logo skv.jpeg` if the artwork changes.
+ */
+export const LogoMark = ({ className, size }) => (
+  <img
+    src={logoArt}
+    width={size ?? 192}
+    height={size ?? 192}
+    alt=""
+    decoding="async"
+    className={cn('shrink-0 rounded-xl bg-black object-cover shadow-soft', className)}
+    // Without `size` the caller sets the box with classes, so it can respond
+    // to the breakpoint.
+    style={size ? { width: size, height: size } : undefined}
+  />
 );
 
 /**
@@ -72,19 +49,16 @@ export const Logo = ({ className, compact = false, onClick }) => {
       aria-label={`${BRAND.name} — home`}
       className={cn('group inline-flex min-h-11 min-w-0 select-none items-center gap-2 sm:gap-3', className)}
     >
-      {/* The mark carries the brand on its own below 420px, where the wordmark
-          plus three header controls will not fit on one line. */}
-      <span className="relative grid shrink-0 place-items-center">
-        <LogoMark size={compact ? 32 : 36} className="sm:hidden" />
-        <LogoMark size={compact ? 34 : 40} className="hidden sm:block" />
-      </span>
+      <LogoMark
+        className={compact ? 'h-10 w-10' : 'h-11 w-11 sm:h-[52px] sm:w-[52px]'}
+      />
 
       <span className="flex min-w-0 flex-col leading-none">
-        {/* 15px is the largest size at which the full wordmark still clears the
-            three header controls on a 320px screen without ellipsing. */}
+        {/* 17px is the largest size at which the full wordmark still clears the
+            Track Order and menu buttons on a 320px screen without ellipsing. */}
         {/* The accent word used to be gradient-clipped text running from
             #C84D0E to #FF8A00 — the bright half measured under 3:1 on the page. */}
-        <span className="truncate font-display text-[15px] font-semibold tracking-tight text-dark xs:text-[19px] sm:text-[21px]">
+        <span className="truncate font-display text-[17px] font-bold tracking-tight text-dark xs:text-[20px] sm:text-[21px]">
           {lead ? `${lead} ` : null}
           <span className="text-primary-700">{accent}</span>
         </span>

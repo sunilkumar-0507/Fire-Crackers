@@ -48,9 +48,8 @@ export const Footer = () => (
     <div className="relative">
       <DiyaBorder />
 
-      {/* The floating basket pill sits over the bottom ~76px on small screens,
-          so the last row needs clearance to stay reachable. */}
-      <div className="container pb-28 pt-8 lg:pb-12">
+      {/* The phone tab bar reserves its own space below the footer. */}
+      <div className="container pb-10 pt-8 lg:pb-12">
         {/* Four link columns plus the brand is more than fits at `lg`, so the
             links go two-up there and only spread out at `xl`. */}
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3 lg:gap-12 xl:grid-cols-[1.3fr_repeat(4,minmax(0,1fr))] xl:gap-10">
