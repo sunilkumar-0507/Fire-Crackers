@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import { ChevronDown, Menu, Phone, Search, ShoppingBag, Truck } from '@/components/ui/icons';
+import { ChevronDown, Phone, Search, ShoppingBag } from '@/components/ui/icons';
 import { BRAND } from '@/constants';
 import { cn } from '@/utils/cn';
 import { buildNavLinks } from '@/utils/nav';
@@ -128,7 +128,6 @@ export const Navbar = () => {
   const count = useCartStore(selectCount);
   const openCart = useUIStore((s) => s.openCart);
   const openSearch = useUIStore((s) => s.openSearch);
-  const openMenu = useUIStore((s) => s.openMenu);
 
   const closeDropdown = useCallback(() => setOpenKey(null), []);
 
@@ -197,19 +196,7 @@ export const Navbar = () => {
           </nav>
 
           <div className="ml-auto flex shrink-0 items-center gap-0.5 sm:gap-2 lg:ml-0">
-            {/* On a phone Search and Cart live in the bottom tab bar, so the
-                header keeps the one thing that bar has no room for. */}
-            <Link
-              to="/track"
-              onClick={closeDropdown}
-              className="flex h-11 items-center gap-1.5 rounded-xl border-2 border-line-strong bg-card px-3 text-[13px] font-semibold text-dark transition-colors duration-200 hover:border-primary hover:text-primary-700 active:scale-95 lg:hidden"
-            >
-              <Truck size={16} />
-              <span>
-                Track<span className="max-[359px]:hidden"> Order</span>
-              </span>
-            </Link>
-
+            {/* On a phone Search and Cart live in the bottom tab bar instead. */}
             <button
               type="button"
               onClick={openSearch}
@@ -237,14 +224,6 @@ export const Navbar = () => {
               ) : null}
             </button>
 
-            <button
-              type="button"
-              onClick={openMenu}
-              aria-label="Open menu"
-              className="grid h-11 w-11 place-items-center rounded-full text-ink transition-colors duration-200 hover:bg-secondary-50 hover:text-primary-700 active:scale-95 lg:hidden"
-            >
-              <Menu size={20} />
-            </button>
           </div>
         </div>
       </div>
