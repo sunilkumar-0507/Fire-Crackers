@@ -10,7 +10,7 @@ import { artForCategory } from '@/utils/image';
 import { useCartStore, selectInCart, selectIsWishlisted } from '@/store/cartStore';
 import { useUIStore } from '@/store/uiStore';
 import ProductImage from '@/components/ui/ProductImage';
-import Badge, { StockBadge } from '@/components/ui/Badge';
+import Badge from '@/components/ui/Badge';
 
 /**
  * The catalogue's workhorse card.
@@ -162,8 +162,6 @@ export const ProductCard = memo(function ProductCard({ product, className, compa
             </p>
           ) : null}
 
-          <p className="truncate text-2xs text-muted">{product.unit}</p>
-
           <div className="mt-auto pt-2.5">
             <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
               <span className="font-display text-xl font-semibold text-dark">
@@ -176,8 +174,6 @@ export const ProductCard = memo(function ProductCard({ product, className, compa
                 </span>
               ) : null}
             </div>
-
-            <StockBadge level={level} className="mt-2" />
 
             <button
               type="button"

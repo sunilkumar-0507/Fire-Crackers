@@ -17,15 +17,18 @@ import ProductGrid from '@/components/product/ProductGrid';
 import Section, { SectionHeading } from '@/components/ui/Section';
 import Tabs from '@/components/ui/Tabs';
 import Button from '@/components/ui/Button';
-import Badge, { StockBadge } from '@/components/ui/Badge';
+import Badge from '@/components/ui/Badge';
 import QtyStepper from '@/components/ui/QtyStepper';
 import EmptyState from '@/components/ui/EmptyState';
 
 /* ----------------------------- tab panels -------------------------------- */
 
+// "Contents" is the pack size ("Box of 10"), which the shop does not show.
+const HIDDEN_SPECS = new Set(['Contents']);
+
 const SpecTable = ({ specs }) => (
   <dl className="grid gap-px overflow-hidden rounded-3xl border border-line bg-line sm:grid-cols-2">
-    {Object.entries(specs).map(([key, value]) => (
+    {Object.entries(specs).filter(([key]) => !HIDDEN_SPECS.has(key)).map(([key, value]) => (
       <div key={key} className="flex items-baseline justify-between gap-3 bg-card px-4 py-3.5 sm:px-5 sm:py-4">
         <dt className="text-2xs font-semibold uppercase tracking-[.14em] text-muted">{key}</dt>
         <dd className="text-right text-sm font-semibold text-dark">{value}</dd>
@@ -202,9 +205,6 @@ export const ProductDetail = () => {
               <h1 className="mt-3 font-display text-display-sm font-semibold leading-[1.1] text-dark">
                 {product.name}
               </h1>
-              <div className="mt-4 flex flex-wrap items-center gap-4">
-                <StockBadge level={level} />
-              </div>
             </div>
 
             <p className="mt-5 text-[15px] leading-[1.75] text-muted">
@@ -225,7 +225,7 @@ export const ProductDetail = () => {
                 </Badge>
               </div>
               <p className="mt-1.5 text-xs text-muted">
-                {product.unit} · inclusive of all taxes
+                Inclusive of all taxes
               </p>
 
               {/* The stepper is ~150px wide; below `xs` there is not enough

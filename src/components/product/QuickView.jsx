@@ -2,14 +2,14 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { ArrowRight, Check, ShieldCheck } from '@/components/ui/icons';
-import { formatPrice, availabilityOf } from '@/utils/format';
+import { formatPrice } from '@/utils/format';
 import { toCartItem } from '@/utils/cart';
 import { artForCategory } from '@/utils/image';
 import { useCartStore } from '@/store/cartStore';
 import { useUIStore } from '@/store/uiStore';
 import Modal from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
-import Badge, { StockBadge } from '@/components/ui/Badge';
+import Badge from '@/components/ui/Badge';
 import QtyStepper from '@/components/ui/QtyStepper';
 import ProductImage from '@/components/ui/ProductImage';
 
@@ -32,7 +32,6 @@ export const QuickView = () => {
 
   if (!product) return <Modal open={false} onClose={close} />;
 
-  const level = availabilityOf(product);
   const soldOut = product.stock <= 0;
   const fallback = artForCategory(product.category);
 
@@ -92,9 +91,6 @@ export const QuickView = () => {
             <h2 className="mt-2 max-w-[calc(100%-2.5rem)] font-display text-xl font-semibold leading-tight text-dark sm:max-w-none sm:text-[28px]">
               {product.name}
             </h2>
-            <div className="mt-3 flex flex-wrap items-center gap-3">
-              <StockBadge level={level} />
-            </div>
           </div>
 
           <p className="line-clamp-4 text-[15px] leading-relaxed text-muted">{product.description}</p>

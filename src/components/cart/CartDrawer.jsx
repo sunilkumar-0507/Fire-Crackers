@@ -56,8 +56,6 @@ const CartLine = ({ item, onClose }) => {
           </button>
         </div>
 
-        <p className="mt-0.5 truncate text-2xs text-muted">{item.unit}</p>
-
         <div className="mt-auto flex items-center justify-between gap-2 pt-2">
           <QtyStepper
             size="sm"
