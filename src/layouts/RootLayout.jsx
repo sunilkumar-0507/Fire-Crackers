@@ -7,6 +7,7 @@ import MobileMenu from '@/components/layout/MobileMenu';
 import SearchOverlay from '@/components/layout/SearchOverlay';
 import MobileBottomBar from '@/components/layout/MobileBottomBar';
 import ScrollManager from '@/components/layout/ScrollManager';
+import RouteMeta from '@/components/layout/RouteMeta';
 import ScrollToTopButton from '@/components/layout/ScrollToTopButton';
 import WhatsAppButton from '@/components/layout/WhatsAppButton';
 import CartDrawer from '@/components/cart/CartDrawer';
@@ -29,6 +30,7 @@ export const RootLayout = () => (
   <div className="relative flex min-h-screen flex-col">
     <GlowBackdrop />
     <ScrollManager />
+    <RouteMeta />
 
     <a
       href="#main"

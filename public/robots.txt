@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Per-customer pages with nothing to index.
+Disallow: /checkout
+Disallow: /track
+
+Sitemap: https://skvpyros.in/sitemap.xml
