@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { useShallow } from 'zustand/react/shallow';
-import { COUPONS, SHIPPING, STORAGE_KEYS } from '@/constants';
+import { COUPONS, STORAGE_KEYS } from '@/constants';
 
 /**
  * Cart + wishlist. Persisted to localStorage so a refresh never loses a basket.
@@ -143,7 +143,7 @@ export const selectTotals = (s) => {
   const catalogueSavings = mrpTotal - subtotal;
 
   // A coupon of type `shipping` (FREESHIP) buys free delivery rather than money
-  // off the goods, so it is worth nothing here and waives the fee below.
+  // off the goods. Delivery is never charged now, so it is worth nothing here.
   const qualifies = s.coupon && subtotal >= s.coupon.minOrder;
   const freeDelivery = Boolean(qualifies && s.coupon.type === 'shipping');
 
@@ -155,20 +155,18 @@ export const selectTotals = (s) => {
         : Math.min(s.coupon.value, subtotal);
   }
 
-  const afterCoupon = subtotal - couponDiscount;
-  const shipping =
-    freeDelivery || afterCoupon === 0 || afterCoupon >= SHIPPING.freeAbove ? 0 : SHIPPING.localFee;
-  const total = afterCoupon + shipping;
+  // No delivery fee: the total is what the products cost, less any coupon.
+  const total = subtotal - couponDiscount;
 
   return {
     subtotal,
     mrpTotal,
     catalogueSavings,
     couponDiscount,
-    shipping,
+    shipping: 0,
     total,
     totalSavings: catalogueSavings + couponDiscount,
-    freeShippingGap: freeDelivery ? 0 : Math.max(0, SHIPPING.freeAbove - afterCoupon),
+    freeShippingGap: 0,
     count: selectCount(s),
   };
 };

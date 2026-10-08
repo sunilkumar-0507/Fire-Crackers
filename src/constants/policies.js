@@ -1,4 +1,4 @@
-import { BRAND, SHIPPING } from '@/constants';
+import { BRAND } from '@/constants';
 
 /**
  * Policy and information pages — requirement 14.
@@ -8,8 +8,8 @@ import { BRAND, SHIPPING } from '@/constants';
  * component.
  *
  * Every figure here is read from the constants the shop already runs on
- * (`SHIPPING.freeAbove`, `BRAND.licence`) rather than typed again, because a
- * policy page that quotes a different delivery threshold from the checkout is
+ * (`BRAND.licence`, `BRAND.phone`) rather than typed again, because a policy
+ * page that quotes different details from the checkout is
  * worse than no policy page at all.
  *
  * ---------------------------------------------------------------------------
@@ -24,8 +24,6 @@ import { BRAND, SHIPPING } from '@/constants';
  * goes live, and re-read them each season.
  * ---------------------------------------------------------------------------
  */
-
-const rupees = (value) => `₹${value.toLocaleString('en-IN')}`;
 
 export const POLICIES = [
   /* ------------------------------------------------------------------ */
@@ -47,9 +45,8 @@ export const POLICIES = [
       {
         heading: 'What delivery costs',
         list: [
-          `Free on orders above ${rupees(SHIPPING.freeAbove)}.`,
-          `${rupees(SHIPPING.localFee)} on orders below that.`,
-          'Nothing at all if you choose to collect from the shop.',
+          'Nothing. There is no delivery fee on any order, whatever its size.',
+          'Nothing either if you choose to collect from the shop.',
         ],
       },
       {

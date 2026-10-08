@@ -34,6 +34,16 @@ export const comboToCartItem = (combo) => ({
   tags: ['combo'],
 });
 
+/**
+ * The shop does not charge for delivery, but the API still prices a fee into
+ * its quotes and orders. Strip it so every total a customer sees — checkout,
+ * confirmation, the WhatsApp message — is the products' total alone.
+ */
+export const withoutDelivery = (totals) =>
+  totals
+    ? { ...totals, shipping: 0, total: totals.total - (totals.shipping ?? 0), freeShippingGap: 0 }
+    : totals;
+
 /** Route for a line item — combos and products live on different pages. */
 export const cartItemHref = (item) =>
   item.kind === 'combo' ? `/combo/${item.slug}` : `/product/${item.slug}`;

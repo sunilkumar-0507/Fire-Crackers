@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { useCartStore, selectTotals, selectCount } from '@/store/cartStore';
 import { toCartItem, comboToCartItem } from '@/utils/cart';
 import { findProduct, findCombo } from '@/data';
-import { SHIPPING, hydrateConfig } from '@/constants';
+import { hydrateConfig } from '@/constants';
 
 const sparkler = toCartItem(findProduct('30-cm-electric-sparkler')); // ₹69, stock 181
 const tower = toCartItem(findProduct('dazzling-pot-deluxe')); //         ₹446, stock 20
@@ -67,19 +67,19 @@ describe('cart store', () => {
     expect(useCartStore.getState().items).toHaveLength(0);
   });
 
-  it('charges delivery below the free threshold and not above it', () => {
+  it('never adds a delivery fee — the total is the products alone', () => {
     const { addItem } = useCartStore.getState();
     addItem(sparkler, 1);
 
     let totals = selectTotals(useCartStore.getState());
     expect(totals.subtotal).toBe(sparkler.price);
-    expect(totals.shipping).toBe(SHIPPING.localFee);
-    expect(totals.total).toBe(sparkler.price + SHIPPING.localFee);
+    expect(totals.shipping).toBe(0);
+    expect(totals.total).toBe(sparkler.price);
 
-    addItem(combo, 1); // pushes past ₹2,000
+    addItem(combo, 1);
     totals = selectTotals(useCartStore.getState());
     expect(totals.shipping).toBe(0);
-    expect(totals.freeShippingGap).toBe(0);
+    expect(totals.total).toBe(totals.subtotal);
   });
 
   it('rejects a coupon below its minimum order and accepts it above', () => {

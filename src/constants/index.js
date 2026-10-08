@@ -22,7 +22,7 @@ export let BRAND = {
 
 /** The one line in the strip under the navbar. Keep it to a single sentence. */
 export const ANNOUNCEMENT =
-  'Diwali 2026 booking is open · Free delivery over ₹2,000 across Tamil Nadu & Kerala';
+  'Diwali 2026 booking is open · Free delivery across Tamil Nadu & Kerala';
 
 /** Primary navigation. `children` renders a dropdown panel. */
 export const NAV_LINKS = [

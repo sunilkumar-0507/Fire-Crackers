@@ -191,7 +191,7 @@ const CategoryBlock = ({ category, items }) => (
 );
 
 const TotalsBar = () => {
-  const { subtotal, count, catalogueSavings, freeShippingGap } = useCartTotals();
+  const { subtotal, count, catalogueSavings } = useCartTotals();
   const openCart = useUIStore((s) => s.openCart);
   const empty = count === 0;
 
@@ -221,12 +221,9 @@ const TotalsBar = () => {
             View cart
           </button>
         </div>
-        {!empty ? (
+        {catalogueSavings > 0 ? (
           <p className="mt-2 truncate rounded-full bg-secondary-50 px-3 py-1.5 text-center text-xs font-semibold text-primary-700">
-            {freeShippingGap > 0
-              ? `Add ${formatPrice(freeShippingGap)} more for free delivery`
-              : 'Free delivery unlocked'}
-            {catalogueSavings > 0 ? ` · You save ${formatPrice(catalogueSavings)}` : ''}
+            You save {formatPrice(catalogueSavings)} on MRP
           </p>
         ) : null}
       </div>

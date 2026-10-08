@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 import { AlertTriangle, Check, Heart, HeartFilled, MessageCircle, ShieldAlert, ShoppingBag, Sparkles, Truck } from '@/components/ui/icons';
 import { cn } from '@/utils/cn';
 import { findProduct, getRelated, findCategory } from '@/data';
-import { SAFETY_RULES, SHIPPING } from '@/constants';
+import { SAFETY_RULES } from '@/constants';
 import { formatPrice, availabilityOf, addWorkingDays, formatDay } from '@/utils/format';
 import { analytics } from '@/lib/analytics';
 import { whatsappHref, productEnquiryMessage } from '@/utils/whatsapp';
@@ -90,8 +90,7 @@ const DeliveryPanel = () => {
 
       <ul className="grid gap-2.5 text-[13px] text-ink sm:grid-cols-2">
         {[
-          `Free delivery above ${formatPrice(SHIPPING.freeAbove)} in Tamil Nadu & Kerala`,
-          `${formatPrice(SHIPPING.localFee)} below that, ${formatPrice(SHIPPING.outstationFee)} for other states`,
+          'Free delivery across Tamil Nadu & Kerala — no delivery fee on any order',
           'Amend or cancel free until the consignment leaves the warehouse',
           'Damaged items replaced or refunded — photograph the carton first',
         ].map((line) => (

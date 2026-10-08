@@ -2,9 +2,7 @@ import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { ArrowRight, MessageCircle, Tag, Trash2, Truck, X } from '@/components/ui/icons';
-import { cn } from '@/utils/cn';
-import { SHIPPING } from '@/constants';
+import { ArrowRight, MessageCircle, Tag, Trash2, X } from '@/components/ui/icons';
 import { formatPrice } from '@/utils/format';
 import { cartItemHref } from '@/utils/cart';
 import { products } from '@/data';
@@ -151,11 +149,6 @@ export const CartDrawer = () => {
 
   useLockBodyScroll(open);
 
-  const shippingProgress = Math.min(
-    100,
-    ((SHIPPING.freeAbove - totals.freeShippingGap) / SHIPPING.freeAbove) * 100,
-  );
-
   if (!open) return null;
 
   return createPortal(
@@ -207,31 +200,6 @@ export const CartDrawer = () => {
           </div>
         ) : (
           <>
-            {/* free shipping progress */}
-            <div className="border-b border-line bg-card px-5 py-4 sm:px-6">
-              <div className="flex items-center gap-2.5 text-xs">
-                <Truck size={15} className="shrink-0 text-primary" />
-                {totals.freeShippingGap > 0 ? (
-                  <span className="text-ink">
-                    Add <strong className="font-semibold text-primary">{formatPrice(totals.freeShippingGap)}</strong> for free delivery
-                  </span>
-                ) : (
-                  <span className="font-semibold text-emerald-600">
-                    Free delivery unlocked
-                  </span>
-                )}
-              </div>
-              <div className="mt-2.5 h-1.5 overflow-hidden rounded-full bg-secondary-100">
-                <div
-                  style={{ width: `${shippingProgress}%` }}
-                  className={cn(
-                    'h-full rounded-full',
-                    totals.freeShippingGap > 0 ? 'bg-primary-600' : 'bg-emerald-600',
-                  )}
-                />
-              </div>
-            </div>
-
             {/* lines */}
             <div className="hide-scrollbar flex-1 overflow-y-auto overscroll-contain px-5 py-5">
               <ul className="flex flex-col gap-3">
@@ -267,16 +235,6 @@ export const CartDrawer = () => {
                     <dd className="tabular-nums">−{formatPrice(totals.couponDiscount)}</dd>
                   </div>
                 ) : null}
-                <div className="flex justify-between text-muted">
-                  <dt>Delivery</dt>
-                  <dd className="tabular-nums">
-                    {totals.shipping === 0 ? (
-                      <span className="font-semibold text-emerald-600">Free</span>
-                    ) : (
-                      formatPrice(totals.shipping)
-                    )}
-                  </dd>
-                </div>
                 <div className="flex items-baseline justify-between border-t border-line pt-3">
                   <dt className="font-display text-lg font-semibold text-dark">Total</dt>
                   <dd className="font-display text-2xl font-semibold text-dark tabular-nums">

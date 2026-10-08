@@ -27,7 +27,7 @@ import { api } from '@/lib/api';
 import { analytics, analyticsSession } from '@/lib/analytics';
 import { whatsappHref, orderMessage } from '@/utils/whatsapp';
 import { formatPrice, addWorkingDays, formatDay } from '@/utils/format';
-import { cartItemHref } from '@/utils/cart';
+import { cartItemHref, withoutDelivery } from '@/utils/cart';
 import { useCartStore, useCartTotals } from '@/store/cartStore';
 import PageHeader from '@/components/ui/PageHeader';
 import CheckoutStepper from '@/components/cart/CheckoutStepper';
@@ -270,25 +270,6 @@ export const Checkout = () => {
 
   const pickup = form.fulfilment === 'pickup';
 
-  /**
-   * Collection is free, and the cart store has no idea which the customer
-   * picked — it prices a basket, not a fulfilment. Rather than thread state
-   * through the store for something only this page cares about, the delivery
-   * line is dropped here. The API re-prices the whole basket on submit anyway,
-   * so this figure is a preview of its answer, never the source of it.
-   */
-  const localTotals = useMemo(
-    () =>
-      pickup
-        ? {
-            ...cartTotals,
-            shipping: 0,
-            total: cartTotals.total - cartTotals.shipping,
-            freeShippingGap: 0,
-          }
-        : cartTotals,
-    [cartTotals, pickup],
-  );
 
   /**
    * Re-price the basket through the API whenever it, the coupon or the
@@ -326,8 +307,8 @@ export const Checkout = () => {
     return () => controller.abort();
   }, [items, coupon?.code, form.fulfilment]);
 
-  /** The API's figures when we have them, the local sum until then. */
-  const totals = quote?.totals ?? localTotals;
+  /** The API's figures when we have them, the local sum until then — never with a delivery fee. */
+  const totals = withoutDelivery(quote?.totals ?? cartTotals);
 
   /** What the API changed about the basket, if anything, in its own words. */
   const notices = quote?.notices ?? [];
@@ -391,7 +372,7 @@ export const Checkout = () => {
 
       if (whatsappTab) {
         whatsappTab.location.href = whatsappHref(
-          orderMessage(result, lines, result.totals ?? totals),
+          orderMessage(result, lines, withoutDelivery(result.totals) ?? totals),
         );
         analytics.whatsappClick('checkout');
       }
@@ -439,7 +420,7 @@ export const Checkout = () => {
     return (
       <Confirmation
         order={order}
-        totals={order.totals ?? placedTotals ?? totals}
+        totals={withoutDelivery(order.totals) ?? placedTotals ?? totals}
         items={placedLines}
       />
     );
@@ -802,26 +783,12 @@ export const Checkout = () => {
                   <dt>Subtotal</dt>
                   <dd className="tabular-nums text-ink">{formatPrice(totals.subtotal)}</dd>
                 </div>
-                <div className="flex justify-between text-emerald-600">
-                  <dt>Catalogue discount</dt>
-                  <dd className="tabular-nums">−{formatPrice(totals.catalogueSavings)}</dd>
-                </div>
                 {totals.couponDiscount > 0 ? (
                   <div className="flex justify-between text-emerald-600">
                     <dt>Coupon {coupon?.code}</dt>
                     <dd className="tabular-nums">−{formatPrice(totals.couponDiscount)}</dd>
                   </div>
                 ) : null}
-                <div className="flex justify-between text-muted">
-                  <dt>{pickup ? 'Collection' : 'Delivery'}</dt>
-                  <dd className="tabular-nums">
-                    {totals.shipping === 0 ? (
-                      <span className="font-semibold text-emerald-600">Free</span>
-                    ) : (
-                      formatPrice(totals.shipping)
-                    )}
-                  </dd>
-                </div>
                 <div className="flex items-baseline justify-between border-t border-line pt-3.5">
                   <dt className="font-display text-lg font-semibold text-dark">Total</dt>
                   <dd className="font-display text-2xl font-semibold text-dark tabular-nums">
