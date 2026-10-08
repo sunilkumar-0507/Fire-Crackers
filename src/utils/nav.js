@@ -46,3 +46,15 @@ export const buildNavLinks = () =>
   });
 
 export default buildNavLinks;
+
+/**
+ * Bottom offset for the floating WhatsApp and back-to-top buttons.
+ *
+ * Normally they sit just above the phone tab bar. The quick-order page pins a
+ * running total above that bar too, so there they climb over it as well —
+ * otherwise both buttons land on top of the total and its View cart button.
+ */
+export const floatingOffset = (pathname) =>
+  pathname === '/quick-order'
+    ? 'bottom-[calc(12rem+env(safe-area-inset-bottom))] lg:bottom-36'
+    : 'bottom-[calc(5.5rem+env(safe-area-inset-bottom))] lg:bottom-8';
