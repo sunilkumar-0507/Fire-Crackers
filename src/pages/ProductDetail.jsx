@@ -187,7 +187,6 @@ export const ProductDetail = () => {
               fallbackType={fallback}
               badges={
                 <>
-                  <Badge tone="flame">{product.discount}% off</Badge>
                   {product.isNew ? <Badge tone="gold">New</Badge> : null}
                   {product.bestSeller ? <Badge tone="dark">Best seller</Badge> : null}
                 </>

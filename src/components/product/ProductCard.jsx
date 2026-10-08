@@ -91,7 +91,6 @@ export const ProductCard = memo(function ProductCard({ product, className, compa
         <Link to={`/product/${product.slug}`} className="relative block overflow-hidden bg-secondary-50">
           {/* badges */}
           <div className="absolute left-2.5 top-2.5 z-10 flex flex-col items-start gap-1.5 sm:left-3 sm:top-3">
-            {product.discount > 0 ? <Badge tone="flame">{product.discount}% off</Badge> : null}
             {product.isNew ? <Badge tone="gold">New</Badge> : null}
             {product.bestSeller && !product.isNew ? <Badge tone="dark">Best seller</Badge> : null}
           </div>

@@ -49,7 +49,6 @@ export const QuickView = () => {
             with the whole viewport taken up by an illustration. */}
         <div className="relative bg-gradient-to-br from-secondary-50 via-white to-secondary-50/50 p-4 sm:p-8">
           <div className="absolute left-4 top-4 z-10 flex flex-col items-start gap-1.5 sm:left-6 sm:top-6">
-            <Badge tone="flame">{product.discount}% off</Badge>
             {product.isNew ? <Badge tone="gold">New</Badge> : null}
           </div>
 
