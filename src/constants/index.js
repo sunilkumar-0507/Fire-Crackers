@@ -190,7 +190,7 @@ export const FOOTER_LINKS = [
 ];
 
 export const SOCIALS = [
-  { label: 'Instagram', href: 'https://instagram.com', icon: 'instagram' },
+  { label: 'Instagram', href: 'https://www.instagram.com/skvpyros/', icon: 'instagram' },
   { label: 'Facebook', href: 'https://facebook.com', icon: 'facebook' },
   { label: 'YouTube', href: 'https://youtube.com', icon: 'youtube' },
   // Read off `BRAND` at access time rather than written out again. This entry
