@@ -7,8 +7,8 @@ import logoArt from '@/assets/art/logo-skv-192.jpg';
  * The SKV Pyros badge: gold lettering on black.
  *
  * Imported from a 192px export rather than the 1254px master in the same
- * folder — the master is 276 KB for something drawn at 44px on every page.
- * Re-export from `Logo skv.jpeg` if the artwork changes.
+ * folder — the master is 242 KB for something drawn at 44px on every page.
+ * Re-export from `Logo SKV pyro Final.jpeg` if the artwork changes.
  */
 export const LogoMark = ({ className, size }) => (
   <img
