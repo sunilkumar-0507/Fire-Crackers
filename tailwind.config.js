@@ -96,12 +96,20 @@ export default {
         'line-strong': 'rgba(122,91,66,.30)',
       },
       fontFamily: {
-        // The *Fallback* families are metric-matched (see globals.css) so the
-        // webfont swap does not reflow the page.
-        display: ['"Playfair Display Variable"', 'Playfair Fallback', 'Georgia', 'serif'],
+        // One family for headings and body: a decorative serif on prices and
+        // names read as template-made. `Jakarta Fallback` is metric-matched
+        // (see globals.css) so the webfont swap does not reflow the page.
+        display: [
+          '"Plus Jakarta Sans Variable"',
+          'Jakarta Fallback',
+          'system-ui',
+          '-apple-system',
+          'Segoe UI',
+          'sans-serif',
+        ],
         sans: [
-          '"Inter Variable"',
-          'Inter Fallback',
+          '"Plus Jakarta Sans Variable"',
+          'Jakarta Fallback',
           'system-ui',
           '-apple-system',
           'Segoe UI',

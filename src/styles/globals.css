@@ -1,31 +1,20 @@
-@import '@fontsource-variable/inter';
-@import '@fontsource-variable/playfair-display';
+@import '@fontsource-variable/plus-jakarta-sans';
 
 /* ------------------------------------------------------------------ *
- * Metric-matched fallbacks.
+ * Metric-matched fallback.
  *
  * Fontsource ships `font-display: swap`, so the page first paints in a
- * system font and then reflows when the webfont arrives — which measured as
- * a 0.098 layout shift across the entire hero. These overrides scale the
- * local fallback so it occupies exactly the same space as the real face,
- * making the swap invisible instead of jarring.
+ * system font and then reflows when the webfont arrives. This override
+ * scales the local fallback to roughly the same box as Plus Jakarta Sans,
+ * so the swap is a repaint rather than a layout shift.
  * ------------------------------------------------------------------ */
 @font-face {
-  font-family: 'Inter Fallback';
+  font-family: 'Jakarta Fallback';
   src: local('Arial');
-  ascent-override: 90.2%;
-  descent-override: 22.48%;
+  ascent-override: 98%;
+  descent-override: 32.7%;
   line-gap-override: 0%;
-  size-adjust: 107.4%;
-}
-
-@font-face {
-  font-family: 'Playfair Fallback';
-  src: local('Georgia');
-  ascent-override: 100.7%;
-  descent-override: 25.87%;
-  line-gap-override: 0%;
-  size-adjust: 107.4%;
+  size-adjust: 107%;
 }
 
 @tailwind base;
@@ -123,6 +112,8 @@
   h3,
   h4 {
     @apply font-display font-semibold text-dark;
+    /* A geometric sans set large looks loose at its default spacing. */
+    letter-spacing: -0.015em;
     text-wrap: balance;
   }
 

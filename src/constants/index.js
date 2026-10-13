@@ -321,3 +321,10 @@ export const hydrateFulfilment = (payload) => {
 
   return true;
 };
+
+/**
+ * The smallest basket the shop will dispatch, in rupees, measured on the
+ * products' subtotal. Below it, checkout is blocked and the cart says how
+ * much more is needed.
+ */
+export const MIN_ORDER_VALUE = 3000;

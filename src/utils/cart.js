@@ -1,3 +1,5 @@
+import { MIN_ORDER_VALUE } from '@/constants';
+
 /**
  * Catalogue entities → cart line items.
  *
@@ -47,3 +49,6 @@ export const withoutDelivery = (totals) =>
 /** Route for a line item — combos and products live on different pages. */
 export const cartItemHref = (item) =>
   item.kind === 'combo' ? `/combo/${item.slug}` : `/product/${item.slug}`;
+
+/** True when a basket of this subtotal meets the shop's minimum order. */
+export const meetsMinOrder = (subtotal) => subtotal >= MIN_ORDER_VALUE;

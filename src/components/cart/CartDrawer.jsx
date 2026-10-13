@@ -3,8 +3,9 @@ import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { ArrowRight, MessageCircle, Tag, Trash2, X } from '@/components/ui/icons';
+import { cn } from '@/utils/cn';
 import { formatPrice } from '@/utils/format';
-import { cartItemHref } from '@/utils/cart';
+import { cartItemHref, meetsMinOrder } from '@/utils/cart';
 import { products } from '@/data';
 import { useCartStore, useCartTotals } from '@/store/cartStore';
 import { analytics } from '@/lib/analytics';
@@ -15,6 +16,8 @@ import ProductImage from '@/components/ui/ProductImage';
 import QtyStepper from '@/components/ui/QtyStepper';
 import Button from '@/components/ui/Button';
 import EmptyState from '@/components/ui/EmptyState';
+import MinOrderNotice from '@/components/cart/MinOrderNotice';
+import { MIN_ORDER_VALUE } from '@/constants';
 
 /* ------------------------------ line item -------------------------------- */
 
@@ -146,8 +149,18 @@ export const CartDrawer = () => {
   const items = useCartStore((s) => s.items);
   const clearCart = useCartStore((s) => s.clearCart);
   const totals = useCartTotals();
+  const canOrder = meetsMinOrder(totals.subtotal);
 
   useLockBodyScroll(open);
+
+  const blockBelowMinimum = (event) => {
+    if (canOrder) {
+      close();
+      return;
+    }
+    event.preventDefault();
+    toast.error(`Minimum order is ${formatPrice(MIN_ORDER_VALUE)}`, { id: 'min-order' });
+  };
 
   if (!open) return null;
 
@@ -243,11 +256,14 @@ export const CartDrawer = () => {
                 </div>
               </dl>
 
+              <MinOrderNotice subtotal={totals.subtotal} />
+
               <Button
                 to="/checkout"
-                onClick={close}
+                onClick={blockBelowMinimum}
+                aria-disabled={!canOrder}
                 size="lg"
-                className="w-full"
+                className={cn('w-full', !canOrder && 'cursor-not-allowed opacity-50')}
                 rightIcon={<ArrowRight size={17} />}
               >
                 Checkout
@@ -261,8 +277,18 @@ export const CartDrawer = () => {
                 href={whatsappHref(cartEnquiryMessage(items, totals))}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={() => analytics.whatsappClick('cart')}
-                className="flex items-center justify-center gap-2 rounded-full border border-line py-3 text-sm font-semibold text-ink transition-colors hover:border-secondary-300 hover:text-primary"
+                onClick={(event) => {
+                  if (!canOrder) {
+                    blockBelowMinimum(event);
+                    return;
+                  }
+                  analytics.whatsappClick('cart');
+                }}
+                aria-disabled={!canOrder}
+                className={cn(
+                  'flex items-center justify-center gap-2 rounded-full border border-line py-3 text-sm font-semibold text-ink transition-colors hover:border-secondary-300 hover:text-primary',
+                  !canOrder && 'cursor-not-allowed opacity-50',
+                )}
               >
                 <MessageCircle size={16} className="text-[#25D366]" />
                 Order on WhatsApp instead

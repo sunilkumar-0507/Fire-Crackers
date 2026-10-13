@@ -22,18 +22,20 @@ import {
   FULFILMENT_METHODS,
   PICKUP,
   BRAND,
+  MIN_ORDER_VALUE,
 } from '@/constants';
 import { api } from '@/lib/api';
 import { analytics, analyticsSession } from '@/lib/analytics';
 import { whatsappHref, orderMessage } from '@/utils/whatsapp';
 import { formatPrice, addWorkingDays, formatDay } from '@/utils/format';
-import { cartItemHref, withoutDelivery } from '@/utils/cart';
+import { cartItemHref, meetsMinOrder, withoutDelivery } from '@/utils/cart';
 import { useCartStore, useCartTotals } from '@/store/cartStore';
 import PageHeader from '@/components/ui/PageHeader';
 import CheckoutStepper from '@/components/cart/CheckoutStepper';
 import ProductImage from '@/components/ui/ProductImage';
 import Button from '@/components/ui/Button';
 import EmptyState from '@/components/ui/EmptyState';
+import MinOrderNotice from '@/components/cart/MinOrderNotice';
 
 const inputClass =
   'h-12 w-full rounded-2xl border border-line bg-card px-4 text-sm text-ink outline-none transition-colors placeholder:text-muted focus:border-secondary-400';
@@ -326,7 +328,13 @@ export const Checkout = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const canOrder = meetsMinOrder(totals.subtotal);
+
   const place = async () => {
+    if (!canOrder) {
+      toast.error(`Minimum order is ${formatPrice(MIN_ORDER_VALUE)}`, { id: 'min-order' });
+      return;
+    }
     setPlacing(true);
     setPlacedTotals(totals);
     setPlacedLines(lines);
@@ -463,6 +471,8 @@ export const Checkout = () => {
               onJump={setStep}
               className="mb-8 rounded-4xl border border-line bg-card p-4 shadow-soft sm:mb-10 sm:p-7"
             />
+
+            <MinOrderNotice subtotal={totals.subtotal} className="mb-6 sm:mb-8" />
 
             <div className="rounded-4xl border border-line bg-card p-5 shadow-card sm:p-9">
               {/* ---------------- step 0: details ---------------- */}
@@ -739,6 +749,7 @@ export const Checkout = () => {
                     onClick={place}
                     size="lg"
                     loading={placing}
+                    disabled={!canOrder}
                     className="w-full px-5 sm:w-auto sm:min-w-[220px] sm:px-8"
                   >
                     {placing ? 'Placing your order…' : `Place order — ${formatPrice(totals.total)}`}

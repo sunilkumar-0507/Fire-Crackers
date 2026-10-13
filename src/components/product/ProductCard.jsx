@@ -144,7 +144,7 @@ export const ProductCard = memo(function ProductCard({ product, className, compa
             {product.brand}
           </span>
 
-          <h3 className="line-clamp-2 font-display text-[15px] font-semibold leading-snug text-dark sm:text-[17px]">
+          <h3 className="line-clamp-2 text-[14px] font-semibold leading-snug tracking-normal text-dark sm:text-[15px]">
             <Link
               to={`/product/${product.slug}`}
               className="inline-flex min-h-6 items-center transition-colors hover:text-primary"
@@ -163,10 +163,10 @@ export const ProductCard = memo(function ProductCard({ product, className, compa
 
           <div className="mt-auto pt-2.5">
             <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-              <span className="font-display text-xl font-semibold text-dark">
+              <span className="text-lg font-bold tabular-nums tracking-tight text-dark sm:text-xl">
                 {formatPrice(product.price)}
               </span>
-              <span className="text-xs text-muted line-through">{formatPrice(product.mrp)}</span>
+              <span className="text-xs tabular-nums text-muted line-through">{formatPrice(product.mrp)}</span>
               {saves > 0 ? (
                 <span className="text-xs font-semibold text-mint-700">
                   Save {formatPrice(saves)}
