@@ -99,6 +99,9 @@ export default {
         // One family for headings and body: a decorative serif on prices and
         // names read as template-made. `Jakarta Fallback` is metric-matched
         // (see globals.css) so the webfont swap does not reflow the page.
+        // The logo wordmark only — it keeps the shop's original lettering.
+        brand: ['"Playfair Display Variable"', 'Georgia', 'serif'],
+        'brand-sans': ['"Inter Variable"', 'system-ui', 'sans-serif'],
         display: [
           '"Plus Jakarta Sans Variable"',
           'Jakarta Fallback',

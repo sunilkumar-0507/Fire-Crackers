@@ -58,11 +58,11 @@ export const Logo = ({ className, compact = false, onClick }) => {
             Track Order and menu buttons on a 320px screen without ellipsing. */}
         {/* The accent word used to be gradient-clipped text running from
             #C84D0E to #FF8A00 — the bright half measured under 3:1 on the page. */}
-        <span className="truncate font-display text-[17px] font-bold tracking-tight text-dark xs:text-[20px] sm:text-[21px]">
+        <span className="truncate font-brand text-[17px] font-bold tracking-tight text-dark xs:text-[20px] sm:text-[21px]">
           {lead ? `${lead} ` : null}
           <span className="text-primary-700">{accent}</span>
         </span>
-        <span className="mt-1 hidden text-2xs font-semibold uppercase tracking-[.16em] text-muted xs:block">
+        <span className="mt-1 hidden font-brand-sans text-2xs font-semibold uppercase tracking-[.16em] text-muted xs:block">
           {BRAND.tagline}
         </span>
       </span>

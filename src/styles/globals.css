@@ -1,4 +1,7 @@
 @import '@fontsource-variable/plus-jakarta-sans';
+/* The logo wordmark keeps its original Playfair + Inter lettering. */
+@import '@fontsource-variable/playfair-display';
+@import '@fontsource-variable/inter';
 
 /* ------------------------------------------------------------------ *
  * Metric-matched fallback.
