@@ -147,6 +147,29 @@ const withoutCashOnDelivery = (faq) =>
   faq?.answer ? { ...faq, answer: faq.answer.replace(COD_MENTION, '') } : faq;
 
 /**
+ * Delivery is never free, but FAQs and banners in the database were written
+ * when it was free above ₹2,000. Rewrite the delivery-charge answer and drop
+ * the free-delivery clause from banners until they are edited at the source.
+ */
+const FREE_DELIVERY = /free (?:delivery|shipping)|delivery (?:is )?free|free above ₹|no delivery fee/i;
+
+const DELIVERY_ANSWER =
+  'Delivery is charged on every order — it is never free. The amount depends on your location and the size of the consignment, so it is not included in the website total; we confirm the exact charge with you on WhatsApp before we dispatch. Collecting from the shop has no delivery charge.';
+
+const withoutFreeDeliveryFaq = (faq) =>
+  faq?.answer && FREE_DELIVERY.test(faq.answer) ? { ...faq, answer: DELIVERY_ANSWER } : faq;
+
+/** Banner titles are " · "-separated claims; drop only the free-delivery one. */
+const withoutFreeDeliveryBanner = (banner) => {
+  const strip = (text) =>
+    text
+      ?.split(' · ')
+      .filter((part) => !FREE_DELIVERY.test(part))
+      .join(' · ');
+  return banner ? { ...banner, title: strip(banner.title), subtitle: strip(banner.subtitle) } : banner;
+};
+
+/**
  * Replaces the catalogue with a bootstrap payload.
  *
  * A list is taken whenever the API sent one, **including an empty one** — an
@@ -160,9 +183,9 @@ export const hydrate = (payload) => {
   if (payload.products) products = payload.products;
   if (payload.categories) categories = payload.categories;
   if (payload.combos) combos = payload.combos;
-  if (payload.banners) banners = payload.banners;
+  if (payload.banners) banners = payload.banners.map(withoutFreeDeliveryBanner);
   if (payload.testimonials) testimonials = payload.testimonials;
-  if (payload.faqs) faqs = payload.faqs.map(withoutCashOnDelivery);
+  if (payload.faqs) faqs = payload.faqs.map(withoutCashOnDelivery).map(withoutFreeDeliveryFaq);
 
   recompute();
 };

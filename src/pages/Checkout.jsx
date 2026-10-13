@@ -22,6 +22,7 @@ import {
   FULFILMENT_METHODS,
   PICKUP,
   BRAND,
+  DELIVERY_CHARGE_NOTE,
   MIN_ORDER_VALUE,
 } from '@/constants';
 import { api } from '@/lib/api';
@@ -800,6 +801,12 @@ export const Checkout = () => {
                     <dd className="tabular-nums">−{formatPrice(totals.couponDiscount)}</dd>
                   </div>
                 ) : null}
+                {!pickup ? (
+                  <div className="flex justify-between text-muted">
+                    <dt>Delivery</dt>
+                    <dd className="text-ink">Extra</dd>
+                  </div>
+                ) : null}
                 <div className="flex items-baseline justify-between border-t border-line pt-3.5">
                   <dt className="font-display text-lg font-semibold text-dark">Total</dt>
                   <dd className="font-display text-2xl font-semibold text-dark tabular-nums">
@@ -843,7 +850,8 @@ export const Checkout = () => {
               ) : (
                 <>
                   <Truck size={14} className="mt-0.5 shrink-0 text-primary" />
-                  Fireworks travel by licensed surface transport only. Arrives {deliveryWindow}.
+                  Fireworks travel by licensed surface transport only. Arrives {deliveryWindow}.{' '}
+                  {DELIVERY_CHARGE_NOTE}
                 </>
               )}
             </p>

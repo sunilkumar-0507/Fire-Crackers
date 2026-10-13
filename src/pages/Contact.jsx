@@ -292,7 +292,7 @@ export const Contact = () => {
                 <ul className="mt-4 space-y-2.5 text-[13px] leading-relaxed text-muted">
                   {[
                     'Tamil Nadu & Kerala in 48–72 hours; other states 3–8 days',
-                    'Free above ₹2,000 locally, ₹149 below; ₹249 elsewhere',
+                    'Delivery charges extra on every order — confirmed on WhatsApp before dispatch',
                     'Amend or cancel free until the consignment leaves the warehouse',
                     'Damaged goods replaced or refunded — photograph the carton first',
                     'We never ask you to send fireworks back; it is neither legal nor safe',

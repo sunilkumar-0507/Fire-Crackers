@@ -22,7 +22,15 @@ export let BRAND = {
 
 /** The one line in the strip under the navbar. Keep it to a single sentence. */
 export const ANNOUNCEMENT =
-  'Diwali 2026 booking is open · Free delivery across Tamil Nadu & Kerala';
+  'Diwali 2026 booking is open · Delivery across Tamil Nadu & Kerala';
+
+/**
+ * Delivery is never free. The charge depends on where the order is going, so
+ * it is not added to the website total: the shop confirms it on WhatsApp.
+ */
+export const DELIVERY_CHARGE_NOTE =
+  'Delivery charges are extra, based on your location — confirmed on WhatsApp before dispatch.';
+export const DELIVERY_HINT = 'Licensed surface transport · delivery charges extra';
 
 /** Primary navigation. `children` renders a dropdown panel. */
 export const NAV_LINKS = [
@@ -109,7 +117,7 @@ export let FULFILMENT_METHODS = [
   {
     id: 'delivery',
     label: 'Deliver to me',
-    hint: 'Licensed surface transport across Tamil Nadu & Kerala',
+    hint: DELIVERY_HINT,
     icon: 'truck',
   },
   {
@@ -285,7 +293,11 @@ export const hydrateConfig = (config) => {
   if (config.districts?.length) DISTRICTS = config.districts;
   if (config.safetyRules?.length) SAFETY_RULES = config.safetyRules;
   if (config.popularSearches?.length) POPULAR_SEARCHES = config.popularSearches;
-  if (config.trustPoints?.length) TRUST_POINTS = config.trustPoints;
+  // Delivery is never free; a trust point still claiming it is dropped.
+  if (config.trustPoints?.length)
+    TRUST_POINTS = config.trustPoints.filter(
+      (p) => !/free (?:delivery|shipping)/i.test(`${p.title} ${p.text}`),
+    );
   if (config.pickup) PICKUP = { ...PICKUP, ...config.pickup };
 
   return true;
@@ -293,7 +305,8 @@ export const hydrateConfig = (config) => {
 
 /**
  * Applies `GET /api/meta/fulfilment`, which words the delivery and pickup
- * options with the live shipping thresholds in them ("Free above ₹2,000").
+ * options. The delivery hint is replaced with our own: the API's still offers
+ * free delivery above a threshold, which the shop no longer does.
  * Kept apart from the config above because it is its own endpoint, and because
  * an unavailable method has to disappear from the checkout rather than be
  * offered and then refused.
@@ -313,7 +326,9 @@ export const hydrateFulfilment = (payload) => {
     .map((m) => ({
       id: m.id,
       label: m.label,
-      hint: m.hint,
+      // The API's delivery hint still advertises free delivery above a
+      // threshold. Delivery is never free, so its wording is not used.
+      hint: m.id === 'delivery' ? DELIVERY_HINT : m.hint,
       icon: ICON_BY_FULFILMENT[m.id] ?? 'truck',
     }));
 

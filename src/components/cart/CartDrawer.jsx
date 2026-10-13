@@ -17,7 +17,7 @@ import QtyStepper from '@/components/ui/QtyStepper';
 import Button from '@/components/ui/Button';
 import EmptyState from '@/components/ui/EmptyState';
 import MinOrderNotice from '@/components/cart/MinOrderNotice';
-import { MIN_ORDER_VALUE } from '@/constants';
+import { DELIVERY_CHARGE_NOTE, MIN_ORDER_VALUE } from '@/constants';
 
 /* ------------------------------ line item -------------------------------- */
 
@@ -248,6 +248,10 @@ export const CartDrawer = () => {
                     <dd className="tabular-nums">−{formatPrice(totals.couponDiscount)}</dd>
                   </div>
                 ) : null}
+                <div className="flex justify-between text-muted">
+                  <dt>Delivery</dt>
+                  <dd className="text-ink">Extra</dd>
+                </div>
                 <div className="flex items-baseline justify-between border-t border-line pt-3">
                   <dt className="font-display text-lg font-semibold text-dark">Total</dt>
                   <dd className="font-display text-2xl font-semibold text-dark tabular-nums">
@@ -295,7 +299,7 @@ export const CartDrawer = () => {
               </a>
 
               <p className="text-center text-2xs text-muted">
-                Licensed surface transport · delivered in 48–72 hours
+                {DELIVERY_CHARGE_NOTE}
               </p>
             </footer>
           </>

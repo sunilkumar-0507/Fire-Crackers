@@ -77,9 +77,9 @@ export const cartEnquiryMessage = (items, totals) =>
     '',
     `Subtotal: ${formatPrice(totals.subtotal)}`,
     totals.couponDiscount > 0 ? `Coupon: −${formatPrice(totals.couponDiscount)}` : null,
-    `Total: ${formatPrice(totals.total)}`,
+    `Total: ${formatPrice(totals.total)} (delivery charges extra)`,
     '',
-    'Please confirm availability and delivery.',
+    'Please confirm availability and the delivery charge.',
   ]
     .filter((part) => part !== null)
     .join('\n');
@@ -123,6 +123,7 @@ export const orderMessage = (order, items = [], totals = order.totals) =>
     totals.couponDiscount > 0 ? `Coupon: −${formatPrice(totals.couponDiscount)}` : null,
     totals.shipping > 0 ? `Delivery: ${formatPrice(totals.shipping)}` : null,
     `*Total: ${formatPrice(totals.total)}*`,
+    order.fulfilment === 'pickup' ? null : 'Delivery charges extra — please confirm the amount.',
     '',
     order.fulfilment === 'pickup'
       ? 'Collecting from the shop.'

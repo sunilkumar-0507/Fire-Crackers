@@ -206,8 +206,8 @@ export const ComboDetail = () => {
               <div className="mt-6 space-y-3 border-t border-line pt-5 text-[13px] text-muted">
                 <p className="flex items-start gap-2.5">
                   <Truck size={15} className="mt-0.5 shrink-0 text-primary" />
-                  Arrives {formatDay(addWorkingDays(2))} – {formatDay(addWorkingDays(4))}, free
-                  above {formatPrice(2000)}
+                  Arrives {formatDay(addWorkingDays(2))} – {formatDay(addWorkingDays(4))} ·
+                  delivery charges extra
                 </p>
               </div>
 

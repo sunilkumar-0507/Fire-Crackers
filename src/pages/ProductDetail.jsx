@@ -90,7 +90,7 @@ const DeliveryPanel = () => {
 
       <ul className="grid gap-2.5 text-[13px] text-ink sm:grid-cols-2">
         {[
-          'Free delivery across Tamil Nadu & Kerala — no delivery fee on any order',
+          'Delivery across Tamil Nadu & Kerala — charges extra, confirmed on WhatsApp',
           'Amend or cancel free until the consignment leaves the warehouse',
           'Damaged items replaced or refunded — photograph the carton first',
         ].map((line) => (

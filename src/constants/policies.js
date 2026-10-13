@@ -45,8 +45,9 @@ export const POLICIES = [
       {
         heading: 'What delivery costs',
         list: [
-          'Nothing. There is no delivery fee on any order, whatever its size.',
-          'Nothing either if you choose to collect from the shop.',
+          'Delivery is charged on every order, whatever its size. It is never free.',
+          'The charge depends on your location and the size of the consignment, and we confirm the exact amount with you on WhatsApp before dispatch.',
+          'There is no delivery charge if you choose to collect from the shop.',
         ],
       },
       {
