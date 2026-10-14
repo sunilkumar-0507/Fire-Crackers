@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { ArrowRight, Search, X } from '@/components/ui/icons';
 import { cn } from '@/utils/cn';
 import { categoriesWithCounts, findCategory, products } from '@/data';
-import { filterProducts, SORT_OPTIONS } from '@/utils/search';
+import { defaultSortFor, filterProducts, sortOptionsFor } from '@/utils/search';
 import { analytics } from '@/lib/analytics';
 import { accentOf } from '@/constants/accents';
 import PageHeader from '@/components/ui/PageHeader';
@@ -24,7 +24,7 @@ const NOISE_COPY = {
 export const Category = () => {
   const { slug } = useParams();
   const category = findCategory(slug);
-  const [sort, setSort] = useState('relevance');
+  const [sort, setSort] = useState(() => defaultSortFor(slug));
   const [query, setQuery] = useState('');
 
   // Deferred so the grid re-rendering behind a fast typist never makes the
@@ -130,7 +130,7 @@ export const Category = () => {
               onChange={(e) => setSort(e.target.value)}
               className="max-w-[52vw] min-h-11 cursor-pointer truncate rounded-full border border-line bg-card px-3 py-2.5 text-sm font-medium text-ink outline-none transition-colors hover:border-secondary-300 focus:border-secondary-400 sm:max-w-none sm:px-4"
             >
-              {SORT_OPTIONS.map((option) => (
+              {sortOptionsFor(slug).map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>

@@ -166,6 +166,14 @@
     -moz-appearance: textfield;
     appearance: textfield;
   }
+
+  /* Our search fields draw their own clear button; Chrome's built-in one
+     would sit right beside it as a second ×. */
+  input[type='search']::-webkit-search-cancel-button,
+  input[type='search']::-webkit-search-decoration {
+    -webkit-appearance: none;
+    appearance: none;
+  }
 }
 
 /* ------------------------------------------------------------------ *

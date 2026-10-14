@@ -102,6 +102,17 @@ export const SORT_OPTIONS = [
   { value: 'newest', label: 'New arrivals' },
 ];
 
+// "Recommended" is a cross-catalogue ranking; inside one category shoppers
+// compare like with like, so a category view defaults to cheapest-first and
+// drops the Recommended option.
+export const defaultSortFor = (category = 'all') =>
+  category && category !== 'all' ? 'price-asc' : 'relevance';
+
+export const sortOptionsFor = (category = 'all') =>
+  defaultSortFor(category) === 'relevance'
+    ? SORT_OPTIONS
+    : SORT_OPTIONS.filter((option) => option.value !== 'relevance');
+
 const comparators = {
   'price-asc': (a, b) => a.price - b.price,
   'price-desc': (a, b) => b.price - a.price,

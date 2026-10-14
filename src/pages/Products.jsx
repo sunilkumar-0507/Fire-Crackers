@@ -2,7 +2,7 @@ import { useCallback, useDeferredValue, useEffect, useMemo, useState } from 'rea
 import { useSearchParams } from 'react-router-dom';
 import { Search, SlidersHorizontal, X } from '@/components/ui/icons';
 import { cn } from '@/utils/cn';
-import { filterProducts, SORT_OPTIONS } from '@/utils/search';
+import { defaultSortFor, filterProducts, sortOptionsFor } from '@/utils/search';
 import { analytics } from '@/lib/analytics';
 import { products, categoriesWithCounts } from '@/data';
 import { QUICK_FILTERS } from '@/constants';
@@ -27,19 +27,22 @@ export const Products = () => {
 
   useLockBodyScroll(drawerOpen);
 
-  const filters = useMemo(
-    () => ({
+  const filters = useMemo(() => {
+    const category = params.get('category') ?? 'all';
+    const sort = params.get('sort') ?? defaultSortFor(category);
+    return {
       query: params.get('q') ?? '',
-      category: params.get('category') ?? 'all',
+      category,
       tags: params.getAll('tag'),
       maxPrice: params.get('max') ? Number(params.get('max')) : null,
       // `stock=1` is the URL this page used to write. Links with it are still
       // out there in WhatsApp threads, so it keeps meaning "in stock only".
       availability: params.get('availability') ?? (params.get('stock') === '1' ? 'available' : 'all'),
-      sort: params.get('sort') ?? 'relevance',
-    }),
-    [params],
-  );
+      // A shared `sort=relevance` link opened on a category falls back to the
+      // category default, since Recommended isn't offered there.
+      sort: sortOptionsFor(category).some((o) => o.value === sort) ? sort : defaultSortFor(category),
+    };
+  }, [params]);
 
   // Deferring keeps the range slider and chips responsive while the full
   // catalogue grid re-renders behind them.
@@ -74,8 +77,7 @@ export const Products = () => {
           value === '' ||
           value === 'all' ||
           value === 0 ||
-          value === false ||
-          (key === 'sort' && value === 'relevance')
+          value === false
         ) {
           next.delete(paramKey);
           // Writing `availability` clears the legacy alias, or the two would
@@ -86,6 +88,18 @@ export const Products = () => {
         if (key === 'availability') next.delete('stock');
         next.set(paramKey, String(value));
       });
+
+      // The default sort depends on the category, so it is only settled once
+      // the whole patch has applied. Keeping it out of the URL lets a category
+      // switch pick up the new default instead of carrying the old one along.
+      const nextCategory = next.get('category') ?? 'all';
+      const nextSort = next.get('sort');
+      if (
+        nextSort === defaultSortFor(nextCategory) ||
+        (nextSort && !sortOptionsFor(nextCategory).some((o) => o.value === nextSort))
+      ) {
+        next.delete('sort');
+      }
 
       setParams(next, { replace: true, preventScrollReset: true });
     },
@@ -208,7 +222,7 @@ export const Products = () => {
                     onChange={(e) => update({ sort: e.target.value })}
                     className="max-w-[46vw] min-h-11 cursor-pointer truncate rounded-full border border-line bg-card px-3 py-2.5 text-sm font-medium text-ink outline-none transition-colors hover:border-secondary-300 focus:border-secondary-400 sm:max-w-none sm:px-4"
                   >
-                    {SORT_OPTIONS.map((option) => (
+                    {sortOptionsFor(filters.category).map((option) => (
                       <option key={option.value} value={option.value}>
                         {option.label}
                       </option>
