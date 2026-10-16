@@ -245,6 +245,8 @@ export const QuickOrder = () => {
       if (!byCategory.has(p.category)) byCategory.set(p.category, []);
       byCategory.get(p.category).push(p);
     }
+    // Cheapest first within each category, so the list reads like a price list.
+    for (const items of byCategory.values()) items.sort((a, b) => a.price - b.price);
 
     // Shop's category order first; anything filed under a category the shop
     // has not listed still shows rather than silently vanishing.
